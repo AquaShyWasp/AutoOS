@@ -1,12 +1,27 @@
+<!-- PROJECT SHIELDS -->
+
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
+
 # AutoOS
-AutoOS is a AutoHotkey color bot for OldSchool RuneScape.
+AutoOS is a AutoHotkey color bot for OldSchool
+RuneScape.
 
+AutoOS is a pure color and math bot, it reads the
+pixels on your screen, their color, their position,
+your mouse position and uses math to figure out
+everything.
 
-AutoOS is a pure color and math bot, it reads the pixels on your screen, their position, your mouse position and uses math to figure everything out.
-Because AutoOS only uses color, you can use AutoOS with any client though I only officially support RuneLite and the official client at the moment.
+Because AutoOS uses color only, you can use it
+with any client though I only officially support
+RuneLite and the official client at the moment.
 
-Also, since AutoOS doesn't use reflection nor injection, in theory, as long as the antiban is good enough it's undetectable.
-
+Also, since AutoOS doesn't use reflection nor
+injection, in theory, it's undetectable.
 
 ### AutoOS features:
 - Script loader.
@@ -15,22 +30,33 @@ Also, since AutoOS doesn't use reflection nor injection, in theory, as long as t
   - Accounts act different from each other.
   - Account sensitive data is encrypted.
 - Asynchronous input.
-  - Mouse and keyboard can move and press keys independent from each other and at the same time.
+  - Mouse and keyboard can move and press keys
+    independent from each other and at the same
+    time.
 - Great Antiban.
+  - Lot's of random variables and several random
+    profiles for everyone.
+- Easy to use.
 - Easy to develop scripts.
 
 
 
-## How to use AutoOS
+## What do you ne
 
-To use AutoOS you only need 3 things:
-1. Download and install [AutoHotkey](https://www.autohotkey.com/) current version (v1.1.32).
-1. Download and run one of the supported osrs clients.
+To use AutoOS you need to prepare 3 things:
+1. Download and install
+   [AutoHotkey](https://www.autohotkey.com/)
+   current version (v1.1.32).
+1. Download and run one of the supported osrs
+   clients.
    - RuneLite.
-   - Official client.
-   - Different clients should work but are not tested.
-1. Download AutoOS and keep all of it's contents on the same folder.
-   - You can make a shortcut of AutoOS.ahk and place it in your desktop if you want.
+   - OSRS official client.
+   - Different clients should work but are not
+     tested.
+1. Download AutoOS and keep all of it's contents
+   on the same folder.
+   - You can optionally make a shortcut of
+     AutoOS.ahk and place it on your desktop.
 
 Once you have everything:
 1. Start your osrs client and wait for it to finish loading.
@@ -78,3 +104,23 @@ AutoOS.Core.GameTab.Prayer.PrayMelee()
 You will mostly be using AutoOS.Core class, so you should get familiar with all it's sub-classes and methods.
 When making a script, AutoOS debug box can be very helpful. It can display all sorts of useful information, like mouse position, color under mouse, etc.
 And gives you an easy way to copy paste useful data.
+
+
+
+
+
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/AquaShyWasp/AutoOS.svg?style=flat-square
+[contributors-url]: https://github.com/AquaShyWasp/AutoOS/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/AquaShyWasp/AutoOS.svg?style=flat-square
+[forks-url]: https://github.com/AquaShyWasp/AutoOS/network/members
+[stars-shield]: https://img.shields.io/github/stars/AquaShyWasp/AutoOS.svg?style=flat-square
+[stars-url]: https://github.com/AquaShyWasp/AutoOS/stargazers
+[issues-shield]: https://img.shields.io/github/issues/AquaShyWasp/AutoOS.svg?style=flat-square
+[issues-url]: https://github.com/AquaShyWasp/AutoOS/issues
+[license-shield]: https://img.shields.io/github/license/AquaShyWasp/AutoOS.svg?style=flat-square
+[license-url]: https://github.com/AquaShyWasp/AutoOS/blob/master/LICENSE.txt
+[product-screenshot]: images/screenshot.png

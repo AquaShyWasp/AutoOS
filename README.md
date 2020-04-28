@@ -9,14 +9,41 @@ Also, since AutoOS doesn't use reflection nor injection, in theory, as long as t
 
 
 AutoOS features:
-- Script loader
-- Player manager
-- Asynchronous mouse
-- Asynchronous keyboard
+- Script loader.
+- Player manager.
+  - Setup several accounts.
+  - Accounts act different from each other.
+  - Account sensitive data is encrypted.
+- Asynchronous input.
+  - Mouse and keyboard can move and press keys independent from each other and at the same time.
+- Great Antiban.
+- Easy to develop scripts.
 
 
-To use a script with AutoOS, you only need to add it to the scripts folder,
-run AutoOS and launch your script from AutoOS.
+
+## How to use AutoOS
+
+To use AutoOS you only need 3 things:
+- Download and install [AutoHotkey current version](https://www.autohotkey.com/) (v1.1.32).
+- Download and run one of the supported osrs clients.
+  - RuneLite.
+  - Official client.
+  - Different clients should work but are not tested.
+- Download AutoOS and keep all of it's contents on the same folder.
+  - You can make a shortcut of AutoOS.ahk and place it in your desktop if you want.
+
+Once you have everything:
+- Start your osrs client and wait for it to finish loading.
+- Run AutoOS.ahk
+- If you want AutoOS to be able to login and unlock the bank by itself
+ type a new master password on the prompt, otherwise you can just press enter leaving it empty.
+- Open the player manager and add a new player.
+  - Your account info is optional.
+  - If you want to add your account information the master password will keep your account details encrypted.
+  - Add your FKeys the same way you have them setup on you account. This is important.
+- To use a script, simply press the script launcher and choose the script you want to run!
+  - You can download or make new scripts yourself.
+  - Place new scripts on the scripts folder.
 
 
 

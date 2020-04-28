@@ -72,5 +72,9 @@ AutoOS makes it very easy to develop a script, for example if you want your scri
 
 ```
 AutoOS.Core.GameTab.Inventory.ClickSlot(1)
-AutoOS.Core.GameTab.Prayer.PrayMelee
+AutoOS.Core.GameTab.Prayer.PrayMelee()
 ```
+
+You will mostly be using AutoOS.Core class, so you should get familiar with all it's sub-classes and methods.
+When making a script, AutoOS debug box can be very helpful. It can display all sorts of useful information, like mouse position, color under mouse, etc.
+And gives you an easy way to copy paste useful data.

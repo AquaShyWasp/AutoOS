@@ -24,7 +24,7 @@ AutoOS features:
 ## How to use AutoOS
 
 To use AutoOS you only need 3 things:
-- Download and install [AutoHotkey current version](https://www.autohotkey.com/) (v1.1.32).
+- Download and install [AutoHotkey](https://www.autohotkey.com/) current version (v1.1.32).
 - Download and run one of the supported osrs clients.
   - RuneLite.
   - Official client.
@@ -46,12 +46,12 @@ Once you have everything:
   - Place new scripts on the scripts folder.
 
 
-
+## How to make scripts for AutoOS
 If you are a developer, AutoOS is basically a large framework with all the boring and hard work already done for you.
-To make your own script for AutoOS:
 
+To make your own script for AutoOS:
 Create your script in the scripts folder.
-add this line at the top:
+Add this line at the top:
 
 #Include ./lib/AOS.ahk
 

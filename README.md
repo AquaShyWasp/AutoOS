@@ -4,7 +4,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![GNU GPLv3 License][license-shield]][license-url]
 
 
 # AutoOS
@@ -122,5 +122,5 @@ And gives you an easy way to copy paste useful data.
 [issues-shield]: https://img.shields.io/github/issues/AquaShyWasp/AutoOS.svg?style=flat-square
 [issues-url]: https://github.com/AquaShyWasp/AutoOS/issues
 [license-shield]: https://img.shields.io/github/license/AquaShyWasp/AutoOS.svg?style=flat-square
-[license-url]: https://github.com/AquaShyWasp/AutoOS/blob/master/LICENSE.txt
+[license-url]: https://github.com/AquaShyWasp/AutoOS/blob/master/LICENSE
 [product-screenshot]: images/screenshot.png

@@ -7,9 +7,22 @@
 [![GNU GPLv3 License][license-shield]][license-url]
 
 
-# AutoOS
-AutoOS is a AutoHotkey color bot for OldSchool
-RuneScape.
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/AquaShyWasp/AutoOS">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">AutoOS</h3>
+
+  <p align="center">
+    AutoHotkey color bot for OldSchool RuneScape.
+  </p>
+</p>
+
+
+
 
 AutoOS is a pure color and math bot, it reads the
 pixels on your screen, their color, their position,
@@ -104,7 +117,6 @@ AutoOS.Core.GameTab.Prayer.PrayMelee()
 You will mostly be using AutoOS.Core class, so you should get familiar with all it's sub-classes and methods.
 When making a script, AutoOS debug box can be very helpful. It can display all sorts of useful information, like mouse position, color under mouse, etc.
 And gives you an easy way to copy paste useful data.
-
 
 
 

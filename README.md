@@ -22,8 +22,24 @@
 </p>
 
 
+<!-- TABLE OF CONTENTS -->
+## Table of Contents
+
+* [About AutoOS](#about-autoos)
+  * [AutoOS features](#autoos-features)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Setup](#setup)
+* [Make scripts for AutoOS](#make-scripts-for-autoos)
+* [Roadmap](#roadmap)
+* [Contributing](#contributing)
+* [License](#license)
+* [Contact](#contact)
+* [Acknowledgements](#acknowledgements)
 
 
+
+## About AutoOS
 AutoOS is a pure color and math bot, it reads the
 pixels on your screen, their color, their position,
 your mouse position and uses math to figure out
@@ -54,9 +70,11 @@ injection, in theory, it's undetectable.
 
 
 
-## What do you ne
+## Getting Started
 
-To use AutoOS you need to prepare 3 things:
+To use AutoOS is easy to use and setup.
+
+### Prerequisites
 1. Download and install
    [AutoHotkey](https://www.autohotkey.com/)
    current version (v1.1.32).
@@ -71,7 +89,7 @@ To use AutoOS you need to prepare 3 things:
    - You can optionally make a shortcut of
      AutoOS.ahk and place it on your desktop.
 
-Once you have everything:
+### Setup
 1. Start your osrs client and wait for it to finish loading.
 1. Run AutoOS.ahk
 1. If you want AutoOS to be able to login and unlock the bank by itself
@@ -85,7 +103,8 @@ Once you have everything:
    - Place new scripts on the scripts folder.
 
 
-## How to make scripts for AutoOS
+## Make scripts for AutoOS
+
 If you are a developer, AutoOS is basically a large framework with all the boring and hard work already done for you.
 
 To make your own script for AutoOS:
@@ -118,6 +137,43 @@ You will mostly be using AutoOS.Core class, so you should get familiar with all 
 When making a script, AutoOS debug box can be very helpful. It can display all sorts of useful information, like mouse position, color under mouse, etc.
 And gives you an easy way to copy paste useful data.
 
+<!-- ROADMAP -->
+## Roadmap
+
+WIP
+See the [open issues](https://github.com/AquaShyWasp/AutoOS/issues) for a list of proposed features (and known issues).
+
+
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Contributions are welcome though there are some rules.
+
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the GNU GPLv3. See `LICENSE` for more information.
+
+
+
+<!-- CONTACT -->
+## Contact
+
+AquaShyWasp - AquaShyWasp@protonmail.com
+
+Project Link: [https://github.com/AquaShyWasp/AutoOS](https://github.com/AquaShyWasp/AutoOS)
+
+
+
+<!-- ACKNOWLEDGEMENTS -->
+## Acknowledgements
+
+* []()
+* []()
+* []()
 
 
 

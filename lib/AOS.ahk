@@ -2,9 +2,14 @@
 {
 	AutoOS.Player := player
 	AutoOS.PlayerManager.GetPlayer(player)
+	AutoOS.Client.BootstrapCoordinates()
 	Input.AsyncMouse := async_input, Input.AsyncKeyboard := async_input
-	Run, "AutoHotkey.exe" "plugins/AsyncMouse.ahk" %player%
-	Run, "AutoHotkey.exe" "plugins/AsyncKeyboard.ahk" %player%
+	if async_input
+	{
+		Run, "AutoHotkey.exe" "plugins/AsyncMouse.ahk" %player%
+		Run, "AutoHotkey.exe" "plugins/AsyncKeyboard.ahk" %player%
+	}
+	UserInterface.MainGUI.Load()
 	return
 }
 
@@ -146,6 +151,32 @@ Class AutoOS
 			IniWrite, % data, account.ini, % player, % field
 		}
 		
+		EditPlayer(n, client, login, password, pin_number, user, combat_fkey, skills_fkey, quests_fkey, inventory_fkey, equipment_fkey, prayer_fkey, magic_fkey, clan_chat_fkey, friend_list_fkey, account_management_fkey, logout_fkey, options_fkey, emotes_fkey, music_player_fkey)
+		{
+			player := "Player" . n
+			IniWrite, % client, account.ini, % player, Client
+			IniWrite, % login, account.ini, % player, Login
+			IniWrite, % password, account.ini, % player, Password
+			IniWrite, % pin_number, account.ini, % player, PinNumber
+			IniWrite, % user, account.ini, % player, Username
+			
+			IniWrite, % combat_fkey, account.ini, % player, CombatFKey
+			IniWrite, % skills_fkey, account.ini, % player, SkillsFKey
+			IniWrite, % quests_fkey, account.ini, % player, QuestsFKey
+			IniWrite, % inventory_fkey, account.ini, % player, InventoryFKey
+			IniWrite, % equipment_fkey, account.ini, % player, EquipmentFKey
+			IniWrite, % prayer_fkey, account.ini, % player, PrayerFKey
+			IniWrite, % magic_fkey, account.ini, % player, MagicFKey
+			
+			IniWrite, % clan_chat_fkey, account.ini, % player, ClanChatFKey
+			IniWrite, % friend_list_fkey, account.ini, % player, FriendListFKey
+			IniWrite, % account_management_fkey, account.ini, % player, AccountManagementFKey
+			IniWrite, % logout_fkey, account.ini, % player, LogoutFKey
+			IniWrite, % options_fkey, account.ini, % player, OptionsFKey
+			IniWrite, % emotes_fkey, account.ini, % player, EmotesFKey
+			IniWrite, % music_player_fkey, account.ini, % player, MusicPlayerFKey
+		}
+		
 		ClearPlayerSensitiveData()						; This should clear the player sensitive data from the variables and therefore,
 		{												; from memory. The masterpass is still saved and I guess it could be extracted 
 			AutoOS.PlayerManager.Login := ""			; from memory with the know how but this is the best I could come up with without
@@ -173,7 +204,7 @@ Class AutoOS
 			FileDelete, account.ini
 			FileAppend, % ini_contents, account.ini
 		}
-		
+
 	}
 	
 	Class Client
@@ -895,7 +926,6 @@ Class AutoOS
 		
 	}
 	
-	
 	Setup()
 	{
 		If (A_CoordModePixel != "Screen")
@@ -938,6 +968,7 @@ Class UserInterface
 			Load()
 			{
 				Gui, PlayerManager: Hide
+				Gui, NewPlayer: New
 				Gui, NewPlayer: Add, Text, x10 y10, % "Client:"
 				Gui, NewPlayer: Add, Text, x82 y10, % "Email/Login:"
 				Gui, NewPlayer: Add, Text, x164 y10, % "Password:"
@@ -1055,57 +1086,59 @@ Class UserInterface
 		
 		Class Editor
 		{
-
-			Static Client, Login, Password, PinNumber, Username
+			
+			Static Player, Client, Login, Password, PinNumber, Username
 			Static CombatFkey, SkillsFkey, QuestsFkey, InventoryFkey, EquipmentFkey, PrayerFkey, MagicFkey
 			Static ClanChatFkey, FriendListFkey, AccountManagementFkey, LogoutFkey, OptionsFkey, EmotesFkey, MusicPlayerFkey
 			
 			Load(player)
 			{
+				UserInterface.PlayerManager.Editor.Player := player
 				Gui, PlayerManager: Hide
-				Gui, NewPlayer: Add, Text, x10 y10, % "Client:"
-				Gui, NewPlayer: Add, Text, x82 y10, % "Email/Login:"
-				Gui, NewPlayer: Add, Text, x164 y10, % "Password:"
-				Gui, NewPlayer: Add, Text, x246 y10, % "Pin number:"
-				Gui, NewPlayer: Add, Text, x318 y10, % "Username:"
-				Gui, NewPlayer: Add, ComboBox, x10 y25 w70 HwndEditPlayerClient, RuneLite||Official
-				Gui, NewPlayer: Add, Edit, x82 y25 w80 r0.8 HwndEditPlayerLogin, Optional
-				Gui, NewPlayer: Add, Edit, x164 y25 w80 r0.8 HwndEditPlayerPassword, Optional
-				Gui, NewPlayer: Add, Edit, x246 y25 w70 r0.8 Number Limit4 HwndEditPlayerPinNumber, Optional
-				Gui, NewPlayer: Add, Edit, x318 y25 w80 r0.8 Limit13 HwndEditPlayerUsername, Optional
+				Gui, PlayerEditor: New
+				Gui, PlayerEditor: Add, Text, x10 y10, % "Client:"
+				Gui, PlayerEditor: Add, Text, x82 y10, % "Email/Login:"
+				Gui, PlayerEditor: Add, Text, x164 y10, % "Password:"
+				Gui, PlayerEditor: Add, Text, x246 y10, % "Pin number:"
+				Gui, PlayerEditor: Add, Text, x318 y10, % "Username:"
+				Gui, PlayerEditor: Add, ComboBox, x10 y25 w70 HwndEditPlayerClient, RuneLite||Official
+				Gui, PlayerEditor: Add, Edit, x82 y25 w80 r0.8 HwndEditPlayerLogin, Optional
+				Gui, PlayerEditor: Add, Edit, x164 y25 w80 r0.8 HwndEditPlayerPassword, Optional
+				Gui, PlayerEditor: Add, Edit, x246 y25 w70 r0.8 Number Limit4 HwndEditPlayerPinNumber, Optional
+				Gui, PlayerEditor: Add, Edit, x318 y25 w80 r0.8 Limit13 HwndEditPlayerUsername, Optional
 
-				Gui, NewPlayer: Add, GroupBox, x5 y60 h110 w400, F-Keys
-				Gui, NewPlayer: Add, Text, x10 y80, % "Combat:"
-				Gui, NewPlayer: Add, Text, x65 y80, % "Skills:"
-				Gui, NewPlayer: Add, Text, x120 y80, % "Quests:"
-				Gui, NewPlayer: Add, Text, x175 y80, % "Inventory:"
-				Gui, NewPlayer: Add, Text, x230 y80, % "Equip:"
-				Gui, NewPlayer: Add, Text, x285 y80, % "Prayer:"
-				Gui, NewPlayer: Add, Text, x340 y80, % "Magic:"
-				Gui, NewPlayer: Add, ComboBox, x10 y95 w50 HwndEditPlayerCombatFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x65 y95 w50 HwndEditPlayerSkillsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x120 y95 w50 HwndEditPlayerQuestsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x175 y95 w50 HwndEditPlayerInventoryFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x230 y95 w50 HwndEditPlayerEquipmentFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x285 y95 w50 HwndEditPlayerPrayerFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x340 y95 w50 HwndEditPlayerMagicFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, Text, x10 y120, % "Clan chat:"
-				Gui, NewPlayer: Add, Text, x65 y120, % "Friends:"
-				Gui, NewPlayer: Add, Text, x120 y120, % "Acc.Man.:"
-				Gui, NewPlayer: Add, Text, x175 y120, % "Logout:"
-				Gui, NewPlayer: Add, Text, x230 y120, % "Options:"
-				Gui, NewPlayer: Add, Text, x285 y120, % "Emotes:"
-				Gui, NewPlayer: Add, Text, x340 y120, % "Music:"
-				Gui, NewPlayer: Add, ComboBox, x10 y135 w50 HwndEditPlayerClanChatFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x65 y135 w50 HwndEditPlayerFriendListFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x120 y135 w50 HwndEditPlayerAccountManagementFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x175 y135 w50 HwndEditPlayerLogoutFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x230 y135 w50 HwndEditPlayerOptionsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x285 y135 w50 HwndEditPlayerEmotesFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x340 y135 w50 HwndEditPlayerMusicPlayerFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, GroupBox, x5 y60 h110 w400, F-Keys
+				Gui, PlayerEditor: Add, Text, x10 y80, % "Combat:"
+				Gui, PlayerEditor: Add, Text, x65 y80, % "Skills:"
+				Gui, PlayerEditor: Add, Text, x120 y80, % "Quests:"
+				Gui, PlayerEditor: Add, Text, x175 y80, % "Inventory:"
+				Gui, PlayerEditor: Add, Text, x230 y80, % "Equip:"
+				Gui, PlayerEditor: Add, Text, x285 y80, % "Prayer:"
+				Gui, PlayerEditor: Add, Text, x340 y80, % "Magic:"
+				Gui, PlayerEditor: Add, ComboBox, x10 y95 w50 HwndEditPlayerCombatFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x65 y95 w50 HwndEditPlayerSkillsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x120 y95 w50 HwndEditPlayerQuestsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x175 y95 w50 HwndEditPlayerInventoryFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x230 y95 w50 HwndEditPlayerEquipmentFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x285 y95 w50 HwndEditPlayerPrayerFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x340 y95 w50 HwndEditPlayerMagicFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, Text, x10 y120, % "Clan chat:"
+				Gui, PlayerEditor: Add, Text, x65 y120, % "Friends:"
+				Gui, PlayerEditor: Add, Text, x120 y120, % "Acc.Man.:"
+				Gui, PlayerEditor: Add, Text, x175 y120, % "Logout:"
+				Gui, PlayerEditor: Add, Text, x230 y120, % "Options:"
+				Gui, PlayerEditor: Add, Text, x285 y120, % "Emotes:"
+				Gui, PlayerEditor: Add, Text, x340 y120, % "Music:"
+				Gui, PlayerEditor: Add, ComboBox, x10 y135 w50 HwndEditPlayerClanChatFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x65 y135 w50 HwndEditPlayerFriendListFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x120 y135 w50 HwndEditPlayerAccountManagementFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x175 y135 w50 HwndEditPlayerLogoutFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x230 y135 w50 HwndEditPlayerOptionsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x285 y135 w50 HwndEditPlayerEmotesFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x340 y135 w50 HwndEditPlayerMusicPlayerFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
 				
-				Gui, NewPlayer: Add, Button, x125 y180 w50 gSaveEditPlayer, Save
-				Gui, NewPlayer: Add, Button, x225 y180 w50 gCancelEditPlayer, Cancel
+				Gui, PlayerEditor: Add, Button, x125 y180 w50 gSaveEditPlayer, Save
+				Gui, PlayerEditor: Add, Button, x225 y180 w50 gCancelEditPlayer, Cancel
 				
 				
 				AutoOS.PlayerManager.GetPlayer(player)
@@ -1115,6 +1148,7 @@ Class UserInterface
 				GuiControl, Text, % EditPlayerClient, % AutoOS.PlayerManager.Client
 				GuiControl, Text, % EditPlayerLogin, % AutoOS.PlayerManager.Login
 				GuiControl, Text, % EditPlayerPassword, % AutoOS.PlayerManager.Password
+				GuiControl, Text, % EditPlayerPinNumber, % AutoOS.PlayerManager.PinNumber
 				GuiControl, Text, % EditPlayerUsername, % AutoOS.PlayerManager.Username
 
 				GuiControl, Text, % EditPlayerCombatFKey, % AutoOS.PlayerManager.CombatFKey
@@ -1133,9 +1167,7 @@ Class UserInterface
 				GuiControl, Text, % EditPlayerEmotesFKey, % AutoOS.PlayerManager.EmotesFKey
 				GuiControl, Text, % EditPlayerMusicPlayerFKey, % AutoOS.PlayerManager.MusicPlayerFKey
 				
-				
-				
-				Gui, NewPlayer: Show
+				Gui, PlayerEditor: Show
 				
 				UserInterface.PlayerManager.Editor.Client := EditPlayerClient
 				UserInterface.PlayerManager.Editor.Login := EditPlayerLogin
@@ -1158,47 +1190,50 @@ Class UserInterface
 				UserInterface.PlayerManager.Editor.MusicPlayerFkey := EditPlayerMusicPlayerFkey
 				return
 				
-				SaveEditPlayer:
-					GuiControlGet, new_player_client,, % UserInterface.PlayerManager.NewPlayer.NewPlayerClient
-					GuiControlGet, new_player_login,, % UserInterface.PlayerManager.NewPlayer.NewPlayerLogin
-					GuiControlGet, new_player_password,, % UserInterface.PlayerManager.NewPlayer.NewPlayerPassword
-					GuiControlGet, new_player_pin_number,, % UserInterface.PlayerManager.NewPlayer.NewPlayerPinNumber
-					GuiControlGet, new_player_username,, % UserInterface.PlayerManager.NewPlayer.NewPlayerUsername
-					GuiControlGet, new_player_combat,, % UserInterface.PlayerManager.NewPlayer.NewPlayerCombatFkey
-					GuiControlGet, new_player_skills,, % UserInterface.PlayerManager.NewPlayer.NewPlayerSkillsFkey
-					GuiControlGet, new_player_quests,, % UserInterface.PlayerManager.NewPlayer.NewPlayerQuestsFkey
-					GuiControlGet, new_player_inventory,, % UserInterface.PlayerManager.NewPlayer.NewPlayerInventoryFkey
-					GuiControlGet, new_player_equipment,, % UserInterface.PlayerManager.NewPlayer.NewPlayerEquipmentFkey
-					GuiControlGet, new_player_prayer,, % UserInterface.PlayerManager.NewPlayer.NewPlayerPrayerFkey
-					GuiControlGet, new_player_magic,, % UserInterface.PlayerManager.NewPlayer.NewPlayerMagicFkey
-					GuiControlGet, new_player_cc,, % UserInterface.PlayerManager.NewPlayer.NewPlayerClanChatFkey
-					GuiControlGet, new_player_fc,, % UserInterface.PlayerManager.NewPlayer.NewPlayerFriendListFkey
-					GuiControlGet, new_player_accman,, % UserInterface.PlayerManager.NewPlayer.NewPlayerAccountManagementFkey
-					GuiControlGet, new_player_logout,, % UserInterface.PlayerManager.NewPlayer.NewPlayerLogoutFkey
-					GuiControlGet, new_player_options,, % UserInterface.PlayerManager.NewPlayer.NewPlayerOptionsFkey
-					GuiControlGet, new_player_emotes,, % UserInterface.PlayerManager.NewPlayer.NewPlayerEmotesFkey
-					GuiControlGet, new_player_music,, % UserInterface.PlayerManager.NewPlayer.NewPlayerMusicPlayerFkey
+				SaveEditPlayer: ;NEED TO FIX THIS just copy pasted this from New player GUI
+					GuiControlGet, edit_player_client,, % UserInterface.PlayerManager.Editor.Client
+					GuiControlGet, edit_player_login,, % UserInterface.PlayerManager.Editor.Login
+					GuiControlGet, edit_player_password,, % UserInterface.PlayerManager.Editor.Password
+					GuiControlGet, edit_player_pin_number,, % UserInterface.PlayerManager.Editor.PinNumber
+					GuiControlGet, edit_player_username,, % UserInterface.PlayerManager.Editor.Username
+					GuiControlGet, edit_player_combat,, % UserInterface.PlayerManager.Editor.CombatFkey
+					GuiControlGet, edit_player_skills,, % UserInterface.PlayerManager.Editor.SkillsFkey
+					GuiControlGet, edit_player_quests,, % UserInterface.PlayerManager.Editor.QuestsFkey
+					GuiControlGet, edit_player_inventory,, % UserInterface.PlayerManager.Editor.InventoryFkey
+					GuiControlGet, edit_player_equipment,, % UserInterface.PlayerManager.Editor.EquipmentFkey
+					GuiControlGet, edit_player_prayer,, % UserInterface.PlayerManager.Editor.PrayerFkey
+					GuiControlGet, edit_player_magic,, % UserInterface.PlayerManager.Editor.MagicFkey
+					GuiControlGet, edit_player_cc,, % UserInterface.PlayerManager.Editor.ClanChatFkey
+					GuiControlGet, edit_player_fc,, % UserInterface.PlayerManager.Editor.FriendListFkey
+					GuiControlGet, edit_player_accman,, % UserInterface.PlayerManager.Editor.AccountManagementFkey
+					GuiControlGet, edit_player_logout,, % UserInterface.PlayerManager.Editor.LogoutFkey
+					GuiControlGet, edit_player_options,, % UserInterface.PlayerManager.Editor.OptionsFkey
+					GuiControlGet, edit_player_emotes,, % UserInterface.PlayerManager.Editor.EmotesFkey
+					GuiControlGet, edit_player_music,, % UserInterface.PlayerManager.Editor.MusicPlayerFkey
 
-					new_player_login := Encryption.AES.Encrypt(new_player_login, AutoOS.PlayerManager.MasterPassword, 256)
-					new_player_password := Encryption.AES.Encrypt(new_player_password, AutoOS.PlayerManager.MasterPassword, 256)
-					new_player_pin_number := Encryption.AES.Encrypt(new_player_pin_number, AutoOS.PlayerManager.MasterPassword, 256)
-					new_player_username := Encryption.AES.Encrypt(new_player_username, AutoOS.PlayerManager.MasterPassword, 256)
+					edit_player_login := Encryption.AES.Encrypt(edit_player_login, AutoOS.PlayerManager.MasterPassword, 256)
+					edit_player_password := Encryption.AES.Encrypt(edit_player_password, AutoOS.PlayerManager.MasterPassword, 256)
+					edit_player_pin_number := Encryption.AES.Encrypt(edit_player_pin_number, AutoOS.PlayerManager.MasterPassword, 256)
+					edit_player_username := Encryption.AES.Encrypt(edit_player_username, AutoOS.PlayerManager.MasterPassword, 256)
 					
-					AutoOS.PlayerManager.NewPlayer(new_player_client, new_player_login, new_player_password
-												 , new_player_pin_number, new_player_username
-												 , new_player_combat, new_player_skills
-											  	 , new_player_quests, new_player_inventory
-												 , new_player_equipment, new_player_prayer
-												 , new_player_magic, new_player_cc
-												 , new_player_fc, new_player_accman
-												 , new_player_logout, new_player_options
-												 , new_player_emotes, new_player_music)
-					Gui, NewPlayer: Destroy
+					AutoOS.PlayerManager.EditPlayer(UserInterface.PlayerManager.Editor.Player, edit_player_client, edit_player_login, edit_player_password
+												 , edit_player_pin_number, edit_player_username
+												 , edit_player_combat, edit_player_skills
+											  	 , edit_player_quests, edit_player_inventory
+												 , edit_player_equipment, edit_player_prayer
+												 , edit_player_magic, edit_player_cc
+												 , edit_player_fc, edit_player_accman
+												 , edit_player_logout, edit_player_options
+												 , edit_player_emotes, edit_player_music)
+												 
+					Gui, PlayerEditor: Destroy
+					UserInterface.PlayerManager.Editor.Player := ""
 					UserInterface.PlayerManager.Viewer.State(true)
+					
 				return
 				
 				CancelEditPlayer:
-					Gui, NewPlayer: Destroy
+					Gui, PlayerEditor: Destroy
 					UserInterface.PlayerManager.Viewer.State(true)
 				return
 				
@@ -1227,7 +1262,7 @@ Class UserInterface
 								  . "Combat|Skills|Quests|Inventory|Equipment|Prayer|Magic|"
 								  . "Clan chat|Friend list|Acc. Management|Logout|Options|Emotes|Music"
 
-				Gui, PlayerManager: New,
+				Gui, PlayerManager: New
 				Gui, PlayerManager: Add, ListView, % list_view_options, % list_view_header
 				LV_ModIfyCol(AutoHdr)
 				LV_ModIfyCol(1, 75)
@@ -1236,11 +1271,19 @@ Class UserInterface
 				LV_ModIfyCol(4, 75)
 				LV_ModIfyCol(5, 40)
 				UserInterface.PlayerManager.Viewer.UpdatePlayersData()
-				Gui, PlayerManager: Add, Button, gAddPlayer y+10, Add Player
+				Gui, PlayerManager: Add, Button, gSelectPlayer y+10, Continue
+				Gui, PlayerManager: Add, Button, gAddPlayer x+20, Add Player
 				Gui, PlayerManager: Add, Button, gEditPlayer x+10, Edit Player
 				Gui, PlayerManager: Add, Button, gDeletePlayer x+10, Delete Player
 				return
-
+				
+				SelectPlayer:
+					UserInterface.PlayerManager.Viewer.State(false)
+					player := LV_GetNext()
+					AutoOS.PlayerManager.GetPlayer(player)
+					If AutoOS.PlayerManager.MasterPassword
+						AutoOS.PlayerManager.GetPlayerSensitiveData(player, AutoOS.PlayerManager.MasterPassword)
+				return
 				AddPlayer:
 					UserInterface.PlayerManager.NewPlayer.Load()
 				return
@@ -1248,7 +1291,9 @@ Class UserInterface
 					UserInterface.PlayerManager.Editor.Load(LV_GetNext())
 				return
 				DeletePlayer:
-					;UserInterface.PlayerManager.Delete()
+					Gui, PlayerManager: Default
+					AutoOS.PlayerManager.DeletePlayer(LV_GetNext())
+					UserInterface.PlayerManager.Viewer.UpdatePlayersData()
 				return
 				
 			}
@@ -1275,12 +1320,31 @@ Class UserInterface
 						   , AutoOS.PlayerManager.LogoutFKey, AutoOS.PlayerManager.OptionsFKey, AutoOS.PlayerManager.EmotesFKey
 						   , AutoOS.PlayerManager.MusicPlayerFKey)
 				}
+				LV_Modify(1, "Select")
 				return
 			}
 		
 		}
 	
 	}
+
+	Class MainGUI
+	{
+		Load()
+		{
+			Gui, MainGUI: New,, Debug Box
+			main_gui_width := Math.DPIScale((AutoOS.Client.Coordinates[3] - AutoOS.Client.Coordinates[1]), "descale")
+			Gui, MainGUI: Add, Edit, r9 HwndDebugger x0 y0 w%main_gui_width% -VScroll -border
+			Gui, MainGUI: -border AlwaysOnTop
+			Gui, MainGUI: Margin, X0 Y0
+			x := AutoOS.Client.Coordinates[1]
+			y := AutoOS.Client.Coordinates[4]
+			Gui, MainGUI: Show, X%x% Y%y%
+		}
+	}
+
+
+
 }
 
 

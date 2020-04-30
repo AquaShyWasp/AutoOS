@@ -5,15 +5,6 @@ ListLines Off
 SetWorkingDir % A_ScriptDir  ; Ensures a consistent starting directory.
 
 AOS_Start(1)
-/*
-UserInterface.PlayerManager.MasterPassword()
-UserInterface.PlayerManager.Start()
-UserInterface.PlayerManager.State(true)
-*/
-
-UserInterface.PlayerManager.MasterPassword()
-UserInterface.PlayerManager.Viewer.Load()
-UserInterface.PlayerManager.Viewer.State(true)
 
 return
 

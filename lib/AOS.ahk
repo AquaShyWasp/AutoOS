@@ -222,7 +222,7 @@ Class AutoOS
 			ControlGetPos, control_x, control_y, control_w, control_h,  SunAwtCanvas2, % "ahk_exe " . AutoOS.PlayerManager.Client ".exe"
 			
 			AutoOS.Client.ClientID := ClientID
-			AutoOS.Client.Coordinates := [control_x, control_y, control_w, control_h]
+			AutoOS.Client.Coordinates := [control_x, control_y, (control_w + control_x), (control_y + control_h)]
 		}
 		
 	}
@@ -968,7 +968,7 @@ Class UserInterface
 			Load()
 			{
 				Gui, PlayerManager: Hide
-				Gui, NewPlayer: New
+				Gui, NewPlayer: New, New Player
 				Gui, NewPlayer: Add, Text, x10 y10, % "Client:"
 				Gui, NewPlayer: Add, Text, x82 y10, % "Email/Login:"
 				Gui, NewPlayer: Add, Text, x164 y10, % "Password:"
@@ -1095,7 +1095,7 @@ Class UserInterface
 			{
 				UserInterface.PlayerManager.Editor.Player := player
 				Gui, PlayerManager: Hide
-				Gui, PlayerEditor: New
+				Gui, PlayerEditor: New, Player Editor
 				Gui, PlayerEditor: Add, Text, x10 y10, % "Client:"
 				Gui, PlayerEditor: Add, Text, x82 y10, % "Email/Login:"
 				Gui, PlayerEditor: Add, Text, x164 y10, % "Password:"
@@ -1262,7 +1262,7 @@ Class UserInterface
 								  . "Combat|Skills|Quests|Inventory|Equipment|Prayer|Magic|"
 								  . "Clan chat|Friend list|Acc. Management|Logout|Options|Emotes|Music"
 
-				Gui, PlayerManager: New
+				Gui, PlayerManager: New, Player Manager
 				Gui, PlayerManager: Add, ListView, % list_view_options, % list_view_header
 				LV_ModIfyCol(AutoHdr)
 				LV_ModIfyCol(1, 75)
@@ -1332,14 +1332,26 @@ Class UserInterface
 	{
 		Load()
 		{
-			Gui, MainGUI: New,, Debug Box
+			player_count := Text.CountIniSections("account.ini")
 			main_gui_width := Math.DPIScale((AutoOS.Client.Coordinates[3] - AutoOS.Client.Coordinates[1]), "descale")
-			Gui, MainGUI: Add, Edit, r9 HwndDebugger x0 y0 w%main_gui_width% -VScroll -border
+			main_gui_height := Math.DPIScale((A_ScreenHeight - AutoOS.Client.Coordinates[4] - 100), "descale")
+			
+			Gui, MainGUI: New,, AutoOS
+			Gui, MainGUI: Add, Text,, Select Player:
+			Loop % player_count
+				player_list := "Player" . A_Index
+			Gui, MainGUI: Add, DropDownList,, % player_list
+			Gui, MainGUI: Add, Edit, r1 w500 -VScroll -border, TestESRWRRASD`n`rasdasd`n`rasdasd`n`rasdasd`n`rasdasd
+			
+			
+			
 			Gui, MainGUI: -border AlwaysOnTop
-			Gui, MainGUI: Margin, X0 Y0
+			;Gui, MainGUI: Margin, X0 Y0
 			x := AutoOS.Client.Coordinates[1]
 			y := AutoOS.Client.Coordinates[4]
-			Gui, MainGUI: Show, X%x% Y%y%
+			
+			Gui, MainGUI: Show, X%x% Y%y% W%main_gui_width% H%main_gui_height%
+			return
 		}
 	}
 

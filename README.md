@@ -11,7 +11,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/AquaShyWasp/AutoOS">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="assets/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">AutoOS</h3>
@@ -62,11 +62,15 @@ injection, in theory, it's undetectable.
   - Mouse and keyboard can move and press keys
     independent from each other and at the same
     time.
+- DPI scaling.
+  - Everything should work and adapt to your
+    screen DPI outside of the box.
 - Great Antiban.
   - Lot's of random variables and several random
     profiles for everyone.
 - Easy to use.
 - Easy to develop scripts.
+
 
 
 

@@ -11,7 +11,9 @@ UserInterface.PlayerManager.Start()
 UserInterface.PlayerManager.State(true)
 */
 
-UserInterface.PlayerManager.NewPlayer.Load()
+UserInterface.PlayerManager.MasterPassword()
+UserInterface.PlayerManager.Viewer.Load()
+UserInterface.PlayerManager.Viewer.State(true)
 
 return
 
@@ -19,7 +21,6 @@ return
 
 
 ^f::
-
 	;gosub, AsyncTest
 return
 

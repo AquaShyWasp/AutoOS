@@ -152,8 +152,25 @@ See the [open issues](https://github.com/AquaShyWasp/AutoOS/issues) for a list o
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are welcome though there are some rules.
-
+Contributions are welcome though they should follow
+this guidelines:
+- Keep the current programming style.
+  - `Local my_variable`
+  - `Static MyVariable`
+  - `Global MY_VARIABLE`
+  - `Class MyClass`
+  - `MyFunction(my_parameter, other_parameter)`
+- Readability over speed.
+  - Fast code is important but if it's hard to
+    understand, it's also hard to fix something that is
+    not working properly later on.
+  - Fast code that is well explained with comments
+    and/or is easy to grasp is very welcome though.
+- There's no need for many way to do the same thing.
+- Get familiar with my versioning.
+- A bot is nothing without good scripts, if you
+  have a script you would like to make public let
+  me know! You can and should display your own ads!
 
 
 <!-- LICENSE -->
@@ -166,7 +183,9 @@ Distributed under the GNU GPLv3. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-AquaShyWasp - AquaShyWasp@protonmail.com
+[AquaShyWasp](https://join.status.im/u/0x04511f0beacc1f24f6af274e09915145791ac768109052007a6e383bb426632a6a65bf6dd28c5a0d61263d0c383e74f514f6baa985e1efeefcaf7fe079fdd60736)
+on Status
+AquaShyWasp@protonmail.com
 
 Project Link: [https://github.com/AquaShyWasp/AutoOS](https://github.com/AquaShyWasp/AutoOS)
 
@@ -175,9 +194,8 @@ Project Link: [https://github.com/AquaShyWasp/AutoOS](https://github.com/AquaShy
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* []()
-* []()
-* []()
+* [SRL](https://github.com/SRL)
+* [AutoHotkey](https://www.autohotkey.com)
 
 
 

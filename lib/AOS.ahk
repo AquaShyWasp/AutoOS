@@ -3,6 +3,7 @@
 	AutoOS.Player := player
 	AutoOS.PlayerManager.GetPlayer(player)
 	AutoOS.Client.BootstrapCoordinates()
+	AutoOS.Setup()
 	Input.AsyncMouse := async_input, Input.AsyncKeyboard := async_input
 	if async_input
 	{
@@ -229,24 +230,24 @@ Class AutoOS
 	
 	Class Coordinates	; This whole Class is just a group of Static variables for all the coordinates I could think of. The only 2 methods are used to convert 
 	{					; Client coordinates to Screen coordinates.
-		Static GameScreen := AutoOS.Coordinates.ClientPosition(6, 5, 773, 505)
-		Static UpText := AutoOS.Coordinates.ClientPosition(6, 5, 300, 23)
+		Static GameScreen := AutoOS.Coordinates.ClientPositionBox(6, 5, 773, 505)
+		Static UpText := AutoOS.Coordinates.ClientPositionBox(6, 5, 300, 23)
 		
-		Static GameTab1 := AutoOS.Coordinates.ClientPosition(522, 168, 559, 203)
-		Static GameTab2 := AutoOS.Coordinates.ClientPosition(560, 168, 592, 203)
-		Static GameTab3 := AutoOS.Coordinates.ClientPosition(593, 168, 625, 203)
-		Static GameTab4 := AutoOS.Coordinates.ClientPosition(626, 168, 658, 203)
-		Static GameTab5 := AutoOS.Coordinates.ClientPosition(659, 168, 691, 203)
-		Static GameTab6 := AutoOS.Coordinates.ClientPosition(692, 168, 724, 203)
-		Static GameTab7 := AutoOS.Coordinates.ClientPosition(725, 168, 762, 203)
+		Static GameTab1 := AutoOS.Coordinates.ClientPositionBox(522, 168, 559, 203)
+		Static GameTab2 := AutoOS.Coordinates.ClientPositionBox(560, 168, 592, 203)
+		Static GameTab3 := AutoOS.Coordinates.ClientPositionBox(593, 168, 625, 203)
+		Static GameTab4 := AutoOS.Coordinates.ClientPositionBox(626, 168, 658, 203)
+		Static GameTab5 := AutoOS.Coordinates.ClientPositionBox(659, 168, 691, 203)
+		Static GameTab6 := AutoOS.Coordinates.ClientPositionBox(692, 168, 724, 203)
+		Static GameTab7 := AutoOS.Coordinates.ClientPositionBox(725, 168, 762, 203)
 		
-		Static GameTab8 := AutoOS.Coordinates.ClientPosition(522, 466, 559, 501)
-		Static GameTab9 := AutoOS.Coordinates.ClientPosition(560, 466, 592, 501)
-		Static GameTab10 := AutoOS.Coordinates.ClientPosition(593, 466, 625, 501)
-		Static GameTab11 := AutoOS.Coordinates.ClientPosition(626, 466, 658, 501)
-		Static GameTab12 := AutoOS.Coordinates.ClientPosition(659, 466, 691, 501)
-		Static GameTab13 := AutoOS.Coordinates.ClientPosition(692, 466, 724, 501)
-		Static GameTab14 := AutoOS.Coordinates.ClientPosition(725, 466, 762, 501)
+		Static GameTab8 := AutoOS.Coordinates.ClientPositionBox(522, 466, 559, 501)
+		Static GameTab9 := AutoOS.Coordinates.ClientPositionBox(560, 466, 592, 501)
+		Static GameTab10 := AutoOS.Coordinates.ClientPositionBox(593, 466, 625, 501)
+		Static GameTab11 := AutoOS.Coordinates.ClientPositionBox(626, 466, 658, 501)
+		Static GameTab12 := AutoOS.Coordinates.ClientPositionBox(659, 466, 691, 501)
+		Static GameTab13 := AutoOS.Coordinates.ClientPositionBox(692, 466, 724, 501)
+		Static GameTab14 := AutoOS.Coordinates.ClientPositionBox(725, 466, 762, 501)
 		
 		ClientPositionX(coordinate)	; Converts coordinates relative to the client to coordinates relative to the window on the X axis.
 		{
@@ -262,7 +263,12 @@ Class AutoOS
 			return % Math.DPIScale(coordinate) + AutoOS.Client.Coordinates[2]
 		}
 		
-		ClientPosition(x, y, w, h)	; Joins both methods above for an fast and easy to write/read way of converting coordinates.
+		ClientPosition(x, y)
+		{
+			return [AutoOS.Coordinates.ClientPositionX(x), AutoOS.Coordinates.ClientPositionY(y)]
+		}
+		
+		ClientPositionBox(x, y, w, h)	; Joins both methods above for an fast and easy to write/read way of converting coordinates.
 		{
 			return [AutoOS.Coordinates.ClientPositionX(x), AutoOS.Coordinates.ClientPositionY(y), AutoOS.Coordinates.ClientPositionX(w), AutoOS.Coordinates.ClientPositionY(h)]
 		}
@@ -274,27 +280,27 @@ Class AutoOS
 			
 			Static Radius := 70 ; Real radius is about 75 pixels but I think setting it up slightly smaller is probably better
 			
-			Static Compass := AutoOS.Coordinates.ClientPosition(546, 6, 574, 34)
+			Static Compass := AutoOS.Coordinates.ClientPositionBox(546, 6, 574, 34)
 							
 		}
 		
 		Class StatOrbs
 		{
-			Static Experience := AutoOS.Coordinates.ClientPosition(517, 21, 542, 47)
+			Static Experience := AutoOS.Coordinates.ClientPositionBox(517, 21, 542, 47)
 	
 			; Health orb
-			Static Health := AutoOS.Coordinates.ClientPosition(544, 45, 567, 70)
+			Static Health := AutoOS.Coordinates.ClientPositionBox(544, 45, 567, 70)
 			; Hitpoints number
-			Static Hitpoints := AutoOS.Coordinates.ClientPosition(520, 50, 540, 70)
+			Static Hitpoints := AutoOS.Coordinates.ClientPositionBox(520, 50, 540, 70)
 				
-			Static QuickPray := AutoOS.Coordinates.ClientPosition(542, 80, 567, 105)
-			Static PrayPoints := AutoOS.Coordinates.ClientPosition(520, 85, 540, 105)
+			Static QuickPray := AutoOS.Coordinates.ClientPositionBox(542, 80, 567, 105)
+			Static PrayPoints := AutoOS.Coordinates.ClientPositionBox(520, 85, 540, 105)
 			
-			Static Energy := AutoOS.Coordinates.ClientPosition(553, 112, 578, 137)
-			Static EnergyPoints := AutoOS.Coordinates.ClientPosition(530, 120, 550, 135)
+			Static Energy := AutoOS.Coordinates.ClientPositionBox(553, 112, 578, 137)
+			Static EnergyPoints := AutoOS.Coordinates.ClientPositionBox(530, 120, 550, 135)
 			
-			Static SpecialAttack := AutoOS.Coordinates.ClientPosition(575, 138, 600, 162)
-			Static SpecAttPoints := AutoOS.Coordinates.ClientPosition(551, 143, 574, 159)
+			Static SpecialAttack := AutoOS.Coordinates.ClientPositionBox(575, 138, 600, 162)
+			Static SpecAttPoints := AutoOS.Coordinates.ClientPositionBox(551, 143, 574, 159)
 
 		}
 	
@@ -303,13 +309,13 @@ Class AutoOS
 			
 			Class Combat	; TODO add staves.
 			{
-				Static WeaponNCombat := AutoOS.Coordinates.ClientPosition(559, 208, 732, 246)
-				Static AttackStyle1 := AutoOS.Coordinates.ClientPosition(567, 250, 637, 296)
-				Static AttackStyle2 := AutoOS.Coordinates.ClientPosition(646, 250, 716, 296)
-				Static AttackStyle3 := AutoOS.Coordinates.ClientPosition(567, 304, 637, 350)
-				Static AttackStyle4 := AutoOS.Coordinates.ClientPosition(646, 304, 716, 350)
-				Static AutoRetaliate := AutoOS.Coordinates.ClientPosition(567, 358, 716, 401)
-				Static SpecAttackBar := AutoOS.Coordinates.ClientPosition(567, 409, 716, 434)
+				Static WeaponNCombat := AutoOS.Coordinates.ClientPositionBox(559, 208, 732, 246)
+				Static AttackStyle1 := AutoOS.Coordinates.ClientPositionBox(567, 250, 637, 296)
+				Static AttackStyle2 := AutoOS.Coordinates.ClientPositionBox(646, 250, 716, 296)
+				Static AttackStyle3 := AutoOS.Coordinates.ClientPositionBox(567, 304, 637, 350)
+				Static AttackStyle4 := AutoOS.Coordinates.ClientPositionBox(646, 304, 716, 350)
+				Static AutoRetaliate := AutoOS.Coordinates.ClientPositionBox(567, 358, 716, 401)
+				Static SpecAttackBar := AutoOS.Coordinates.ClientPositionBox(567, 409, 716, 434)
 			}
 		
 			Class Skills
@@ -350,7 +356,7 @@ Class AutoOS
 				{
 					
 					If ((n >= 1) and (n <= 24))
-						return AutoOS.Coordinates.ClientPosition((485 + (63 * ((n-(Floor(n/3)*3)) != 0 ? (n-(Floor(n/3)*3)) : 3))), (174 + (32 * Ceil(n/3)))
+						return AutoOS.Coordinates.ClientPositionBox((485 + (63 * ((n-(Floor(n/3)*3)) != 0 ? (n-(Floor(n/3)*3)) : 3))), (174 + (32 * Ceil(n/3)))
 															    , (546 + (63 * ((n-(Floor(n/3)*3)) != 0 ? (n-(Floor(n/3)*3)) : 3))), (205 + (32 * Ceil(n/3))))
 				}
 				 
@@ -365,7 +371,7 @@ Class AutoOS
 			
 			Class Inventory
 			{				
-				Static Inventory := AutoOS.Coordinates.ClientPosition(563, 213, 720, 460)
+				Static Inventory := AutoOS.Coordinates.ClientPositionBox(563, 213, 720, 460)
 				
 				Static Slot1 := AutoOS.Coordinates.GameTab.Inventory.GetSlot(1)
 				Static Slot2 := AutoOS.Coordinates.GameTab.Inventory.GetSlot(2)
@@ -430,7 +436,7 @@ Class AutoOS
 					*/
 					
 					If ((n >= 1) and (n <= 28))
-						return AutoOS.Coordinates.ClientPosition((521 + (42 * ((n-(Floor(n/4)*4)) != 0 ? (n-(Floor(n/4)*4)) : 4))), (177 + (36 * Ceil(n/4)))
+						return AutoOS.Coordinates.ClientPositionBox((521 + (42 * ((n-(Floor(n/4)*4)) != 0 ? (n-(Floor(n/4)*4)) : 4))), (177 + (36 * Ceil(n/4)))
 															    , (552 + (42 * ((n-(Floor(n/4)*4)) != 0 ? (n-(Floor(n/4)*4)) : 4))), (208 + (36 * Ceil(n/4))))
 				}
 
@@ -481,7 +487,7 @@ Class AutoOS
 				GetPray(n)	; For more info on what's going on on this function, check AutoOS.Coordinates.GameTab.Inventory.GetSlot()
 				{
 					If ((n >= 1) and (n <= 29))
-						return AutoOS.Coordinates.ClientPosition((514 + (37 * ((n-(Floor(n/5)*5)) != 0 ? (n-(Floor(n/5)*5)) : 5))), (177 + (37 * Ceil(n/5)))
+						return AutoOS.Coordinates.ClientPositionBox((514 + (37 * ((n-(Floor(n/5)*5)) != 0 ? (n-(Floor(n/5)*5)) : 5))), (177 + (37 * Ceil(n/5)))
 															    , (547 + (37 * ((n-(Floor(n/5)*5)) != 0 ? (n-(Floor(n/5)*5)) : 5))), (210 + (37 * Ceil(n/5))))
 				}
 				
@@ -574,7 +580,7 @@ Class AutoOS
 					GetSpell(n)	; For more info on what's going on on this function, check AutoOS.Coordinates.GameTab.Inventory.GetSlot()
 					{
 						If ((n >= 1) and (n <= 70))
-							return AutoOS.Coordinates.ClientPosition((526 + (26 * ((n-(Floor(n/7)*7)) != 0 ? (n-(Floor(n/7)*7)) : 7))), (181 + (24 * Ceil(n/7)))
+							return AutoOS.Coordinates.ClientPositionBox((526 + (26 * ((n-(Floor(n/7)*7)) != 0 ? (n-(Floor(n/7)*7)) : 7))), (181 + (24 * Ceil(n/7)))
 																   , (549 + (26 * ((n-(Floor(n/7)*7)) != 0 ? (n-(Floor(n/7)*7)) : 7))), (204 + (24 * Ceil(n/7))))
 					}
 	
@@ -614,8 +620,8 @@ Class AutoOS
 			
 			Class Logout	; TODO
 			{
-				Static WorldSwitcherButton := AutoOS.Coordinates.ClientPosition(570, 366, 713, 401)
-				Static LogoutButton := AutoOS.Coordinates.ClientPosition(570, 414, 713, 449)
+				Static WorldSwitcherButton := AutoOS.Coordinates.ClientPositionBox(570, 366, 713, 401)
+				Static LogoutButton := AutoOS.Coordinates.ClientPositionBox(570, 414, 713, 449)
 									  
 				Class WorldSwitcher	; TODO
 				{
@@ -626,44 +632,44 @@ Class AutoOS
 			
 			Class Options	; TODO
 			{
-				Static Display := AutoOS.Coordinates.ClientPosition(553, 206, 592, 245)
-				Static Audio := AutoOS.Coordinates.ClientPosition(599, 206, 638, 245)
-				Static Chat := AutoOS.Coordinates.ClientPosition(645, 206, 684, 245)
-				Static Controls := AutoOS.Coordinates.ClientPosition(691, 206, 730, 245)
+				Static Display := AutoOS.Coordinates.ClientPositionBox(553, 206, 592, 245)
+				Static Audio := AutoOS.Coordinates.ClientPositionBox(599, 206, 638, 245)
+				Static Chat := AutoOS.Coordinates.ClientPositionBox(645, 206, 684, 245)
+				Static Controls := AutoOS.Coordinates.ClientPositionBox(691, 206, 730, 245)
 					
-				Static ZoomIcon := AutoOS.Coordinates.ClientPosition(558, 256, 589, 287)
-				Static ZoomBar := AutoOS.Coordinates.ClientPosition(601, 265, 712, 280)
+				Static ZoomIcon := AutoOS.Coordinates.ClientPositionBox(558, 256, 589, 287)
+				Static ZoomBar := AutoOS.Coordinates.ClientPositionBox(601, 265, 712, 280)
 				
-				Static BrightnessIcon := AutoOS.Coordinates.ClientPosition(558, 290, 589, 321)
-				Static BrightnessBar := AutoOS.Coordinates.ClientPosition(593, 299, 720, 314)
+				Static BrightnessIcon := AutoOS.Coordinates.ClientPositionBox(558, 290, 589, 321)
+				Static BrightnessBar := AutoOS.Coordinates.ClientPositionBox(593, 299, 720, 314)
 				
-				Static FixedClient := AutoOS.Coordinates.ClientPosition(572, 325, 633, 378)
-				Static ScaleableClient := AutoOS.Coordinates.ClientPosition(650, 325, 711, 378)
+				Static FixedClient := AutoOS.Coordinates.ClientPositionBox(572, 325, 633, 378)
+				Static ScaleableClient := AutoOS.Coordinates.ClientPositionBox(650, 325, 711, 378)
 				
-				Static AdvancedOptions := AutoOS.Coordinates.ClientPosition(572, 382, 711, 411)
+				Static AdvancedOptions := AutoOS.Coordinates.ClientPositionBox(572, 382, 711, 411)
 				
-				Static AcceptAid := AutoOS.Coordinates.ClientPosition(553, 425, 592, 464)
-				Static RunButton := AutoOS.Coordinates.ClientPosition(599, 425, 638, 464)
-				Static HouseOptions := AutoOS.Coordinates.ClientPosition(645, 425, 684, 464)
-				Static BondPouch := AutoOS.Coordinates.ClientPosition(691, 425, 730, 464)
+				Static AcceptAid := AutoOS.Coordinates.ClientPositionBox(553, 425, 592, 464)
+				Static RunButton := AutoOS.Coordinates.ClientPositionBox(599, 425, 638, 464)
+				Static HouseOptions := AutoOS.Coordinates.ClientPositionBox(645, 425, 684, 464)
+				Static BondPouch := AutoOS.Coordinates.ClientPositionBox(691, 425, 730, 464)
 				
 				Class POH	; TODO
 				{
-					Static Title := AutoOS.Coordinates.ClientPosition(589, 204, 691, 224)
-					Static Close := AutoOS.Coordinates.ClientPosition(710, 212, 735, 234)
-					Static Viewer := AutoOS.Coordinates.ClientPosition(557, 230, 661, 269)
-					Static BuildModeOn := AutoOS.Coordinates.ClientPosition(685, 273, 701, 289)
-					Static BuildModeOff := AutoOS.Coordinates.ClientPosition(710, 273, 726, 289)
-					Static TeleportInsideOn := AutoOS.Coordinates.ClientPosition(685, 293, 701, 309)
-					Static TeleportInsideOff := AutoOS.Coordinates.ClientPosition(710, 293, 726, 309)
+					Static Title := AutoOS.Coordinates.ClientPositionBox(589, 204, 691, 224)
+					Static Close := AutoOS.Coordinates.ClientPositionBox(710, 212, 735, 234)
+					Static Viewer := AutoOS.Coordinates.ClientPositionBox(557, 230, 661, 269)
+					Static BuildModeOn := AutoOS.Coordinates.ClientPositionBox(685, 273, 701, 289)
+					Static BuildModeOff := AutoOS.Coordinates.ClientPositionBox(710, 273, 726, 289)
+					Static TeleportInsideOn := AutoOS.Coordinates.ClientPositionBox(685, 293, 701, 309)
+					Static TeleportInsideOff := AutoOS.Coordinates.ClientPositionBox(710, 293, 726, 309)
 					
-					Static DoorsClosed := AutoOS.Coordinates.ClientPosition(617, 318, 633, 334)
-					Static DoorsOpen := AutoOS.Coordinates.ClientPosition(665, 318, 681, 334)
-					Static DoorsOff := AutoOS.Coordinates.ClientPosition(712, 318, 728, 334)
+					Static DoorsClosed := AutoOS.Coordinates.ClientPositionBox(617, 318, 633, 334)
+					Static DoorsOpen := AutoOS.Coordinates.ClientPositionBox(665, 318, 681, 334)
+					Static DoorsOff := AutoOS.Coordinates.ClientPositionBox(712, 318, 728, 334)
 					
-					Static ExpellGuests := AutoOS.Coordinates.ClientPosition(557, 340, 726, 374)
-					Static LeaveHouse := AutoOS.Coordinates.ClientPosition(557, 375, 726, 409)
-					Static CallServant := AutoOS.Coordinates.ClientPosition(557, 410, 726, 445)
+					Static ExpellGuests := AutoOS.Coordinates.ClientPositionBox(557, 340, 726, 374)
+					Static LeaveHouse := AutoOS.Coordinates.ClientPositionBox(557, 375, 726, 409)
+					Static CallServant := AutoOS.Coordinates.ClientPositionBox(557, 410, 726, 445)
 				}
 				
 			}
@@ -718,18 +724,18 @@ Class AutoOS
 	
 		Class Chat
 		{
-			Static ChatBox := AutoOS.Coordinates.ClientPosition(0, 338, 477, 520)
-			Static Scroll := AutoOS.Coordinates.ClientPosition(497, 343, 511, 455)
-			Static UserInput := AutoOS.Coordinates.ClientPosition(7, 455, 511, 473)
-			Static UITitle := AutoOS.Coordinates.ClientPosition(13, 355, 507, 374) ; I don't remember what's this lol.... need to check and probably name it better.
+			Static ChatBox := AutoOS.Coordinates.ClientPositionBox(0, 338, 477, 520)
+			Static Scroll := AutoOS.Coordinates.ClientPositionBox(497, 343, 511, 455)
+			Static UserInput := AutoOS.Coordinates.ClientPositionBox(7, 455, 511, 473)
+			Static UITitle := AutoOS.Coordinates.ClientPositionBox(13, 355, 507, 374) ; I don't remember what's this lol.... need to check and probably name it better.
 			
-			Static Option1 := AutoOS.Coordinates.ClientPosition(5, 480, 60, 501)
-			Static Option2 := AutoOS.Coordinates.ClientPosition(71, 480, 126, 501)
-			Static Option3 := AutoOS.Coordinates.ClientPosition(137, 480, 192, 501)
-			Static Option4 := AutoOS.Coordinates.ClientPosition(203, 480, 258, 501)
-			Static Option5 := AutoOS.Coordinates.ClientPosition(269, 480, 324, 501)
-			Static Option6 := AutoOS.Coordinates.ClientPosition(335, 480, 390, 501)
-			Static Option7 := AutoOS.Coordinates.ClientPosition(403, 480, 513, 501)
+			Static Option1 := AutoOS.Coordinates.ClientPositionBox(5, 480, 60, 501)
+			Static Option2 := AutoOS.Coordinates.ClientPositionBox(71, 480, 126, 501)
+			Static Option3 := AutoOS.Coordinates.ClientPositionBox(137, 480, 192, 501)
+			Static Option4 := AutoOS.Coordinates.ClientPositionBox(203, 480, 258, 501)
+			Static Option5 := AutoOS.Coordinates.ClientPositionBox(269, 480, 324, 501)
+			Static Option6 := AutoOS.Coordinates.ClientPositionBox(335, 480, 390, 501)
+			Static Option7 := AutoOS.Coordinates.ClientPositionBox(403, 480, 513, 501)
 			
 		}
 	
@@ -1330,27 +1336,74 @@ Class UserInterface
 
 	Class MainGUI
 	{
+		Static MouseScreenPosition, MouseClientPosition
+		
 		Load()
 		{
 			player_count := Text.CountIniSections("account.ini")
-			main_gui_width := Math.DPIScale((AutoOS.Client.Coordinates[3] - AutoOS.Client.Coordinates[1]), "descale")
-			main_gui_height := Math.DPIScale((A_ScreenHeight - AutoOS.Client.Coordinates[4] - 100), "descale")
+			
+			main_gui_x := AutoOS.Client.Coordinates[1]
+			main_gui_y := AutoOS.Client.Coordinates[4]
+			main_gui_w := Math.DPIScale((AutoOS.Client.Coordinates[3] - AutoOS.Client.Coordinates[1]), "descale")
+			main_gui_h := Math.DPIScale((A_ScreenHeight - AutoOS.Client.Coordinates[4] - 100), "descale")
 			
 			Gui, MainGUI: New,, AutoOS
+			Gui, MainGUI: -border AlwaysOnTop
+			
 			Gui, MainGUI: Add, Text,, Select Player:
 			Loop % player_count
-				player_list := "Player" . A_Index
+			{	
+				player_list .= "Player" . A_Index . "|"
+				if (A_Index == 1)
+					player_list .= "|"
+			}
 			Gui, MainGUI: Add, DropDownList,, % player_list
-			Gui, MainGUI: Add, Edit, r1 w500 -VScroll -border, TestESRWRRASD`n`rasdasd`n`rasdasd`n`rasdasd`n`rasdasd
+			Gui, MainGUI: Add, Button,, Load script
+			Gui, MainGUI: Add, Button,, Pause script
+			Gui, MainGUI: Add, Button,, Stop script
+			
+			debug_tools_x := Round(main_gui_w/4)
+			debug_tools_w := main_gui_w - debug_tools_x - 5
+			debug_tools_h := main_gui_h - 10
+			debug_tools_options := "x" . debug_tools_x . " y5 w" . debug_tools_w . " h" . debug_tools_h
+			
+			Gui, MainGUI: Add, GroupBox, % debug_tools_options, Debug tools
+			
+			debug_col1 := debug_tools_x + 10
+			Gui, MainGUI: Add, CheckBox, % "x" . debug_col1 . " y25", Arrows mouse keys
+			
+			Gui, MainGUI: Add, Text, % "x" . debug_col1 . " y45", Mouse position on screen:
+			Gui, MainGUI: Add, CheckBox, % "x" . debug_col1 . " y59 w23 gMouseScreeenPositionToggle",
+			Gui, MainGUI: Add, Edit,  % "x" . (debug_col1 + 24) . " y59 w100 r0.5 HwndMouseScreenPosition", % " "
+			UserInterface.MainGUI.MouseScreenPosition := MouseScreenPosition
+			
+			Gui, MainGUI: Add, Text, % "x" . debug_col1 . " y75", Mouse position on client:
+			Gui, MainGUI: Add, CheckBox, % "x" . debug_col1 . " y89 w23 gMouseScreeenPositionToggle",
+			Gui, MainGUI: Add, Edit,  % "x" . (debug_col1 + 24) . " y89 w100 r2 HwndMouseClientPosition", % " "
+			UserInterface.MainGUI.MouseClientPosition := MouseClientPosition
 			
 			
+			Gui, MainGUI: Margin, X0 Y0
 			
-			Gui, MainGUI: -border AlwaysOnTop
-			;Gui, MainGUI: Margin, X0 Y0
-			x := AutoOS.Client.Coordinates[1]
-			y := AutoOS.Client.Coordinates[4]
 			
-			Gui, MainGUI: Show, X%x% Y%y% W%main_gui_width% H%main_gui_height%
+			Gui, MainGUI: Show, X%main_gui_x% Y%main_gui_y% W%main_gui_w% H%main_gui_h%
+			return
+			
+			MouseScreeenPositionToggle:
+			if !toggle
+			{
+				toggle := true
+				SetTimer, MousePosition, 200
+			}
+			else if toggle
+			{
+				toggle := false
+				SetTimer, MousePosition, Off
+			}
+			return
+			MousePosition:
+				MouseGetPos, x, y
+				ControlSetText,, % "x: " . x . " y: " . y, % "ahk_id " . UserInterface.MainGUI.MouseScreenPosition
 			return
 		}
 	}
@@ -1358,7 +1411,6 @@ Class UserInterface
 
 
 }
-
 
 Class Debug
 {

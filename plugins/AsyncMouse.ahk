@@ -5,6 +5,7 @@
 #Include ./lib/Gdip.ahk
 
 AutoOS.PlayerManager.GetPlayerMouseSpeed(%1%) ; Get current player.
+AutoOS.Setup()
 OnMessage(0x4a, "ReceiveAsyncInput")  ; 0x4a is WM_COPYDATA
 return
 

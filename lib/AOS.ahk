@@ -1,5 +1,6 @@
 ﻿AOS_Start(player, async_input := true)
 {
+	Thread, Priority, High
 	AutoOS.Player := player
 	AutoOS.PlayerManager.GetPlayer(player)
 	AutoOS.Client.BootstrapCoordinates()
@@ -109,7 +110,7 @@ Class AutoOS
 			AutoOS.PlayerManager.LogoutFKey := LogoutFKey
 			AutoOS.PlayerManager.OptionsFKey := OptionsFKey
 			AutoOS.PlayerManager.EmotesFKey := EmotesFKey
-			AutoOS.PlayerManager.MusicPlayerFKeythis := MusicPlayerFKeythis
+			AutoOS.PlayerManager.MusicPlayerFKey := MusicPlayerFKey
 			AutoOS.PlayerManager.MouseSlowSpeed := MouseSlowSpeed
 			AutoOS.PlayerManager.MouseFastSpeed := MouseFastSpeed
 			AutoOS.PlayerManager.FkeyProbability := FkeyProbability
@@ -248,6 +249,39 @@ Class AutoOS
 		Static GameTab12 := AutoOS.Coordinates.ClientPositionBox(659, 466, 691, 501)
 		Static GameTab13 := AutoOS.Coordinates.ClientPositionBox(692, 466, 724, 501)
 		Static GameTab14 := AutoOS.Coordinates.ClientPositionBox(725, 466, 762, 501)
+		
+		GetTab(tab)
+		{
+			if (tab==1)
+				return AutoOS.Coordinates.GameTab1
+			else if (tab==2)
+				return AutoOS.Coordinates.GameTab2
+			else if (tab==3)
+				return AutoOS.Coordinates.GameTab3
+			else if (tab==4)
+				return AutoOS.Coordinates.GameTab4
+			else if (tab==5)
+				return AutoOS.Coordinates.GameTab5
+			else if (tab==6)
+				return AutoOS.Coordinates.GameTab6
+			else if (tab==7)
+				return AutoOS.Coordinates.GameTab7
+			else if (tab==8)
+				return AutoOS.Coordinates.GameTab8
+			else if (tab==9)
+				return AutoOS.Coordinates.GameTab9
+			else if (tab==10)
+				return AutoOS.Coordinates.GameTab10
+			else if (tab==11)
+				return AutoOS.Coordinates.GameTab11
+			else if (tab==12)
+				return AutoOS.Coordinates.GameTab12
+			else if (tab==13)
+				return AutoOS.Coordinates.GameTab13
+			else if (tab==14)
+				return AutoOS.Coordinates.GameTab14
+			
+		}
 		
 		ClientPositionX(coordinate)	; Converts coordinates relative to the client to coordinates relative to the window on the X axis.
 		{
@@ -583,22 +617,170 @@ Class AutoOS
 							return AutoOS.Coordinates.ClientPositionBox((526 + (26 * ((n-(Floor(n/7)*7)) != 0 ? (n-(Floor(n/7)*7)) : 7))), (181 + (24 * Ceil(n/7)))
 																   , (549 + (26 * ((n-(Floor(n/7)*7)) != 0 ? (n-(Floor(n/7)*7)) : 7))), (204 + (24 * Ceil(n/7))))
 					}
-	
-				}
-
-				Class Ancient	; TODO
-				{
 					
 				}
 
-				Class Lunar	; TODO
+				Class Ancient
 				{
+					Static Spell1 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(1)
+					Static Spell2 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(2)
+					Static Spell3 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(3)
+					Static Spell4 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(4)
 					
+					Static Spell5 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(5)
+					Static Spell6 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(6)
+					Static Spell7 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(7)
+					Static Spell8 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(8)
+					
+					Static Spell9 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(9)
+					Static Spell10 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(10)
+					Static Spell11 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(11)
+					Static Spell12 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(12)
+					
+					Static Spell13 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(13)
+					Static Spell14 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(14)
+					Static Spell15 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(15)
+					Static Spell16 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(16)
+					
+					Static Spell17 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(17)
+					Static Spell18 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(18)
+					Static Spell19 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(19)
+					Static Spell20 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(20)
+					
+					Static Spell21 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(21)
+					Static Spell22 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(22)
+					Static Spell23 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(23)
+					Static Spell24 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(24)
+					
+					Static Spell25 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(25)
+					Static Spell26 := AutoOS.Coordinates.GameTab.Magic.Ancient.GetSpell(26)
+					
+					GetSpell(n)	; For more info on what's going on on this function, check AutoOS.Coordinates.GameTab.Inventory.GetSlot()
+					{
+						If ((n >= 1) and (n <= 26))
+							return AutoOS.Coordinates.ClientPositionBox((510 + (48 * ((n-(Floor(n/4)*4)) != 0 ? (n-(Floor(n/4)*4)) : 4))), (169 + (36 * Ceil(n/4)))
+																   , (533 + (48 * ((n-(Floor(n/4)*4)) != 0 ? (n-(Floor(n/4)*4)) : 4))), (192 + (36 * Ceil(n/4))))
+					}
 				}
 
-				Class Arceuus	; TODO
+				Class Lunar
+				{
+					Static Spell1 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(1)
+					Static Spell2 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(2)
+					Static Spell3 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(3)
+					Static Spell4 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(4)
+					Static Spell5 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(5)
+					
+					Static Spell6 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(6)
+					Static Spell7 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(7)
+					Static Spell8 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(8)
+					Static Spell9 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(9)
+					
+					Static Spell10 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(10)
+					Static Spell11 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(11)
+					Static Spell12 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(12)
+					Static Spell13 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(13)
+					Static Spell14 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(14)
+					
+					Static Spell15 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(15)
+					Static Spell16 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(16)
+					Static Spell17 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(17)
+					Static Spell18 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(18)
+					Static Spell19 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(19)
+					
+					Static Spell20 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(20)
+					Static Spell21 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(21)
+					Static Spell22 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(22)
+					Static Spell23 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(23)
+					Static Spell24 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(24)
+					
+					Static Spell25 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(25)
+					Static Spell26 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(26)
+					Static Spell27 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(27)
+					Static Spell28 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(28)
+					Static Spell29 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(29)
+					
+					Static Spell30 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(30)
+					Static Spell31 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(31)
+					Static Spell32 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(32)
+					Static Spell33 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(33)
+					Static Spell34 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(34)
+					Static Spell35 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(35)
+					
+					Static Spell36 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(36)
+					Static Spell37 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(37)
+					Static Spell38 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(38)
+					Static Spell39 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(39)
+					Static Spell40 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(40)
+					
+					Static Spell41 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(41)
+					Static Spell42 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(42)
+					Static Spell43 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(43)
+					Static Spell44 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(44)
+					Static Spell45 := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(45)
+
+					GetSpell(n)	; For more info on what's going on on this function, check AutoOS.Coordinates.GameTab.Inventory.GetSlot()
+					{
+						If ((n >= 1) and (n <= 45))
+							return AutoOS.Coordinates.ClientPositionBox((510 + (40 * ((n-(Floor(n/5)*5)) != 0 ? (n-(Floor(n/5)*5)) : 5))), (178 + (27 * Ceil(n/5)))
+																   , (533 + (40 * ((n-(Floor(n/5)*5)) != 0 ? (n-(Floor(n/5)*5)) : 5))), (201 + (27 * Ceil(n/5))))
+					}
+				}
+
+				Class Arceuus
 				{
 					
+					Static Spell1 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(1)
+					Static Spell2 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(2)
+					Static Spell3 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(3)
+					Static Spell4 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(4)
+					
+					Static Spell5 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(5)
+					Static Spell6 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(6)
+					Static Spell7 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(7)
+					Static Spell8 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(8)
+					
+					Static Spell9 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(9)
+					Static Spell10 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(10)
+					Static Spell11 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(11)
+					Static Spell12 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(12)
+					
+					Static Spell13 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(13)
+					Static Spell14 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(14)
+					Static Spell15 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(15)
+					Static Spell16 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(16)
+					
+					Static Spell17 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(17)
+					Static Spell18 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(18)
+					Static Spell19 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(19)
+					Static Spell20 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(20)
+					
+					Static Spell21 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(21)
+					Static Spell22 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(22)
+					Static Spell23 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(23)
+					Static Spell24 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(24)
+					
+					Static Spell25 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(25)
+					Static Spell26 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(26)
+					Static Spell27 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(27)
+					Static Spell28 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(28)
+					 
+					Static Spell29 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(29)
+					Static Spell30 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(30)
+					Static Spell31 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(31)
+					Static Spell32 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(32)
+					
+					Static Spell33 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(33)
+					Static Spell34 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(34)
+					Static Spell35 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(35)
+					Static Spell36 := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(36)
+					
+					GetSpell(n)	; For more info on what's going on on this function, check AutoOS.Coordinates.GameTab.Inventory.GetSlot()
+					{
+						If ((n >= 1) and (n <= 36))
+							return AutoOS.Coordinates.ClientPositionBox((510 + (48 * ((n-(Floor(n/4)*4)) != 0 ? (n-(Floor(n/4)*4)) : 4))), (178 + (27 * Ceil(n/4)))
+																   , (533 + (48 * ((n-(Floor(n/4)*4)) != 0 ? (n-(Floor(n/4)*4)) : 4))), (201 + (27 * Ceil(n/4))))
+					}
 				}
 								
 			}
@@ -743,11 +925,131 @@ Class AutoOS
 	}
 	
 	Class Core	; TODO
-	{
+	{	
+		
+		Class StatOrbs
+		{
+			QPrayClick(flick := false)
+			{
+				Debug.AddLine("Activating quick prayers")
+				If Input.AsyncMouse
+				{
+					QuickPray := AutoOS.Coordinates.StatOrbs.QuickPray[1] . ", "
+								   . AutoOS.Coordinates.StatOrbs.QuickPray[2] . ", "
+								   . AutoOS.Coordinates.StatOrbs.QuickPray[3] . ", "
+								   . AutoOS.Coordinates.StatOrbs.QuickPray[4]
+					If !flick
+						Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . QuickPray . ", ""Left"")", "AsyncMouse.ahk ahk_class AutoHotkey")
+					Else if flick
+						
+						Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . QuickPray . ", ""doubleclick"")", "AsyncMouse.ahk ahk_class AutoHotkey")
+				}
+				Else
+				{
+					If !flick
+						Input.Human.Mouse.HumanCoordinates(AutoOS.Coordinates.StatOrbs.QuickPray[1]
+														 , AutoOS.Coordinates.StatOrbs.QuickPray[2]
+														 , AutoOS.Coordinates.StatOrbs.QuickPray[3]
+														 , AutoOS.Coordinates.StatOrbs.QuickPray[4], "Left")
+					Else if flick
+						Input.Human.Mouse.HumanCoordinates(AutoOS.Coordinates.StatOrbs.QuickPray[1]
+														 , AutoOS.Coordinates.StatOrbs.QuickPray[2]
+														 , AutoOS.Coordinates.StatOrbs.QuickPray[3]
+														 , AutoOS.Coordinates.StatOrbs.QuickPray[4], "doubleclick")
+				}
+				Sleep, Math.Random(10, 50)
+			}
+
+			CheckIfSpecWeapon()
+			{
+				SpecAttackOrb := AutoOS.Coordinates.StatOrbs.SpecialAttack
+				Debug.AddLine("Checking if our weapon has a spec attack")
+				If (Color.Multi.Pixel.InBox(SpecAttackOrb, 0x3a9bb5, 0x014b5d, 1, 4, , 0x2e9ab5, 0x013c4e))
+				{
+					Debug.AddLine("Is spec weapon")
+					return true
+				}
+				Else
+				{
+					Debug.AddLine("Is not a spec weapon or we have 0 spec") ; TODO ADD OCR to get Spec %
+					return false
+				}
+			}
+			
+			SpecAttOrbClick() ; TODO add OCR to check spec amount available
+			{
+				If !AutoOs.Core.StatOrbs.CheckIfSpecWeapon()
+					return
+				Debug.AddLine("Activating special attack orb")
+				
+				If Input.AsyncMouse
+				{
+					SpecAttackOrb := AutoOS.Coordinates.StatOrbs.SpecialAttack[1] . ", "
+								   . AutoOS.Coordinates.StatOrbs.SpecialAttack[2] . ", "
+								   . AutoOS.Coordinates.StatOrbs.SpecialAttack[3] . ", "
+								   . AutoOS.Coordinates.StatOrbs.SpecialAttack[4]
+					Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . SpecAttackOrb . ", ""Left"")", "AsyncMouse.ahk ahk_class AutoHotkey")
+				}
+				else
+					Input.Human.Mouse.HumanCoordinates(AutoOS.Coordinates.StatOrbs.SpecialAttack[1]
+													 , AutoOS.Coordinates.StatOrbs.SpecialAttack[2]
+													 , AutoOS.Coordinates.StatOrbs.SpecialAttack[3]
+													 , AutoOS.Coordinates.StatOrbs.SpecialAttack[4], "Left")
+				Sleep, Math.Random(10, 50)
+			}
+		
+		}
+		
 		Class GameTab	; TODO
 		{
+			Static TabName := {1: "Combat", 2: "Skills", 3: "Quests", 4: "Inventory", 5: "Equipment", 6: "Prayer", 7: "Magic"
+							 , 8: "ClanChat", 9: "FriendList", 10: "AccountManagement", 11: "Logout", 12: "Options", 13: "Emotes", 14: "MusicPlayer"}
+				   
+			Static TabNumber := {"Combat": 1, "Skills": 2, "Quests": 3, "Inventory": 4, "Equipment": 5, "Prayer": 6, "Magic": 7
+							   , "ClanChat": 8, "FriendList": 9, "AccountManagement": 10, "Logout": 11, "Options": 12, "Emotes": 13, "MusicPlayer": 14}
+			
+			GetTabFKey(tab)	; This seems useless but it's the only way I know to call variables and and methods inside a class dinamically
+			{
+				if tab is not integer
+					tab := AutoOS.Core.GameTab.TabNumber[tab]	; Converts tab into string in case we were passed an integer. e.g. "Combat"
+				
+				if (tab == 1)
+					return AutoOS.PlayerManager.CombatFKey
+				else if (tab == 2)
+					return AutoOS.PlayerManager.SkillsFKey
+				else if (tab == 3)
+					return AutoOS.PlayerManager.QuestsFKey
+				else if (tab == 4)
+					return AutoOS.PlayerManager.InventoryFKey
+				else if (tab == 5)
+					return AutoOS.PlayerManager.EquipmentFKey
+				else if (tab == 6)
+					return AutoOS.PlayerManager.PrayerFKey
+				else if (tab == 7)
+					return AutoOS.PlayerManager.MagicFKey
+				else if (tab == 8)
+					return AutoOS.PlayerManager.ClanChatFKey
+				else if (tab == 9)
+					return AutoOS.PlayerManager.FriendListFKey
+				else if (tab == 10)
+					return AutoOS.PlayerManager.AccountManagementFKey
+				else if (tab == 11)
+					return AutoOS.PlayerManager.LogoutFKey
+				else if (tab == 12)
+					return AutoOS.PlayerManager.OptionsFKey
+				else if (tab == 13)
+					return AutoOS.PlayerManager.EmotesFKey
+				else if (tab == 14)
+					return AutoOS.PlayerManager.MusicPlayerFKey
+				else
+					return "Error"
+			}
+			
 			IsActive(tab)
 			{
+				if tab is not integer
+				tab := AutoOS.Core.GameTab.TabNumber[tab]	; Converts tab into integer in case we were passed a string. e.g. "Combat"
+				
 				If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab.GetTab(tab), 0x75281e, 0x3b140f, 2, 5, 0x441812)
 					return true
 				Else if ((tab == 4) and !AutoOS.Core.GameTab.GetActiveRow())	; If tab is inventory and no tab is active, we probably are at bank or shop.
@@ -756,7 +1058,7 @@ Class AutoOS
 					return false
 			}
 			
-			GetActive()	; This was my last attempt and the best attempt at this. This only uses pixel search a maximum
+			GetActive()	; This was my third attempt and the best attempt at this. This only uses pixel search a maximum
 			{			; of 6 times and uses math to figure out which tab is active. Benchmarks were over 200 times faster sometimes than the other methods.
 						; And I think this is the definitive best way to do it. Though If you can make it faster, I'll be happy to know how :)
 				row := AutoOS.Core.GameTab.GetActiveRow()
@@ -773,52 +1075,6 @@ Class AutoOS
 				
 			}
 			
-			GetActiveFaster()	; This was my second attempt at this method. It's slower than the original GetActiveSlow() on the first 7 tabs,
-			{					; but much much faster on the last 7 tabs. Overall I think it's better than the original one. For more info read
-								; the comments on GetActive() and GetActiveFast()
-				row := AutoOS.Core.GameTab.GetActiveRow()
-				MsgBox % row[1] . " and " . row[2]
-				If (row == "top")
-				{
-					Loop, 7
-					{
-						If (AutoOS.Core.GameTab.IsActive(A_Index) == true)
-						{
-							Debug.AddLine("Active Gametab is: " . A_Index)
-							return A_Index
-						}
-					}
-				}
-				
-				Else if (row == "bottom")
-				{
-					Loop, 7
-					{
-						If (AutoOS.Core.GameTab.IsActive(A_Index+7) == true)
-							{
-								Debug.AddLine("Active Gametab is: " . (A_Index+7))
-								return (A_Index+7)
-							}
-					}
-				}
-			}
-		
-			GetActiveSlow()	; I was originally using this method inspired by Simba's SRL include but I found it too slow on the last tabs.
-			{				; The method I'm currently using is much faster and even though this one should be more accurate in theory, the 
-							; current method never failed me so far. Read the comments on GetActive() and GetActiveFast() for more info.
-				Loop, 14
-				{
-					If (AutoOS.Core.GameTab.IsActive(A_Index) == true)
-					{
-						Debug.AddLine("Active Gametab is: " . A_Index)
-						return A_Index
-					}
-				}
-				Debug.AddLine("We can't find active tab. Maybe we are logged out.")
-				return "Error"
-				; Add logout check.
-			}
-			
 			GetActiveRow()
 			{
 				If (top_row := Color.Multi.Pixel.InBox([AutoOS.Coordinates.GameTab.GetTab(1)[1], AutoOS.Coordinates.GameTab.GetTab(1)[2]	; Checks for red
@@ -830,15 +1086,126 @@ Class AutoOS
 				Else
 					return false
 			}
-						
-			Class Combat	; TODO
+			
+			Click(tab)
+			{				
+				if tab is not integer
+					tab := AutoOS.Core.GameTab.TabNumber[tab]	; Converts tab into integer in case we were passed a string. e.g. "Combat"
+				
+				Debug.AddLine("Switching to game tab: " . AutoOS.Core.GameTab.TabName[tab] . " with mouse click")
+				
+				if !Math.Between(tab, 1, 14)
+					return false	; If tab doesn't exist returns false.
+				
+				if (AutoOS.Core.GameTab.IsActive(tab))
+				{
+					Debug.AddLine(AutoOS.Core.GameTab.TabName[tab] . " tab is already active.")
+					return true
+				}
+				
+				tab := AutoOS.Coordinates.GetTab(tab)
+				
+				If Input.AsyncMouse
+				{
+					tab := tab[1] . ", " . tab[2] . ", " . tab[3] . ", " . tab[4]
+					Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . tab . ", ""Left"")", "AsyncMouse.ahk ahk_class AutoHotkey")
+				}
+				else
+					Input.Human.Mouse.HumanCoordinates(tab[1], tab[2], tab[3], tab[4], "Left")
+				Sleep, Math.Random(10, 50)
+			}
+
+			FKeySwitch(tab)
+			{
+				if tab is not integer
+					tab := AutoOS.Core.GameTab.TabNumber[tab]	; Converts tab into string in case we were passed an integer. e.g. "Combat"
+				
+				Debug.AddLine("Switching to game tab: " . AutoOS.Core.GameTab.TabName[tab] . " with FKey")
+				
+				if !Math.Between(tab, 1, 14)
+					return false	; If tab doesn't exist returns false.
+				
+				if (AutoOS.Core.GameTab.IsActive(tab))
+				{
+					Debug.AddLine(AutoOS.Core.GameTab.TabName[tab] . " tab is already active.")
+					return true
+				}
+
+				key := AutoOS.Core.GameTab.GetTabFKey(tab)
+				
+				if ((key == "Error") or (key == "None"))
+				{
+					Debug.AddLine("Couldn't find FKey for " . AutoOS.Core.GameTab.TabName[tab] . " tab. Will click the tab instead.")
+					AutoOs.Core.GameTab.Click(tab)
+					return
+				}
+				
+				If Input.AsyncMouse
+				{
+					Input.SendAsyncInput("Input.Human.Keyboard.PressKey(" . key . ", " . Math.Random(10, 50) . ")", "AsyncKeyboard.ahk ahk_class AutoHotkey")
+				}
+				else
+					Input.Human.Keyboard.PressKey(key, Math.Random(10, 50))
+				Sleep, Math.Random(10, 50)
+			}
+			
+			Switch(tab)
+			{
+				case := Math.Random(0, 99)
+				if (case < AutoOS.PlayerManager.FkeyProbability)
+					AutoOs.Core.GameTab.FKeySwitch(tab)
+				else
+					AutoOs.Core.GameTab.Click(tab)
+			}
+
+			Class Combat	; TODO Add attack styles
 			{
 				
+				SpecAttBarClick()
+				{
+					If !AutoOs.Core.StatOrbs.CheckIfSpecWeapon()
+						return
+					AutoOS.Core.GameTab.Switch("Combat")
+					Debug.AddLine("Activating special attack bar")
+					If Input.AsyncMouse
+					{
+						SpecAttackBar := AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[1] . ", "
+									   . AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[2] . ", "
+									   . AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[3] . ", "
+									   . AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[4]
+						Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . SpecAttackBar . ", ""Left"")", "AsyncMouse.ahk ahk_class AutoHotkey")
+					}
+					else
+						Input.Human.Mouse.HumanCoordinates(AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[1]
+														 , AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[2]
+														 , AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[3]
+														 , AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[4], "Left")
+					Sleep, Math.Random(10, 50)
+				}
+				
+				
+				UseSpecAttack()
+				{
+					case := Math.Random(0, 99)
+					if (case < AutoOS.PlayerManager.FkeyProbability)	; Since FkeyProbability is more or less a probability of how efficient is the player is, 
+						AutoOs.Core.StatOrbs.SpecAttOrbClick()			; we use this for the special attack probability.
+					else
+						AutoOs.Core.GameTab.Combat.SpecAttBarClick()
+				}
+
 			}
 		
 			Class Skills	; TODO
 			{
 				
+				Static SkillName := {1: Attack, 2: Hitpoints, 3: Mining, 4: Strength, 5: Agility, 6: Smithing, 7: Defense, 8: Herblore, 9: Fishing
+						, 10: Ranged, 11: Thieving, 12: Cooking, 13: Prayer, 14: Crafting, 15: Firemaking, 16: Magic, 17: Fletching, 18: Woodcutting
+						, 19: Runecrafting, 20: Slayer, 21: Farming, 22: Construction, 23: Hunter, 24: TotalLevel}
+						
+				Static SkillNumber := {Attack: 1, Hitpoints: 2, Mining: 3, Strength: 4, Agility: 5, Smithing: 6, Defense: 7, Herblore: 8, Fishing: 9
+						, Ranged: 10, Thieving:11, Cooking: 12, Prayer: 13, Crafting: 14, Firemaking: 15, Magic: 16, Fletching: 17, Woodcutting: 18
+						, Runecrafting: 19, Slayer: 20, Farming: 21, Construction: 22, Hunter: 23, TotalLevel: 24}
+			
 			}
 		
 			Class Quests	; TODO
@@ -848,7 +1215,7 @@ Class AutoOS
 			
 			Class Inventory	; TODO
 			{
-
+				
 			}
 			
 			Class Equipment	; TODO
@@ -863,9 +1230,61 @@ Class AutoOS
 			
 			Class Magic	; TODO
 			{
+				IsSpellBook(book) ; TODO add debug line
+				{
+					if (book == "Standard")
+					{
+						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0xd7c19b, 0x9a6c34, 2, 1, 0xa89050)
+							return true
+						else
+							return false
+					}
+					else if (book == "Ancient")
+					{
+						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0x654b8e, 0xd0ba6b, 2, 1, 0x48316d)
+							return true
+						else
+							return false
+					}
+					else if (book == "Lunar")
+					{
+						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0xb3bcc0, 0xdcdcec, 2, 1, 0xbfc5d6)
+							return true
+						else
+							return false
+					}
+					else if (book == "Arceuus")
+					{
+						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0x68677c, 0x654b8e, 2, 1, 0x57566b)
+							return true
+						else
+							return false
+					}
+					
+				}
+				
+				GetSpellBook() ; TODO add debug line
+				{
+					If AutoOS.Core.GameTab.Magic.IsSpellBook("Standard")
+						return "Standard"
+					Else If AutoOS.Core.GameTab.Magic.IsSpellBook("Ancient")
+						return "Ancient"
+					Else If AutoOS.Core.GameTab.Magic.IsSpellBook("Lunar")
+						return "Lunar"
+					Else If AutoOS.Core.GameTab.Magic.IsSpellBook("Arceuus")
+						return "Arceuus"
+					
+				}
+				
 				Class Standard
 				{
-	
+					CastSpell(n) ; TODO
+					{
+						If !AutoOS.Core.GameTab.Magic.IsSpellBook("Standard")
+							return
+						AutoOS.Core.GameTab.Switch("Magic")
+						Debug.AddLine("Going to cast spell " . n)
+					}
 				}
 
 				Class Ancient	; TODO
@@ -926,8 +1345,6 @@ Class AutoOS
 			}
 			
 			
-			
-			
 		}
 		
 	}
@@ -980,11 +1397,11 @@ Class UserInterface
 				Gui, NewPlayer: Add, Text, x164 y10, % "Password:"
 				Gui, NewPlayer: Add, Text, x246 y10, % "Pin number:"
 				Gui, NewPlayer: Add, Text, x318 y10, % "Username:"
-				Gui, NewPlayer: Add, ComboBox, x10 y25 w70 HwndNewPlayerClient, RuneLite||Official
-				Gui, NewPlayer: Add, Edit, x82 y25 w80 r0.8 HwndNewPlayerLogin, Optional
-				Gui, NewPlayer: Add, Edit, x164 y25 w80 r0.8 HwndNewPlayerPassword, Optional
-				Gui, NewPlayer: Add, Edit, x246 y25 w70 r0.8 Number Limit4 HwndNewPlayerPinNumber, Optional
-				Gui, NewPlayer: Add, Edit, x318 y25 w80 r0.8 Limit13 HwndNewPlayerUsername, Optional
+				Gui, NewPlayer: Add, ComboBox, x10 y25 w70 Hwndnew_player_client, RuneLite||Official
+				Gui, NewPlayer: Add, Edit, x82 y25 w80 r0.8 Hwndnew_player_login, Optional
+				Gui, NewPlayer: Add, Edit, x164 y25 w80 r0.8 Hwndnew_player_password, Optional
+				Gui, NewPlayer: Add, Edit, x246 y25 w70 r0.8 Number Limit4 Hwndnew_player_pin_number, Optional
+				Gui, NewPlayer: Add, Edit, x318 y25 w80 r0.8 Limit13 Hwndnew_player_username, Optional
 
 				Gui, NewPlayer: Add, GroupBox, x5 y60 h110 w400, F-Keys
 				Gui, NewPlayer: Add, Text, x10 y80, % "Combat:"
@@ -994,13 +1411,13 @@ Class UserInterface
 				Gui, NewPlayer: Add, Text, x230 y80, % "Equip:"
 				Gui, NewPlayer: Add, Text, x285 y80, % "Prayer:"
 				Gui, NewPlayer: Add, Text, x340 y80, % "Magic:"
-				Gui, NewPlayer: Add, ComboBox, x10 y95 w50 HwndNewPlayerCombatFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x65 y95 w50 HwndNewPlayerSkillsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x120 y95 w50 HwndNewPlayerQuestsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x175 y95 w50 HwndNewPlayerInventoryFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x230 y95 w50 HwndNewPlayerEquipmentFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x285 y95 w50 HwndNewPlayerPrayerFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x340 y95 w50 HwndNewPlayerMagicFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x10 y95 w50 Hwndnew_player_combat_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x65 y95 w50 Hwndnew_player_skills_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x120 y95 w50 Hwndnew_player_quests_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x175 y95 w50 Hwndnew_player_inventory_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x230 y95 w50 Hwndnew_player_equipment_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x285 y95 w50 Hwndnew_player_prayer_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x340 y95 w50 Hwndnew_player_magic_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
 				Gui, NewPlayer: Add, Text, x10 y120, % "Clan chat:"
 				Gui, NewPlayer: Add, Text, x65 y120, % "Friends:"
 				Gui, NewPlayer: Add, Text, x120 y120, % "Acc.Man.:"
@@ -1008,37 +1425,37 @@ Class UserInterface
 				Gui, NewPlayer: Add, Text, x230 y120, % "Options:"
 				Gui, NewPlayer: Add, Text, x285 y120, % "Emotes:"
 				Gui, NewPlayer: Add, Text, x340 y120, % "Music:"
-				Gui, NewPlayer: Add, ComboBox, x10 y135 w50 HwndNewPlayerClanChatFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x65 y135 w50 HwndNewPlayerFriendListFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x120 y135 w50 HwndNewPlayerAccountManagementFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x175 y135 w50 HwndNewPlayerLogoutFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x230 y135 w50 HwndNewPlayerOptionsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x285 y135 w50 HwndNewPlayerEmotesFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, NewPlayer: Add, ComboBox, x340 y135 w50 HwndNewPlayerMusicPlayerFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x10 y135 w50 Hwndnew_player_clan_chat_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x65 y135 w50 Hwndnew_player_friend_list_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x120 y135 w50 Hwndnew_player_account_management_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x175 y135 w50 Hwndnew_player_logout_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x230 y135 w50 Hwndnew_player_options_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x285 y135 w50 Hwndnew_player_emotes_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, NewPlayer: Add, ComboBox, x340 y135 w50 Hwndnew_player_music_player_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
 				
 				Gui, NewPlayer: Add, Button, x125 y180 w50 gSaveNewPlayer, Save
 				Gui, NewPlayer: Add, Button, x225 y180 w50 gCancelNewPlayer, Cancel
 				Gui, NewPlayer: Show
 				
-				UserInterface.PlayerManager.NewPlayer.NewPlayerClient := NewPlayerClient
-				UserInterface.PlayerManager.NewPlayer.NewPlayerLogin := NewPlayerLogin
-				UserInterface.PlayerManager.NewPlayer.NewPlayerPassword := NewPlayerPassword
-				UserInterface.PlayerManager.NewPlayer.NewPlayerPinNumber := NewPlayerPinNumber
-				UserInterface.PlayerManager.NewPlayer.NewPlayerUsername := NewPlayerUsername
-				UserInterface.PlayerManager.NewPlayer.NewPlayerCombatFkey := NewPlayerCombatFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerSkillsFkey := NewPlayerSkillsFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerQuestsFkey := NewPlayerQuestsFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerInventoryFkey := NewPlayerInventoryFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerEquipmentFkey := NewPlayerEquipmentFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerPrayerFkey := NewPlayerPrayerFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerMagicFkey := NewPlayerMagicFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerClanChatFkey := NewPlayerClanChatFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerFriendListFkey := NewPlayerFriendListFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerAccountManagementFkey := NewPlayerAccountManagementFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerLogoutFkey := NewPlayerLogoutFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerOptionsFkey := NewPlayerOptionsFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerEmotesFkey := NewPlayerEmotesFkey
-				UserInterface.PlayerManager.NewPlayer.NewPlayerMusicPlayerFkey := NewPlayerMusicPlayerFkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerClient := new_player_client
+				UserInterface.PlayerManager.NewPlayer.NewPlayerLogin := new_player_login
+				UserInterface.PlayerManager.NewPlayer.NewPlayerPassword := new_player_password
+				UserInterface.PlayerManager.NewPlayer.NewPlayerPinNumber := new_player_pin_number
+				UserInterface.PlayerManager.NewPlayer.NewPlayerUsername := new_player_username
+				UserInterface.PlayerManager.NewPlayer.NewPlayerCombatFkey := new_player_combat_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerSkillsFkey := new_player_skills_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerQuestsFkey := new_player_quests_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerInventoryFkey := new_player_inventory_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerEquipmentFkey := new_player_equipment_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerPrayerFkey := new_player_prayer_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerMagicFkey := new_player_magic_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerClanChatFkey := new_player_clan_chat_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerFriendListFkey := new_player_friend_list_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerAccountManagementFkey := new_player_account_management_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerLogoutFkey := new_player_logout_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerOptionsFkey := new_player_options_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerEmotesFkey := new_player_emotes_fkey
+				UserInterface.PlayerManager.NewPlayer.NewPlayerMusicPlayerFkey := new_player_music_player_fkey
 				return
 				
 				SaveNewPlayer:
@@ -1107,11 +1524,11 @@ Class UserInterface
 				Gui, PlayerEditor: Add, Text, x164 y10, % "Password:"
 				Gui, PlayerEditor: Add, Text, x246 y10, % "Pin number:"
 				Gui, PlayerEditor: Add, Text, x318 y10, % "Username:"
-				Gui, PlayerEditor: Add, ComboBox, x10 y25 w70 HwndEditPlayerClient, RuneLite||Official
-				Gui, PlayerEditor: Add, Edit, x82 y25 w80 r0.8 HwndEditPlayerLogin, Optional
-				Gui, PlayerEditor: Add, Edit, x164 y25 w80 r0.8 HwndEditPlayerPassword, Optional
-				Gui, PlayerEditor: Add, Edit, x246 y25 w70 r0.8 Number Limit4 HwndEditPlayerPinNumber, Optional
-				Gui, PlayerEditor: Add, Edit, x318 y25 w80 r0.8 Limit13 HwndEditPlayerUsername, Optional
+				Gui, PlayerEditor: Add, ComboBox, x10 y25 w70 Hwndedit_player_client, RuneLite||Official
+				Gui, PlayerEditor: Add, Edit, x82 y25 w80 r0.8 Hwndedit_player_login, Optional
+				Gui, PlayerEditor: Add, Edit, x164 y25 w80 r0.8 Hwndedit_player_password, Optional
+				Gui, PlayerEditor: Add, Edit, x246 y25 w70 r0.8 Number Limit4 Hwndedit_player_pin_number, Optional
+				Gui, PlayerEditor: Add, Edit, x318 y25 w80 r0.8 Limit13 Hwndedit_player_username, Optional
 
 				Gui, PlayerEditor: Add, GroupBox, x5 y60 h110 w400, F-Keys
 				Gui, PlayerEditor: Add, Text, x10 y80, % "Combat:"
@@ -1121,13 +1538,13 @@ Class UserInterface
 				Gui, PlayerEditor: Add, Text, x230 y80, % "Equip:"
 				Gui, PlayerEditor: Add, Text, x285 y80, % "Prayer:"
 				Gui, PlayerEditor: Add, Text, x340 y80, % "Magic:"
-				Gui, PlayerEditor: Add, ComboBox, x10 y95 w50 HwndEditPlayerCombatFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x65 y95 w50 HwndEditPlayerSkillsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x120 y95 w50 HwndEditPlayerQuestsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x175 y95 w50 HwndEditPlayerInventoryFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x230 y95 w50 HwndEditPlayerEquipmentFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x285 y95 w50 HwndEditPlayerPrayerFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x340 y95 w50 HwndEditPlayerMagicFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x10 y95 w50 Hwndedit_player_combat_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x65 y95 w50 Hwndedit_player_skills_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x120 y95 w50 Hwndedit_player_quests_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x175 y95 w50 Hwndedit_player_inventory_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x230 y95 w50 Hwndedit_player_equipment_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x285 y95 w50 Hwndedit_player_prayer_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x340 y95 w50 Hwndedit_player_magic_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
 				Gui, PlayerEditor: Add, Text, x10 y120, % "Clan chat:"
 				Gui, PlayerEditor: Add, Text, x65 y120, % "Friends:"
 				Gui, PlayerEditor: Add, Text, x120 y120, % "Acc.Man.:"
@@ -1135,13 +1552,13 @@ Class UserInterface
 				Gui, PlayerEditor: Add, Text, x230 y120, % "Options:"
 				Gui, PlayerEditor: Add, Text, x285 y120, % "Emotes:"
 				Gui, PlayerEditor: Add, Text, x340 y120, % "Music:"
-				Gui, PlayerEditor: Add, ComboBox, x10 y135 w50 HwndEditPlayerClanChatFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x65 y135 w50 HwndEditPlayerFriendListFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x120 y135 w50 HwndEditPlayerAccountManagementFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x175 y135 w50 HwndEditPlayerLogoutFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x230 y135 w50 HwndEditPlayerOptionsFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x285 y135 w50 HwndEditPlayerEmotesFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
-				Gui, PlayerEditor: Add, ComboBox, x340 y135 w50 HwndEditPlayerMusicPlayerFkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x10 y135 w50 Hwndedit_player_clan_chat_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x65 y135 w50 Hwndedit_player_friend_list_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x120 y135 w50 Hwndedit_player_account_management_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x175 y135 w50 Hwndedit_player_logout_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x230 y135 w50 Hwndedit_player_options_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x285 y135 w50 Hwndedit_player_emotes_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
+				Gui, PlayerEditor: Add, ComboBox, x340 y135 w50 Hwndedit_player_music_player_fkey, None||ESC|F1|F2|F3|F4|F5|F6|F7|F8|F9|F10|F11|F12
 				
 				Gui, PlayerEditor: Add, Button, x125 y180 w50 gSaveEditPlayer, Save
 				Gui, PlayerEditor: Add, Button, x225 y180 w50 gCancelEditPlayer, Cancel
@@ -1151,49 +1568,49 @@ Class UserInterface
 				If (masterpass := AutoOS.PlayerManager.MasterPassword)
 					AutoOS.PlayerManager.GetPlayerSensitiveData(player, masterpass)
 				
-				GuiControl, Text, % EditPlayerClient, % AutoOS.PlayerManager.Client
-				GuiControl, Text, % EditPlayerLogin, % AutoOS.PlayerManager.Login
-				GuiControl, Text, % EditPlayerPassword, % AutoOS.PlayerManager.Password
-				GuiControl, Text, % EditPlayerPinNumber, % AutoOS.PlayerManager.PinNumber
-				GuiControl, Text, % EditPlayerUsername, % AutoOS.PlayerManager.Username
+				GuiControl, Text, % edit_player_Client, % AutoOS.PlayerManager.Client
+				GuiControl, Text, % edit_player_login, % AutoOS.PlayerManager.Login
+				GuiControl, Text, % edit_player_password, % AutoOS.PlayerManager.Password
+				GuiControl, Text, % edit_player_pin_number, % AutoOS.PlayerManager.PinNumber
+				GuiControl, Text, % edit_player_username, % AutoOS.PlayerManager.Username
 
-				GuiControl, Text, % EditPlayerCombatFKey, % AutoOS.PlayerManager.CombatFKey
-				GuiControl, Text, % EditPlayerSkillsFKey, % AutoOS.PlayerManager.SkillsFKey
-				GuiControl, Text, % EditPlayerQuestsFKey, % AutoOS.PlayerManager.QuestsFKey
-				GuiControl, Text, % EditPlayerInventoryFKey, % AutoOS.PlayerManager.InventoryFKey
-				GuiControl, Text, % EditPlayerEquipmentFKey, % AutoOS.PlayerManager.EquipmentFKey
-				GuiControl, Text, % EditPlayerPrayerFKey, % AutoOS.PlayerManager.PrayerFKey
-				GuiControl, Text, % EditPlayerMagicFKey, % AutoOS.PlayerManager.MagicFKey
+				GuiControl, Text, % edit_player_combat_fkey, % AutoOS.PlayerManager.CombatFKey
+				GuiControl, Text, % edit_player_skills_fkey, % AutoOS.PlayerManager.SkillsFKey
+				GuiControl, Text, % edit_player_quests_fkey, % AutoOS.PlayerManager.QuestsFKey
+				GuiControl, Text, % edit_player_inventory_fkey, % AutoOS.PlayerManager.InventoryFKey
+				GuiControl, Text, % edit_player_equipment_fkey, % AutoOS.PlayerManager.EquipmentFKey
+				GuiControl, Text, % edit_player_prayer_fkey, % AutoOS.PlayerManager.PrayerFKey
+				GuiControl, Text, % edit_player_magic_fkey, % AutoOS.PlayerManager.MagicFKey
 
-				GuiControl, Text, % EditPlayerClanChatFKey, % AutoOS.PlayerManager.ClanChatFKey
-				GuiControl, Text, % EditPlayerFriendListFKey, % AutoOS.PlayerManager.FriendListFKey
-				GuiControl, Text, % EditPlayerAccountManagementFKey, % AutoOS.PlayerManager.AccountManagementFKey
-				GuiControl, Text, % EditPlayerLogoutFKey, % AutoOS.PlayerManager.LogoutFKey
-				GuiControl, Text, % EditPlayerOptionsFKey, % AutoOS.PlayerManager.OptionsFKey
-				GuiControl, Text, % EditPlayerEmotesFKey, % AutoOS.PlayerManager.EmotesFKey
-				GuiControl, Text, % EditPlayerMusicPlayerFKey, % AutoOS.PlayerManager.MusicPlayerFKey
+				GuiControl, Text, % edit_player_clan_chat_fkey, % AutoOS.PlayerManager.ClanChatFKey
+				GuiControl, Text, % edit_player_friend_list_fkey, % AutoOS.PlayerManager.FriendListFKey
+				GuiControl, Text, % edit_player_account_management_fkey, % AutoOS.PlayerManager.AccountManagementFKey
+				GuiControl, Text, % edit_player_logout_fkey, % AutoOS.PlayerManager.LogoutFKey
+				GuiControl, Text, % edit_player_options_fkey, % AutoOS.PlayerManager.OptionsFKey
+				GuiControl, Text, % edit_player_emotes_fkey, % AutoOS.PlayerManager.EmotesFKey
+				GuiControl, Text, % edit_player_music_player_fkey, % AutoOS.PlayerManager.MusicPlayerFKey
 				
 				Gui, PlayerEditor: Show
 				
-				UserInterface.PlayerManager.Editor.Client := EditPlayerClient
-				UserInterface.PlayerManager.Editor.Login := EditPlayerLogin
-				UserInterface.PlayerManager.Editor.Password := EditPlayerPassword
-				UserInterface.PlayerManager.Editor.PinNumber := EditPlayerPinNumber
-				UserInterface.PlayerManager.Editor.Username := EditPlayerUsername
-				UserInterface.PlayerManager.Editor.CombatFkey := EditPlayerCombatFkey
-				UserInterface.PlayerManager.Editor.SkillsFkey := EditPlayerSkillsFkey
-				UserInterface.PlayerManager.Editor.QuestsFkey := EditPlayerQuestsFkey
-				UserInterface.PlayerManager.Editor.InventoryFkey := EditPlayerInventoryFkey
-				UserInterface.PlayerManager.Editor.EquipmentFkey := EditPlayerEquipmentFkey
-				UserInterface.PlayerManager.Editor.PrayerFkey := EditPlayerPrayerFkey
-				UserInterface.PlayerManager.Editor.MagicFkey := EditPlayerMagicFkey
-				UserInterface.PlayerManager.Editor.ClanChatFkey := EditPlayerClanChatFkey
-				UserInterface.PlayerManager.Editor.FriendListFkey := EditPlayerFriendListFkey
-				UserInterface.PlayerManager.Editor.AccountManagementFkey := EditPlayerAccountManagementFkey
-				UserInterface.PlayerManager.Editor.LogoutFkey := EditPlayerLogoutFkey
-				UserInterface.PlayerManager.Editor.OptionsFkey := EditPlayerOptionsFkey
-				UserInterface.PlayerManager.Editor.EmotesFkey := EditPlayerEmotesFkey
-				UserInterface.PlayerManager.Editor.MusicPlayerFkey := EditPlayerMusicPlayerFkey
+				UserInterface.PlayerManager.Editor.Client := edit_player_client
+				UserInterface.PlayerManager.Editor.Login := edit_player_login
+				UserInterface.PlayerManager.Editor.Password := edit_player_password
+				UserInterface.PlayerManager.Editor.PinNumber := edit_player_pin_number
+				UserInterface.PlayerManager.Editor.Username := edit_player_username
+				UserInterface.PlayerManager.Editor.CombatFkey := edit_player_combat_fkey
+				UserInterface.PlayerManager.Editor.SkillsFkey := edit_player_skills_fkey
+				UserInterface.PlayerManager.Editor.QuestsFkey := edit_player_quests_fkey
+				UserInterface.PlayerManager.Editor.InventoryFkey := edit_player_inventory_fkey
+				UserInterface.PlayerManager.Editor.EquipmentFkey := edit_player_equipment_fkey
+				UserInterface.PlayerManager.Editor.PrayerFkey := edit_player_prayer_fkey
+				UserInterface.PlayerManager.Editor.MagicFkey := edit_player_magic_fkey
+				UserInterface.PlayerManager.Editor.ClanChatFkey := edit_player_clan_chat_fkey
+				UserInterface.PlayerManager.Editor.FriendListFkey := edit_player_friend_list_fkey
+				UserInterface.PlayerManager.Editor.AccountManagementFkey := edit_player_account_management_fkey
+				UserInterface.PlayerManager.Editor.LogoutFkey := edit_player_logout_fkey
+				UserInterface.PlayerManager.Editor.OptionsFkey := edit_player_options_fkey
+				UserInterface.PlayerManager.Editor.EmotesFkey := edit_player_emotes_fkey
+				UserInterface.PlayerManager.Editor.MusicPlayerFkey := edit_player_music_player_fkey
 				return
 				
 				SaveEditPlayer: ;NEED TO FIX THIS just copy pasted this from New player GUI
@@ -1336,20 +1753,34 @@ Class UserInterface
 
 	Class MainGUI
 	{
-		Static MouseScreenPosition, MouseClientPosition
+		Static MouseScreenPosition, MouseClientPosition, ClientPosition, ScriptDebugger
 		
 		Load()
 		{
-			player_count := Text.CountIniSections("account.ini")
 			
 			main_gui_x := AutoOS.Client.Coordinates[1]
 			main_gui_y := AutoOS.Client.Coordinates[4]
 			main_gui_w := Math.DPIScale((AutoOS.Client.Coordinates[3] - AutoOS.Client.Coordinates[1]), "descale")
-			main_gui_h := Math.DPIScale((A_ScreenHeight - AutoOS.Client.Coordinates[4] - 100), "descale")
+			main_gui_h := Math.DPIScale((A_ScreenHeight - AutoOS.Client.Coordinates[4] - 400), "descale")
 			
 			Gui, MainGUI: New,, AutoOS
+			;Gui, MainGUI: Color, Gray
+			Gui, MainGUI: Font, s9
 			Gui, MainGUI: -border AlwaysOnTop
 			
+			UserInterface.MainGUI.LeftSide()
+			UserInterface.MainGUI.RightSide(main_gui_x, main_gui_y, main_gui_w, main_gui_h)
+			
+			
+			Gui, MainGUI: Margin, X0 Y0
+			Gui, MainGUI: Show, X%main_gui_x% Y%main_gui_y% W%main_gui_w% H%main_gui_h%
+			return
+		}
+	
+		LeftSide()
+		{
+			player_count := Text.CountIniSections("account.ini")
+
 			Gui, MainGUI: Add, Text,, Select Player:
 			Loop % player_count
 			{	
@@ -1361,54 +1792,154 @@ Class UserInterface
 			Gui, MainGUI: Add, Button,, Load script
 			Gui, MainGUI: Add, Button,, Pause script
 			Gui, MainGUI: Add, Button,, Stop script
-			
+			return
+		}
+		
+		RightSide(main_gui_x, main_gui_y, main_gui_w, main_gui_h)
+		{
 			debug_tools_x := Round(main_gui_w/4)
 			debug_tools_w := main_gui_w - debug_tools_x - 5
 			debug_tools_h := main_gui_h - 10
 			debug_tools_options := "x" . debug_tools_x . " y5 w" . debug_tools_w . " h" . debug_tools_h
 			
 			Gui, MainGUI: Add, GroupBox, % debug_tools_options, Debug tools
+			UserInterface.MainGUI.MousePosition(main_gui_x, main_gui_y, main_gui_w, main_gui_h, debug_tools_x, debug_tools_h)
+			UserInterface.MainGUI.CommandDebug(main_gui_x, main_gui_y, main_gui_w, main_gui_h, debug_tools_x, debug_tools_y, debug_tools_w, debug_tools_h)
+			return
+		}
+		
+		MousePosition(main_gui_x, main_gui_y, main_gui_w, main_gui_h, debug_tools_x, debug_tools_h)
+		{			
+			debug_col1 := debug_tools_x + 15
 			
-			debug_col1 := debug_tools_x + 10
-			Gui, MainGUI: Add, CheckBox, % "x" . debug_col1 . " y25", Arrows mouse keys
+			Gui, MainGUI: Add, CheckBox, % "x" . debug_col1 . " y25 gMouseKeysToggle", Arrows mouse keys
 			
-			Gui, MainGUI: Add, Text, % "x" . debug_col1 . " y45", Mouse position on screen:
-			Gui, MainGUI: Add, CheckBox, % "x" . debug_col1 . " y59 w23 gMouseScreeenPositionToggle",
-			Gui, MainGUI: Add, Edit,  % "x" . (debug_col1 + 24) . " y59 w100 r0.5 HwndMouseScreenPosition", % " "
-			UserInterface.MainGUI.MouseScreenPosition := MouseScreenPosition
+			Gui, MainGUI: Add, GroupBox, % "x" . (debug_col1 - 5) . " y45 w150 h" . (debug_tools_h - 40),
+			Gui, MainGUI: Add, Checkbox, % "x" . (debug_col1) . " y45 gMouseScreeenPositionToggle", Mouse position
+			Gui, MainGUI: Font, s8
+			Gui, MainGUI: Add, Text, % "x" . (debug_col1) . " y62", On Screen:
+			Gui, MainGUI: Font, s9
+			Gui, MainGUI: Add, Edit, % "x" . (debug_col1) . " y74 w100 r0.5 Hwndmouse_screen_position", % " "
+			UserInterface.MainGUI.MouseScreenPosition := mouse_screen_position
+			Gui, MainGUI: Font, s8
+			Gui, MainGUI: Add, Text, % "x" . debug_col1 . " y90", On Client:
+			Gui, MainGUI: Font, s9
+			Gui, MainGUI: Add, Edit,  % "x" . (debug_col1) . " y102 w100 r0.5 Hwndmouse_client_position", % " "
+			UserInterface.MainGUI.MouseClientPosition := mouse_client_position
+			return
 			
-			Gui, MainGUI: Add, Text, % "x" . debug_col1 . " y75", Mouse position on client:
-			Gui, MainGUI: Add, CheckBox, % "x" . debug_col1 . " y89 w23 gMouseScreeenPositionToggle",
-			Gui, MainGUI: Add, Edit,  % "x" . (debug_col1 + 24) . " y89 w100 r2 HwndMouseClientPosition", % " "
-			UserInterface.MainGUI.MouseClientPosition := MouseClientPosition
+			MouseKeysToggle:
+			if !toggle_mouse_keys
+			{
+				toggle_mouse_keys := true
+				Hotkey, Left, LeftKey, On
+				Hotkey, Up, UpKey, On
+				Hotkey, Down, DownKey, On
+				Hotkey, Right, RightKey, On
+			}
+			else if toggle_mouse_keys
+			{
+				toggle_mouse_keys := false
+				Hotkey, Left, LeftKey, Off
+				Hotkey, Up, UpKey, Off
+				Hotkey, Down, DownKey, Off
+				Hotkey, Right, RightKey, Off
+			}
+			return
 			
+			LeftKey:
+				MouseGetPos, x, y
+				x := --x
+				MouseMove, x, y
+			return
 			
-			Gui, MainGUI: Margin, X0 Y0
+			UpKey:
+				MouseGetPos, x, y
+				y := --y
+				MouseMove, x, y
+			return
 			
+			DownKey:
+				MouseGetPos, x, y
+				y := ++y
+				MouseMove, x, y
+			return
 			
-			Gui, MainGUI: Show, X%main_gui_x% Y%main_gui_y% W%main_gui_w% H%main_gui_h%
+			RightKey:
+				MouseGetPos, x, y
+				x := ++x
+				MouseMove, x, y	
 			return
 			
 			MouseScreeenPositionToggle:
-			if !toggle
-			{
-				toggle := true
-				SetTimer, MousePosition, 200
-			}
-			else if toggle
-			{
-				toggle := false
-				SetTimer, MousePosition, Off
-			}
+				if !toggle_mouse_position
+				{
+					toggle_mouse_position := true
+					Debug.AddLine("Unless you need this, you should keep it off.")
+					Debug.AddLine("It might impact performance slightly.")
+					SetTimer, MousePosition, 150
+				}
+				else if toggle_mouse_position
+				{
+					toggle_mouse_position := false
+					SetTimer, MousePosition, Off
+				}
 			return
 			MousePosition:
 				MouseGetPos, x, y
 				ControlSetText,, % "x: " . x . " y: " . y, % "ahk_id " . UserInterface.MainGUI.MouseScreenPosition
+				ControlSetText,, % "x: " . (x - AutoOS.Client.Coordinates[1]) . " y: " . (y - AutoOS.Client.Coordinates[2])
+							   , % "ahk_id " . UserInterface.MainGUI.MouseClientPosition
 			return
 		}
+		
+		CommandDebug(main_gui_x, main_gui_y, main_gui_w, main_gui_h, debug_tools_x, debug_tools_y, debug_tools_w, debug_tools_h)
+		{
+			debug_col2_x := Round((debug_tools_x + debug_tools_w)/2)-5
+			debug_col2_w := 380
+			debug_tools_h := main_gui_h - 10
+			debug_tools_options := "x" . debug_col2_x . " y5 w" . debug_tools_w . " h" . debug_tools_h
+			
+			Gui, MainGUI: Add, Text, % "x" . debug_col2_x . " y15", % "Get box coordinates:"
+			Gui, MainGUI: Font, s8
+			Gui, MainGUI: Add, Edit, % "x" . (debug_col2_x + 110) . " y15 w265 r0.6 Hwndclient_position", % "AutoOS.Coordinates.ClientPosition(x, y, w, h)"
+			UserInterface.MainGUI.ClientPosition := client_position
+			Hotkey, ^a, ClientPosition, On
+			
+			Gui, MainGUI: Font, s7
+			Gui, MainGUI: Add, Text, % "x" . debug_col2_x . " y32", % "Press CTRL+A on the box top-left corner and then again on the bottom-right corner."
+			
+			Gui, MainGUI: Font, s9
+			Gui, MainGUI: Add, Text, % "x" . debug_col2_x . " y43 w" . debug_col2_w, Script debugger:
+			
+			Gui, MainGUI: Font, s8
+			Gui, MainGUI: Add, Edit, % "x" . debug_col2_x . " y57 r4 Hwndscript_debugger w" . debug_col2_w, Script Debugger
+			UserInterface.MainGUI.ScriptDebugger := script_debugger
+			return
+			
+			ClientPosition:
+				static x, y, w, h, toggle_client_position
+				MouseGetPos, mouse_x, mouse_y
+				if !toggle_client_position
+				{
+					toggle_client_position := true
+					x := mouse_x, y := mouse_y
+				}
+				else if toggle_client_position
+				{
+					toggle_client_position := false
+					w := mouse_x, h := mouse_y
+				}
+				ControlSetText,
+				, % "AutoOS.Coordinates.ClientPosition(" . (x - AutoOS.Client.Coordinates[1])
+											      . ", " . (y - AutoOS.Client.Coordinates[2])
+												  . ", " . (w - AutoOS.Client.Coordinates[1])
+												  . ", " . (h - AutoOS.Client.Coordinates[2]) . ")"
+							   , % "ahk_id " . UserInterface.MainGUI.ClientPosition
+			return
+		}
+		
 	}
-
-
 
 }
 
@@ -1422,7 +1953,8 @@ Class Debug
 		
 		Loop % loops
 		{
-			Tooltip % AutoOS.Core.GameTab.GetActiveFast2() ; Add funcion or label here.
+			;Tooltip % AutoOS.Coordinates.GameTab.Magic.Standard.Spell1[1] ; Add funcion or label here.
+			Tooltip % AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(1)[1]
 		}
 		Clipboard := (A_TickCount - starting_tick)
 		Tooltip % "Ran the command/function " . loops . " times in: " .  (Clipboard) . "miliseconds. Last result is: "
@@ -1446,7 +1978,12 @@ Class Debug
 		If !Debug.LogFile
 			Debug.CreateLog()
 		FormatTime, TIME_STAMP,, [dd-MM-yyyy HH:mm:ss]:
-		FileAppend, % TIME_STAMP . " " . line . "`r`n",  % Debug.LogFile
+		FileAppend, % "`r`n" . TIME_STAMP . " " . line, % Debug.LogFile
+		FileRead, debug_file, % Debug.LogFile
+		ControlSetText,, % debug_file , % "ahk_id " . UserInterface.MainGUI.ScriptDebugger	; Rewrites the script debugger to add the new lines. There's probably a better
+																							; way to do this but for now this is good enough.
+																							
+		PostMessage, 0x115, 7,,, % "ahk_id " . UserInterface.MainGUI.ScriptDebugger			; This scrolls the edit control down to the bottom.
 	}
 	
 	
@@ -1458,7 +1995,8 @@ Class Input	; Core Class of our input
 	Static AsyncMouse, AsyncKeyboard
 	
 	SendAsyncInput(ByRef StringToSend, ByRef TargetScriptTitle)
-	{
+	{	
+		
 		VarSetCapacity(CopyDataStruct, 3*A_PtrSize, 0)  ; Set up the structure's memory area.
 		; First set the structure's cbData member to the size of the string, including its zero terminator:
 		SizeInBytes := (StrLen(StringToSend) + 1) * (A_IsUnicode ? 2 : 1)
@@ -1469,9 +2007,12 @@ Class Input	; Core Class of our input
 		DetectHiddenWindows On
 		SetTitleMatchMode 2
 		TimeOutTime := 1  ; I set this to 0 so it doesn't hang waiting for a response... I don't like having a confirmation though
+		Thread, Priority, 0
 		SendMessage, 0x4a, 0, &CopyDataStruct,, %TargetScriptTitle%,,,, %TimeOutTime% ; 0x4a is WM_COPYDATA.
+		Thread, Priority, High
 		DetectHiddenWindows %Prev_DetectHiddenWindows%  ; Restore original setting for the caller.
 		SetTitleMatchMode %Prev_TitleMatchMode%         ; Same.
+		
 		return
 	}
 	
@@ -1588,7 +2129,7 @@ Class Input	; Core Class of our input
 		; MasterFocus's RandomBezier function.
 		; Source at: https://github.com/MasterFocus/AutoHotkey/tree/master/Functions/RandomBezier
 		; Slightly modIfied and simplIfied for my use... Would like to completely redo this later on as it's not very clear IMO.
-		RandomBezier(X0, Y0, Xf, Yf, action := "move", p1 := 2, p2 := 5, speed1 := 3, speed2 := 8)
+		RandomBezier(X0, Y0, Xf, Yf, action := "move", p1 := 2, p2 := 4, speed1 := 3, speed2 := 8)
 		{	
 			x_distance := X0 - Xf
 			y_distance := Y0 - Yf
@@ -1598,14 +2139,12 @@ Class Input	; Core Class of our input
 			; This formula depending on the distance is what I came up with.
 			speed_modIfier := Round(Math.GetLowest(Math.MakePositive(x_distance), Math.MakePositive(y_distance)) / 3.5)
 			time := Math.Random((speed2 * speed_modIfier), (speed1 * speed_modIfier))
-			N := Math.Random(p, p2)
+			N := Math.Random(p1, p2)
 			
 			If (N > 20)
 				N := 19
 			Else if (N < 2)
 				N := 2
-			
-			
 			
 			If (Math.Between(x_distance, -50, 50) or Math.Between(y_distance, -50, 50))	; If the distance is short, doesn't make sense having the
 				N := 2																						; mouse doing crazy curves.
@@ -1647,9 +2186,16 @@ Class Input	; Core Class of our input
 				}
 				MouseMove, X, Y, 0
 			}
-			MouseMove, X%N%, Y%N%, 0
-			If (action != "move")
-				MouseClick, % action,
+			MouseMove, Xf, Yf, Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
+			
+			If ((action != "move") and (action != "doubleclick"))
+				MouseClick, % action
+			Else if (action == "doubleclick")
+			{
+				MouseClick, Left
+				Sleep, Math.Random(300, 400)	; This should be passed to the function later on but for now i'll leave it like this since this is barely ever used.
+				MouseClick, Left
+			}
 			return N+1
 		}
 	
@@ -1700,35 +2246,35 @@ Class Input	; Core Class of our input
 			{
 				box := Math.GetPoint.Box(x, y, w, h)
 				MouseGetPos, current_x, current_y
-				Input.Mouse.RandomBezier(current_x, current_y, box[1], box[2], action, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
+				Input.Mouse.RandomBezier(current_x, current_y, box[1], box[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
 			}
 		
 			Mid(x, y, w, h, action := "move")
 			{
 				mid := Math.GetPoint.Mid(x, y, w, h)
 				MouseGetPos, current_x, current_y
-				Input.Mouse.RandomBezier(current_x, current_y, mid[1], mid[2], action, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
+				Input.Mouse.RandomBezier(current_x, current_y, mid[1], mid[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
 			}
 			
 			Circle(x, y, radius, action := "move")
 			{
 				circle := Math.GetPoint.Circle(x, y, radius)
 				MouseGetPos, current_x, current_y
-				Input.Mouse.RandomBezier(current_x, current_y, circle[1], circle[2], action, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
+				Input.Mouse.RandomBezier(current_x, current_y, circle[1], circle[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
 			}
 			
 			CwBox(x, y, w, h, action := "move") ; CwBox := Circle within box
 			{
 				cwb := Math.GetPoint.CwBox(x, y, w, h)
 				MouseGetPos, current_x, current_y
-				Input.Mouse.RandomBezier(current_x, current_y, cwb[1], cwb[2], action, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
+				Input.Mouse.RandomBezier(current_x, current_y, cwb[1], cwb[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
 			}
 			
 			HumanCoordinates(x, y, w, h, action := "move")
 			{
 				coord := Math.GetPoint.HumanCoordinates(x, y, w, h)
 				MouseGetPos, current_x, current_y
-				Input.Mouse.RandomBezier(current_x, current_y, coord[1], coord[2], action, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
+				Input.Mouse.RandomBezier(current_x, current_y, coord[1], coord[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
 			}
 
 		}
@@ -1943,31 +2489,43 @@ Class Math
 		; where usually there's only "empty" space and doesn't look human at all.
 		; This function attempts to solve that.
 		; It gives you coordinates that are more likely to be in the center where the icon of whatever you want to click likely is.
-		HumanCoordinates(x, y, w, h)
+		HumanCoordinates(x, y, w, h) ; TODO NEED TO MAKE THIS BETTER
 		{
 			Random, probability, 0, 99
-			If (probability <= 49)
+			
+			if ((((w-x) - (h-y)) >= 10) OR (((w-x) - (h-y)) <= -10)) ; checks if the box is a square or a rectangle. 
 			{
-				x_circle := Round(x + ((w - x) * 0.2))	; 50% probability the coordinates will be in the "eye" of the box.
-				w_circle := Round(w + ((x - w) * 0.2))
-				y_circle := Round(y + ((h - y) * 0.2))
-				h_circle := Round(h + ((y - h) * 0.2))
+				x := x+2, y := y+2, w := w-2, h := h-2
+				return Array(Math.Random(x, w), Math.Random(y, h))
 			}
-			Else if (probability <= 84)
+			Else
 			{
-				x_circle := Round(x + ((w - x) * 0.35))	; 35% probability the coordinates will be in the inner circle inside of the box.
-				w_circle := Round(w + ((x - w) * 0.35))	; This includes the "eye" above, so in reality the probability of having the coordinates closer to the center
-				y_circle := Round(y + ((h - y) * 0.35))	; is higher than 50%.
-				h_circle := Round(h + ((y - h) * 0.35))
+				If (probability <= 49)
+				{
+					case := 1
+					x_circle := Round(x + ((w - x) * 0.2))	; 50% probability the coordinates will be in the "eye" of the box.
+					w_circle := Round(w + ((x - w) * 0.2))
+					y_circle := Round(y + ((h - y) * 0.2))
+					h_circle := Round(h + ((y - h) * 0.2))
+				}
+				Else if (probability <= 84)
+				{
+					case := 2
+					x_circle := Round(x + ((w - x) * 0.35))	; 35% probability the coordinates will be in the inner circle inside of the box.
+					w_circle := Round(w + ((x - w) * 0.35))	; This includes the "eye" above, so in reality the probability of having the coordinates closer to the center
+					y_circle := Round(y + ((h - y) * 0.35))	; is higher than 50%.
+					h_circle := Round(h + ((y - h) * 0.35))
+				}
+				Else if (probability >= 85)
+				{
+					case := 3
+					x_circle := Round(x + ((w - x) * 0.45))	; 15% probability the coordinates will be in the outter parts of the circle inside of the box.
+					w_circle := Round(w + ((x - w) * 0.45))	; This includes the "eye" and the inner circle above, so in reality the probability of having
+					y_circle := Round(y + ((h - y) * 0.45))	; the coordinates closer to the center is higher than 50% for the "eye" and 35% for the inner circle.
+					h_circle := Round(h + ((y - h) * 0.45))
+				}
+				return Math.GetPoint.CwBox(x_circle, y_circle, w_circle, h_circle)
 			}
-			Else if (probability >= 85)
-			{
-				x_circle := Round(x + ((w - x) * 0.45))	; 15% probability the coordinates will be in the outter parts of the circle inside of the box.
-				w_circle := Round(w + ((x - w) * 0.45))	; This includes the "eye" and the inner circle above, so in reality the probability of having
-				y_circle := Round(y + ((h - y) * 0.45))	; the coordinates closer to the center is higher than 50% for the "eye" and 35% for the inner circle.
-				h_circle := Round(h + ((y - h) * 0.45))
-			}
-			return Math.GetPoint.CwBox(x_circle, y_circle, w_circle, h_circle)
 		}
 
 	}

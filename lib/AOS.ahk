@@ -92,6 +92,8 @@ Class AutoOS
 			}
 			; If anyone knows how I can reduce this mess underneath into less lines
 			; to keep it cleaner while still readable like I did above, I'm all ears.
+			If (Client == "Official")
+				Client := "JagexLauncher"
 			AutoOS.PlayerManager.Client := Client
 			AutoOS.PlayerManager.Login := Login
 			AutoOS.PlayerManager.Password := Password
@@ -218,15 +220,32 @@ Class AutoOS
 			If !WinExist("ahk_exe " . AutoOS.PlayerManager.Client ".exe")
 			{
 				MsgBox % "The client " . AutoOS.PlayerManager.Client . ".exe is not running."
-				ExitApp
+				OnExit()
 			}
 			WinGet, ClientID, ID, % "ahk_exe " . AutoOS.PlayerManager.Client ".exe"
-			ControlGetPos, control_x, control_y, control_w, control_h,  SunAwtCanvas2, % "ahk_exe " . AutoOS.PlayerManager.Client ".exe"
+			If (AutoOS.PlayerManager.Client == "RuneLite")
+				client_control := "SunAwtCanvas2"
+			else
+				client_control := "SunAwtCanvas3"
+			ControlGetPos, control_x, control_y, control_w, control_h,  % client_control, % "ahk_exe " . AutoOS.PlayerManager.Client ".exe"
 			
 			AutoOS.Client.ClientID := ClientID
+			If !(AutoOS.PlayerManager.Client == "RuneLite")
+				control_x := control_x - 12, control_y := control_y - 13
 			AutoOS.Client.Coordinates := [control_x, control_y, (control_w + control_x), (control_y + control_h)]
 		}
 		
+		ActivateClient()
+		{
+			If WinExist("ahk_id " . AutoOS.Client.ClientID)
+				WinActivate, % "ahk_id " . AutoOS.Client.ClientID
+			else
+			{
+				MsgBox % "The client " . AutoOS.PlayerManager.Client . ".exe is not running."
+				OnExit()
+			}
+			return
+		}
 	}
 	
 	Class Coordinates	; This whole Class is just a group of Static variables for all the coordinates I could think of. The only 2 methods are used to convert 
@@ -405,7 +424,10 @@ Class AutoOS
 			
 			Class Inventory
 			{				
-				Static Inventory := AutoOS.Coordinates.ClientPositionBox(563, 213, 720, 460)
+				Static Inventory := AutoOS.Coordinates.ClientPositionBox(AutoOS.Coordinates.GameTab.Inventory.GetSlot(1)[1]
+																	   , AutoOS.Coordinates.GameTab.Inventory.GetSlot(1)[2]
+																	   , AutoOS.Coordinates.GameTab.Inventory.GetSlot(28)[3]
+																	   , AutoOS.Coordinates.GameTab.Inventory.GetSlot(28)[4])
 				
 				Static Slot1 := AutoOS.Coordinates.GameTab.Inventory.GetSlot(1)
 				Static Slot2 := AutoOS.Coordinates.GameTab.Inventory.GetSlot(2)
@@ -1077,11 +1099,15 @@ Class AutoOS
 			
 			GetActiveRow()
 			{
+				If (A_ScreenDPI >= 168)
+					variation := 3
+				Else
+					variation := 5
 				If (top_row := Color.Multi.Pixel.InBox([AutoOS.Coordinates.GameTab.GetTab(1)[1], AutoOS.Coordinates.GameTab.GetTab(1)[2]	; Checks for red
-											  , AutoOS.Coordinates.GameTab.GetTab(7)[3], AutoOS.Coordinates.GameTab.GetTab(7)[4]], 0x75281e, 0x3b140f, 2, 5, 0x441812))
+											  , AutoOS.Coordinates.GameTab.GetTab(7)[3], AutoOS.Coordinates.GameTab.GetTab(7)[4]], 0x75281e, 0x3b140f, 2, variation, 0x441812))
 					return top_row
 				Else if (bottom_row := Color.Multi.Pixel.InBox([AutoOS.Coordinates.GameTab.GetTab(8)[1], AutoOS.Coordinates.GameTab.GetTab(8)[2] ; Checks for red
-											   , AutoOS.Coordinates.GameTab.GetTab(14)[3], AutoOS.Coordinates.GameTab.GetTab(14)[4]], 0x75281e, 0x3b140f, 2, 5, 0x441812))
+											   , AutoOS.Coordinates.GameTab.GetTab(14)[3], AutoOS.Coordinates.GameTab.GetTab(14)[4]], 0x75281e, 0x3b140f, 2, variation, 0x441812))
 					return bottom_row
 				Else
 					return false
@@ -1157,7 +1183,23 @@ Class AutoOS
 				else
 					AutoOs.Core.GameTab.Click(tab)
 			}
-
+			
+			WaitTab(tab, t := 1000)
+			{
+				start_tick := A_TickCount, current_tick := A_TickCount
+				While ((current_tick - start_tick) < t)
+				{
+					If AutoOS.Core.GameTab.IsActive(tab)
+						return true
+					Else
+					{
+						Sleep, 50
+						current_tick := A_TickCount
+					}
+				}
+				return false
+			}
+			
 			Class Combat	; TODO Add attack styles
 			{
 				
@@ -1169,11 +1211,11 @@ Class AutoOS
 					Debug.AddLine("Activating special attack bar")
 					If Input.AsyncMouse
 					{
-						SpecAttackBar := AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[1] . ", "
+						spec_attack_bar := AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[1] . ", "
 									   . AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[2] . ", "
 									   . AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[3] . ", "
 									   . AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[4]
-						Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . SpecAttackBar . ", ""Left"")", "AsyncMouse.ahk ahk_class AutoHotkey")
+						Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . spec_attack_bar . ", ""Left"")", "AsyncMouse.ahk ahk_class AutoHotkey")
 					}
 					else
 						Input.Human.Mouse.HumanCoordinates(AutoOS.Coordinates.GameTab.Combat.SpecAttackBar[1]
@@ -1216,6 +1258,50 @@ Class AutoOS
 			Class Inventory	; TODO
 			{
 				
+				IsEmpty()
+				{
+					; This functions searchs for near black pixels all items have in their borders
+					AutoOS.Core.GameTab.Switch("Inventory")
+					if Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab.Inventory.Inventory, 0x090607, 0x040304, 2, 4, 0x0b0a09)
+						return true
+					else
+						return false
+				}
+				
+				IsSlotEmpty(n)
+				{
+					; This functions searchs for near black pixels all items have in their borders
+					AutoOS.Core.GameTab.Switch("Inventory")
+					if Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab.Inventory.GetSlot(n), 0x090607, 0x040304, 2, 4, 0x0b0a09)
+						return true
+					else
+						return false
+				}
+				
+				
+				ClickSlot(n, check_item_exists := false)
+				{
+
+					If !Math.Between(n, 1, 28) ; no need to check if it's an integer, if it's not it will not validate and will return
+						return false
+					if check_item_exists
+						AutoOS.Core.GameTab.Inventory.IsSlotEmpty(n)	; AutoOS.Core.GameTab.Switch("Inventory") is already called
+					else												; in AutoOS.Core.GameTab.Inventory.IsSlotEmpty(n)... no need to call it twice.
+						AutoOS.Core.GameTab.Switch("Inventory")
+					
+					Debug.AddLine("Going to click inventory slot " . n)
+					
+					slot := AutoOS.Coordinates.GameTab.Inventory.GetSlot(n)
+					
+					If Input.AsyncMouse
+					{
+						slot := slot[1] . ", " . slot[2] . ", " . slot[3] . ", " . slot[4] . ", ""Left"""
+						Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . slot . ")", "AsyncMouse.ahk ahk_class AutoHotkey")
+					}
+					else
+						Input.Human.Mouse.HumanCoordinates(slot[1], slot[2], slot[3], slot[4], "Left")
+					Sleep, Math.Random(10, 50)
+				}
 			}
 			
 			Class Equipment	; TODO
@@ -1230,41 +1316,68 @@ Class AutoOS
 			
 			Class Magic	; TODO
 			{
-				IsSpellBook(book) ; TODO add debug line
+				
+				IsSpellBook(book)
 				{
+					Debug.AddLine("Going to check if our spell book is: " . book)
 					if (book == "Standard")
 					{
-						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0xd7c19b, 0x9a6c34, 2, 1, 0xa89050)
+						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0xd7c19b, 0x9a6c34, 2, 6, 0xa89050)
+						{
+							Debug.AddLine("We are on Standard spell book")
 							return true
+						}
 						else
+						{
+							Debug.AddLine("We are not on Standard spell book")
 							return false
+						}
 					}
 					else if (book == "Ancient")
 					{
-						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0x654b8e, 0xd0ba6b, 2, 1, 0x48316d)
+						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0x593e83, 0xd2bd9b, 2, 5, 0x5b4086)
+							{
+							Debug.AddLine("We are on Ancient spell book")
 							return true
+						}
 						else
+						{
+							Debug.AddLine("We are not on Ancient spell book")
 							return false
+						}
 					}
 					else if (book == "Lunar")
 					{
-						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0xb3bcc0, 0xdcdcec, 2, 1, 0xbfc5d6)
+						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0xb3bcc0, 0xdcdcec, 2, 5, 0xbfc5d6)
+							{
+							Debug.AddLine("We are on Lunar spell book")
 							return true
+						}
 						else
+						{
+							Debug.AddLine("We are not on Lunar spell book")
 							return false
+						}
 					}
 					else if (book == "Arceuus")
 					{
-						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0x68677c, 0x654b8e, 2, 1, 0x57566b)
+						If Color.Multi.Pixel.InBox(AutoOS.Coordinates.GameTab7, 0x68677c, 0x654b8e, 2, 6, 0x57566b)
+							{
+							Debug.AddLine("We are on Arceuus spell book")
 							return true
+						}
 						else
+						{
+							Debug.AddLine("We are not on Arceuus spell book")
 							return false
+						}
 					}
 					
 				}
 				
-				GetSpellBook() ; TODO add debug line
+				GetSpellBook()
 				{
+					Debug.AddLine("Going to check which spell book we have active")
 					If AutoOS.Core.GameTab.Magic.IsSpellBook("Standard")
 						return "Standard"
 					Else If AutoOS.Core.GameTab.Magic.IsSpellBook("Ancient")
@@ -1273,18 +1386,58 @@ Class AutoOS
 						return "Lunar"
 					Else If AutoOS.Core.GameTab.Magic.IsSpellBook("Arceuus")
 						return "Arceuus"
-					
 				}
 				
 				Class Standard
 				{
-					CastSpell(n) ; TODO
+					
+					Static SpellName := {1: "HomeTeleport", 2: "WindStrike", 3: "Confuse", 4: "EnchantBolt", 5: "WaterStrike", 6: "Lvl1Enchant", 7: "EarthStrike"
+					, 8: "Weaken", 9: "FireStrike", 10: "BonesToBananas", 11: "WindBolt", 12: "Curse", 13: "Bind", 14: "LowAlchemy"
+					, 15: "WaterBolt", 16: "VarrockTeleport", 17: "Lvl2Enchant", 18: "EarthBolt", 19: "LumbridgeTeleport", 20: "TeleGrab", 21: "FireBolt"
+					, 22: "FaladorTeleport", 23: "CrumbleUndead", 24: "HouseTeleport", 25: "WindBlast", 26: "SuperHeat", 27: "CamelotTeleport", 28: "WaterBlast"
+					, 29: "Lvl3Enchant", 30: "IbanBlast", 31: "Snare", 32: "MagicDart", 33: "ArdougneTeleport", 34: "EarthBlast", 35: "HighAlchemy"
+					, 36: "ChargeWaterOrb", 37: "Lvl4Enchant", 38: "WatchtowerTeleport", 39: "FireBlast", 40: "ChargeEarthOrb", 41: "BonesToPeaches", 42: "SaradominStrike"
+					, 43: "ClawsOfGuthix", 44: "FlamesOfZamorak", 45: "TrollheimTeleport", 46: "WindWave", 47: "ChargeFireOrb", 48: "ApeAtollTeleport", 49: "WaterWave"
+					, 50: "ChargeAirOrb", 51: "Vulnerability", 52: "Lvl5Enchant", 53: "KourendTeleport", 54: "EarthWave", 55: "Enfeeble", 56: "TeleotherLumbridge"
+					, 57: "FireWave", 58: "Entangle", 59: "Stun", 60: "Charge", 61: "WindSurge", 62: "TeleotherFalador", 63: "WaterSurge"
+					, 64: "TeleBlock", 65: "BountyTeleport", 66: "Lvl6Enchant", 67: "TeleotherCamelot", 68: "EarthSurge", 69: "Lvl7Enchant", 70: "FireSurge"}
+					   
+					Static SpellNumber := {"HomeTeleport": 1, "WindStrike": 2, "Confuse": 3, "EnchantBolt": 4, "WaterStrike": 5, "Lvl1Enchant": 6, "EarthStrike": 7
+					, "Weaken": 8, "FireStrike": 9, "BonesToBananas": 10, "WindBolt": 11, "Curse": 12, "Bind": 13, "LowAlchemy": 14
+					, "WaterBolt": 15, "VarrockTeleport": 16, "Lvl2Enchant": 17, "EarthBolt": 18, "LumbridgeTeleport": 19, "TeleGrab": 20, "FireBolt": 21
+					, "FaladorTeleport": 22, "CrumbleUndead": 23, "HouseTeleport": 24, "WindBlast": 25, "SuperHeat": 26, "CamelotTeleport": 27, "WaterBlast": 28
+					, "Lvl3Enchant": 29, "IbanBlast": 30, "Snare": 31, "MagicDart": 32, "ArdougneTeleport": 33, "EarthBlast": 34, "HighAlchemy": 35
+					, "ChargeWaterOrb": 36, "Lvl4Enchant": 37, "WatchtowerTeleport": 38, "FireBlast": 39, "ChargeEarthOrb": 40, "BonesToPeaches": 41, "SaradominStrike": 42
+					, "ClawsOfGuthix": 43, "FlamesOfZamorak": 44, "TrollheimTeleport": 45, "WindWave": 46, "ChargeFireOrb": 47, "ApeAtollTeleport": 48, "WaterWave": 49
+					, "ChargeAirOrb": 50, "Vulnerability": 51, "Lvl5Enchant": 52, "KourendTeleport": 53, "EarthWave": 54, "Enfeeble": 55, "TeleotherLumbridge": 56
+					, "FireWave": 57, "Entangle": 58, "Stun": 59, "Charge": 60, "WindSurge": 61, "TeleotherFalador": 62, "WaterSurge": 63
+					, "TeleBlock": 64, "BountyTeleport": 65, "Lvl6Enchant": 66, "TeleotherCamelot": 67, "EarthSurge": 68, "Lvl7Enchant": 69, "FireSurge": 70}
+					
+					
+					CastSpell(n) ; TODO Add check if spell is grayed out.
 					{
 						If !AutoOS.Core.GameTab.Magic.IsSpellBook("Standard")
 							return
+						If n is not Integer
+							n := AutoOS.Core.GameTab.Magic.Standard.SpellNumber[n]
+						
 						AutoOS.Core.GameTab.Switch("Magic")
-						Debug.AddLine("Going to cast spell " . n)
+						Debug.AddLine("Going to cast " . AutoOS.Core.GameTab.Magic.Standard.SpellName[n])
+				
+						; TODO Add check if spell is grayed out.
+						
+						spell := AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(n)
+						
+						If Input.AsyncMouse
+						{
+							spell := spell[1] . ", " . spell[2] . ", " . spell[3] . ", " . spell[4] . ", ""Left"""
+							Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . spell . ")", "AsyncMouse.ahk ahk_class AutoHotkey")
+						}
+						else
+							Input.Human.Mouse.HumanCoordinates(spell[1], spell[2], spell[3], spell[4], "Left")
+						Sleep, Math.Random(10, 50)
 					}
+				
 				}
 
 				Class Ancient	; TODO
@@ -1295,6 +1448,60 @@ Class AutoOS
 				Class Lunar	; TODO
 				{
 					
+					Static SpellName := {1: "HomeTeleport", 2: "BakePie", 3: "Geomancy", 4: "CurePlant", 5: "MonsterExamine"
+					, 6: "NPCContact", 7: "CureOther", 8: "Humidify", 9: "MoonclanTeleport", 10: "TeleGroupMoonclan"
+					, 11: "CureMe", 12: "OuraniaTeleport", 13: "HunterKit", 14: "WaterbirthTeleport", 15: "TeleGroupWaterbirth"
+					, 16: "CureGroup", 17: "StatSpy", 18: "BarbarianTeleport", 19: "TeleGroupBarbarian", 20: "SpinFlax"
+					, 21: "SuperglassMake", 22: "TanLeather", 23: "KhazardTeleport", 24: "TeleGroupKhazard", 25: "Dream"
+					, 26: "StringJewellery", 27: "StatRestorePotShare", 28: "MagicImbue", 29: "FertileSoil", 30: "BoostPotionShare"
+					, 31: "FishingGuildTeleport", 32: "BountyTeleport", 33: "TeleGroupFishingGuild", 34: "PlankMake", 35: "CatherbyTeleport"
+					, 36: "TeleGroupCatherby", 37: "RechargeDragonstone", 38: "IcePlateuTeleport", 39: "TeleGroupIcePlateu", 40: "EnergyTransfer"
+					, 41: "HealOther", 42: "VengeanceOther", 43: "Vengeance", 44: "HealGroup", 45: "SpellbookSwap"}
+					   
+					Static SpellNumber := {"HomeTeleport": 1, "BakePie": 2, "Geomancy": 3, "CurePlant": 4, "MonsterExamine": 5
+					, "NPCContact": 6, "CureOther": 7, "Humidify": 8, "MoonclanTeleport": 9, "TeleGroupMoonclan": 10
+					, "CureMe": 11, "OuraniaTeleport": 12, "HunterKit": 13, "WaterbirthTeleport": 14, "TeleGroupWaterbirth": 15
+					, "CureGroup": 16, "StatSpy": 17, "BarbarianTeleport": 18, "TeleGroupBarbarian": 19, "SpinFlax": 20
+					, "SuperglassMake": 21, "TanLeather": 22, "KhazardTeleport": 23, "TeleGroupKhazard": 24, "Dream": 25
+					, "StringJewellery": 26, "StatRestorePotShare": 27, "MagicImbue": 28, "FertileSoil": 29, "BoostPotionShare": 30
+					, "FishingGuildTeleport": 31, "BountyTeleport": 32, "TeleGroupFishingGuild": 33, "PlankMake": 34, "CatherbyTeleport": 35
+					, "TeleGroupCatherby": 36, "RechargeDragonstone": 37, "IcePlateuTeleport": 38, "TeleGroupIcePlateu": 39, "EnergyTransfer": 40
+					, "HealOther": 41, "VengeanceOther": 42, "Vengeance": 43, "HealGroup": 44, "SpellbookSwap": 45}
+					
+					static InvSpell := [34]
+					static Teleport := [1]
+					
+					CastSpell(n) ; TODO Add check if spell is grayed out.
+					{
+						If !AutoOS.Core.GameTab.Magic.IsSpellBook("Lunar")
+							return
+						If n is not Integer
+							n := AutoOS.Core.GameTab.Magic.Lunar.SpellNumber[n]
+						
+						AutoOS.Core.GameTab.Switch("Magic")
+						Debug.AddLine("Going to cast " . AutoOS.Core.GameTab.Magic.Lunar.SpellName[n])
+						
+						; TODO Add check if spell is grayed out.
+						
+						spell := AutoOS.Coordinates.GameTab.Magic.Lunar.GetSpell(n)
+						
+						If Input.AsyncMouse
+						{
+							spell := spell[1] . ", " . spell[2] . ", " . spell[3] . ", " . spell[4] . ", ""Left"""
+							Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . spell . ")", "AsyncMouse.ahk ahk_class AutoHotkey")
+						}
+						else
+							Input.Human.Mouse.HumanCoordinates(spell[1], spell[2], spell[3], spell[4], "Left")
+						Sleep, Math.Random(10, 50)
+						For i, spell in AutoOS.Core.GameTab.Magic.Lunar.InvSpell
+						{
+							If (n == spell)
+							{
+								AutoOS.Core.GameTab.WaitTab("Inventory", 1000)
+								return
+							}
+						}
+					}
 				}
 
 				Class Arceuus	; TODO
@@ -1761,7 +1968,7 @@ Class UserInterface
 			main_gui_x := AutoOS.Client.Coordinates[1]
 			main_gui_y := AutoOS.Client.Coordinates[4]
 			main_gui_w := Math.DPIScale((AutoOS.Client.Coordinates[3] - AutoOS.Client.Coordinates[1]), "descale")
-			main_gui_h := Math.DPIScale((A_ScreenHeight - AutoOS.Client.Coordinates[4] - 400), "descale")
+			main_gui_h := 140
 			
 			Gui, MainGUI: New,, AutoOS
 			;Gui, MainGUI: Color, Gray
@@ -1996,7 +2203,7 @@ Class Input	; Core Class of our input
 	
 	SendAsyncInput(ByRef StringToSend, ByRef TargetScriptTitle)
 	{	
-		
+		Critical
 		VarSetCapacity(CopyDataStruct, 3*A_PtrSize, 0)  ; Set up the structure's memory area.
 		; First set the structure's cbData member to the size of the string, including its zero terminator:
 		SizeInBytes := (StrLen(StringToSend) + 1) * (A_IsUnicode ? 2 : 1)
@@ -2006,10 +2213,10 @@ Class Input	; Core Class of our input
 		Prev_TitleMatchMode := A_TitleMatchMode
 		DetectHiddenWindows On
 		SetTitleMatchMode 2
-		TimeOutTime := 1  ; I set this to 0 so it doesn't hang waiting for a response... I don't like having a confirmation though
-		Thread, Priority, 0
-		SendMessage, 0x4a, 0, &CopyDataStruct,, %TargetScriptTitle%,,,, %TimeOutTime% ; 0x4a is WM_COPYDATA.
-		Thread, Priority, High
+		time_out := 25  ; I set this to 1 so it doesn't hang waiting for a response... I don't like having a confirmation though
+		SendMessage, 0x4a, 0, &CopyDataStruct,, %TargetScriptTitle%,,,, % time_out ; 0x4a is WM_COPYDATA.
+		If (ErrorLevel != 1)
+			SendMessage, 0x4a, 0, &CopyDataStruct,, %TargetScriptTitle%,,,, % time_out ; 0x4a is WM_COPYDATA.
 		DetectHiddenWindows %Prev_DetectHiddenWindows%  ; Restore original setting for the caller.
 		SetTitleMatchMode %Prev_TitleMatchMode%         ; Same.
 		
@@ -2020,7 +2227,6 @@ Class Input	; Core Class of our input
 	{
 		; When you call a input method through this, you need to declare all parameters. Haven't tested it but it's very likely it won't work well If you don't declare all params.
 		params := Text.ExtractParams(StrSplit(StrSplit(string, "(")[2], ")")[1])
-
 		If InStr(string, "Human.")	; need to include the period at the or it will be messed up by "HumanCoordinates" method.
 		{
 			If InStr(string, "Box")
@@ -2088,7 +2294,7 @@ Class Input	; Core Class of our input
 		Box(x, y, w, h, action := "move")
 		{
 			box := Math.GetPoint.Box(x, y, w, h)
-			;MsgBox % box[1]
+			AutoOS.Client.ActivateClient()
 			MouseMove, box[1], box[2], Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
 			If (action != "move")
 				MouseClick, % action
@@ -2097,6 +2303,7 @@ Class Input	; Core Class of our input
 		Mid(x, y, w, h, action := "move")
 		{
 			mid := Math.GetPoint.Mid(x, y, w, h)
+			AutoOS.Client.ActivateClient()
 			MouseMove, mid[1], mid[2], Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
 			If (action != "move")
 				MouseClick, % action
@@ -2105,6 +2312,7 @@ Class Input	; Core Class of our input
 		Circle(x, y, radius, action := "move")
 		{
 			circle := Math.GetPoint.Circle(x, y, radius)
+			AutoOS.Client.ActivateClient()
 			MouseMove, circle[1], circle[2], Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
 			If (action != "move")
 				MouseClick, % action
@@ -2113,6 +2321,7 @@ Class Input	; Core Class of our input
 		CwBox(x, y, w, h, action := "move") ; CwBox := Circle within box
 		{
 			cwb := Math.GetPoint.CwBox(x, y, w, h)
+			AutoOS.Client.ActivateClient()
 			MouseMove, cwb[1], cwb[2], Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
 			If (action != "move")
 				MouseClick, % action
@@ -2121,6 +2330,7 @@ Class Input	; Core Class of our input
 		HumanCoordinates(x, y, w, h, action := "move")
 		{
 			coord := Math.GetPoint.HumanCoordinates(x, y, w, h)
+			AutoOS.Client.ActivateClient()
 			MouseMove, coord[1], coord[2], Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
 			If (action != "move")
 				MouseClick, % action
@@ -2149,9 +2359,11 @@ Class Input	; Core Class of our input
 			If (Math.Between(x_distance, -50, 50) or Math.Between(y_distance, -50, 50))	; If the distance is short, doesn't make sense having the
 				N := 2																						; mouse doing crazy curves.
 	
-	
+			
 			OfT := 100, OfB := 100
 			OfL := 100, OfR := 100
+			
+			AutoOS.Client.ActivateClient()
 			MouseGetPos, XM, YM
 			
 			If (X0 < Xf)
@@ -2205,6 +2417,7 @@ Class Input	; Core Class of our input
 	{
 		PressKey(key, time := 30)
 		{
+			AutoOS.Client.ActivateClient()
 			Send, {%key% Down}
 			Sleep, time
 			Send, {%key% Up}
@@ -2212,6 +2425,7 @@ Class Input	; Core Class of our input
 		
 		MultiKeyPress(key1, key2, key3 := "", key4 := "", key5 := "", time := 30)
 		{
+			AutoOS.Client.ActivateClient()
 			Send, {%key1% Down}
 			Send, {%key2% Down}
 			If key3
@@ -2245,6 +2459,7 @@ Class Input	; Core Class of our input
 			Box(x, y, w, h, action := "move")
 			{
 				box := Math.GetPoint.Box(x, y, w, h)
+				AutoOS.Client.ActivateClient()
 				MouseGetPos, current_x, current_y
 				Input.Mouse.RandomBezier(current_x, current_y, box[1], box[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
 			}
@@ -2252,6 +2467,7 @@ Class Input	; Core Class of our input
 			Mid(x, y, w, h, action := "move")
 			{
 				mid := Math.GetPoint.Mid(x, y, w, h)
+				AutoOS.Client.ActivateClient()
 				MouseGetPos, current_x, current_y
 				Input.Mouse.RandomBezier(current_x, current_y, mid[1], mid[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
 			}
@@ -2259,6 +2475,7 @@ Class Input	; Core Class of our input
 			Circle(x, y, radius, action := "move")
 			{
 				circle := Math.GetPoint.Circle(x, y, radius)
+				AutoOS.Client.ActivateClient()
 				MouseGetPos, current_x, current_y
 				Input.Mouse.RandomBezier(current_x, current_y, circle[1], circle[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
 			}
@@ -2266,6 +2483,7 @@ Class Input	; Core Class of our input
 			CwBox(x, y, w, h, action := "move") ; CwBox := Circle within box
 			{
 				cwb := Math.GetPoint.CwBox(x, y, w, h)
+				AutoOS.Client.ActivateClient()
 				MouseGetPos, current_x, current_y
 				Input.Mouse.RandomBezier(current_x, current_y, cwb[1], cwb[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
 			}
@@ -2273,6 +2491,7 @@ Class Input	; Core Class of our input
 			HumanCoordinates(x, y, w, h, action := "move")
 			{
 				coord := Math.GetPoint.HumanCoordinates(x, y, w, h)
+				AutoOS.Client.ActivateClient()
 				MouseGetPos, current_x, current_y
 				Input.Mouse.RandomBezier(current_x, current_y, coord[1], coord[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
 			}
@@ -2283,6 +2502,7 @@ Class Input	; Core Class of our input
 		{
 			PressKey(key, time := 30)	; This function mimics the auto-repeat feature most keyboards have.
 			{
+				AutoOS.Client.ActivateClient()
 				Send, {%key% Down}
 				If (time > 500)			; This might be dIfferent with other keyboards but mine holds the key down
 				{						; for 500 miliseconds before starting the auto-repeat ¯\_(ツ)_/¯
@@ -2305,6 +2525,7 @@ Class Input	; Core Class of our input
 			
 			MultiKeyPress(key1, key2, key3 := "", key4 := "", key := "", time := 30) ; Haven't tested this yet. Should work though.
 			{
+				AutoOS.Client.ActivateClient()
 				Send, {%key1% Down}
 				Send, {%key2% Down}
 				If key3

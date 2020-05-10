@@ -424,10 +424,10 @@ Class AutoOS
 			
 			Class Inventory
 			{				
-				Static Inventory := AutoOS.Coordinates.ClientPositionBox(AutoOS.Coordinates.GameTab.Inventory.GetSlot(1)[1]
-																	   , AutoOS.Coordinates.GameTab.Inventory.GetSlot(1)[2]
-																	   , AutoOS.Coordinates.GameTab.Inventory.GetSlot(28)[3]
-																	   , AutoOS.Coordinates.GameTab.Inventory.GetSlot(28)[4])
+				Static Inventory := Array(AutoOS.Coordinates.GameTab.Inventory.GetSlot(1)[1]
+									    , AutoOS.Coordinates.GameTab.Inventory.GetSlot(1)[2]
+									    , AutoOS.Coordinates.GameTab.Inventory.GetSlot(28)[3]
+									    , AutoOS.Coordinates.GameTab.Inventory.GetSlot(28)[4])
 				
 				Static Slot1 := AutoOS.Coordinates.GameTab.Inventory.GetSlot(1)
 				Static Slot2 := AutoOS.Coordinates.GameTab.Inventory.GetSlot(2)
@@ -943,7 +943,69 @@ Class AutoOS
 			
 		}
 	
-	
+		Class Interface
+		{
+			Class Bank
+			{
+				Static BankPinSlot0 := AutoOS.Coordinates.ClientPositionBox(37, 107, 100, 170)
+					 , BankPinSlot1 := AutoOS.Coordinates.ClientPositionBox(131, 107, 194, 170)
+					 , BankPinSlot2 := AutoOS.Coordinates.ClientPositionBox(225, 107, 288, 170)
+					 , BankPinSlot3 := AutoOS.Coordinates.ClientPositionBox(309, 107, 372, 170)
+				
+				Static BankPinSlot4 := AutoOS.Coordinates.ClientPositionBox(37, 179, 100, 242)
+					 , BankPinSlot5 := AutoOS.Coordinates.ClientPositionBox(131, 179, 194, 242)
+					 , BankPinSlot6 := AutoOS.Coordinates.ClientPositionBox(225, 179, 288, 242)
+				
+				Static BankPinSlot7 := AutoOS.Coordinates.ClientPositionBox(37, 251, 100, 314)
+					 , BankPinSlot8 := AutoOS.Coordinates.ClientPositionBox(131, 251, 194, 314)
+					 , BankPinSlot9 := AutoOS.Coordinates.ClientPositionBox(225, 251, 288, 314)
+				
+				Static BankPinExit := AutoOS.Coordinates.ClientPositionBox(326, 251, 483, 275)
+					 , BankPinForgot := AutoOS.Coordinates.ClientPositionBox(326, 276, 483, 300)
+					 
+					 
+					 
+				GetTab(n)
+				{	
+					if ((n < 0) or (n > 9))
+						return false
+					if (n == 0)
+						return AutoOS.Coordinates.ClientPositionBox(62, 45, 97, 76)
+					else
+						return AutoOS.Coordinates.ClientPositionBox((63 + (40 * n)), 45, (98 + (40 * n)), 76)
+				}
+						 
+					 
+				Static ShowEquipment := AutoOS.Coordinates.ClientPositionBox(28, 48, 52, 72)
+					 , ShowEquipmentRuneLite := AutoOS.Coordinates.ClientPositionBox(22, 10, 46, 34)
+						
+				Static BankCloseButton := AutoOS.Coordinates.ClientPositionBox(475, 12, 500, 34)
+				
+				 
+				Static ShowMenuButton := AutoOS.Coordinates.ClientPositionBox(467, 48, 491, 72)
+				
+				Static RearrangeMode := AutoOS.Coordinates.ClientPositionBox(22, 294, 118, 307)
+					 , WithdrawAs := AutoOS.Coordinates.ClientPositionBox(130, 294, 207, 308)
+					 , Quantity := AutoOS.Coordinates.ClientPositionBox(253, 293, 309, 309)
+					 
+				Static SwapButton := AutoOS.Coordinates.ClientPositionBox(21, 310, 70, 331)
+					 , InsertButton := AutoOS.Coordinates.ClientPositionBox(71, 310, 120, 331)
+					 , ItemButton := AutoOS.Coordinates.ClientPositionBox(121, 310, 170, 331)
+					 , NoteButton := AutoOS.Coordinates.ClientPositionBox(171, 310, 220, 331)
+					 , 1Button := AutoOS.Coordinates.ClientPositionBox(221, 310, 245, 331)
+					 , 5Button := AutoOS.Coordinates.ClientPositionBox(246, 310, 270, 331)
+					 , 10Button := AutoOS.Coordinates.ClientPositionBox(271, 310, 295, 331)
+					 , XButton := AutoOS.Coordinates.ClientPositionBox(296, 310, 320, 331)
+					 , AllButton := AutoOS.Coordinates.ClientPositionBox(321, 310, 345, 331)
+					 
+				Static PlaceholderButton := AutoOS.Coordinates.ClientPositionBox(347, 295, 382, 330)
+					 , SearchButton := AutoOS.Coordinates.ClientPositionBox(386, 295, 421, 330)
+					 , InventoryButton := AutoOS.Coordinates.ClientPositionBox(425, 295, 460, 330)
+					 , EquipmentButton := AutoOS.Coordinates.ClientPositionBox(462, 295, 497, 330)
+					 
+					 
+			}
+		}
 	}
 	
 	Class Core	; TODO
@@ -1257,6 +1319,30 @@ Class AutoOS
 			
 			Class Inventory	; TODO
 			{
+				Static PotionColor := {"Attack": 0xff, "Antipoison": 0xffd4d259, "Strength": 0xff, "Compost": 0xff, "Restore": 0xff, "GuthixBalance": 0xff 
+									, "Energy": 0xff, "Defence": 0xff, "Agility": 0xff, "Combat": 0xff, "Prayer": 0xff59d4a8, "SuperAttack": 0xff5658d4, "SuperAntipoison": 0xff 
+									, "Fishing": 0xff, "SuperEnergy": 0xff, "Hunter": 0xff, "SuperStrength": 0xffd7d6d6, "MagicEssence": 0xff, "WeaponPoison": 0xff 
+									, "SuperRestore": 0xffb74272, "SanfewSerum": 0xff, "SuperDefence": 0xff, "AntidotePlus": 0xff, "Antifire": 0xff, "Ranging": 0xff56b1d4
+									, "WeaponPoisonPlus": 0xff, "Magic": 0xff, "Stamina": 0xff9f7b4a, "ZamorakBrew": 0xff, "AntidotePlusPlus": 0xff81853d, "Bastion": 0xffbd6316
+									, "BattleMage": 0xff, "SaradominBrew": 0xffcbca60, "WeaponPoisonPlusPlus": 0xff, "ExtendedAntifire": 0xff7442d2, "AntiVenom": 0xff
+									, "SuperCombat": 0xff1c700b, "SuperAntifire": 0xff, "AntiVenomPlus": 0xff5e4b51, "ExtendedSuperAntifire": 0xffb393cb
+									, "SuperMagic": 0xff, "SuperRanging": 0xff, "Overload": 0xff120e0e, "Absorption": 0xbdc4c8}
+				
+				Static PotionName := {0xff: "Attack", 0xff: "Antipoison", 0xffd4d259: "Strength", 0xff: "Compost", 0xff: "Restore", 0xff: "GuthixBalance"
+									 , 0xff: "Energy", 0xff: "Defence", 0xff: "Agility", 0xff: "Combat", 0xff59d4a8: "Prayer", 0xff5658d4: "SuperAttack", 0xff: "SuperAntipoison"
+									 , 0xff: "Fishing", 0xff: "SuperEnergy", 0xff: "Hunter", 0xffd7d6d6: "SuperStrength", 0xff: "MagicEssence", 0xff: "WeaponPoison"
+									 , 0xffb74272: "SuperRestore", 0xff: "SanfewSerum", 0xff: "SuperDefence", 0xff: "AntidotePlus", 0xff: "Antifire", 0xff56b1d4: "Ranging"
+									 , 0xff: "WeaponPoisonPlus", 0xff: "Magic", 0xff9f7b4a: "Stamina", 0xff: "ZamorakBrew", 0xff81853d: "AntidotePlusPlus", 0xffbd6316: "Bastion"
+									 , 0xff: "BattleMage", 0xffcbca60: "SaradominBrew", 0xff: "WeaponPoisonPlusPlus", 0xff7442d2: "ExtendedAntifire", 0xff: "AntiVenom"
+									 , 0xff1c700b: "SuperCombat", 0xff: "SuperAntifire", 0xff5e4b51: "AntiVenomPlus", 0xffb393cb: "ExtendedSuperAntifire"
+									 , 0xff: "SuperMagic", 0xff: "SuperRanging", 0xff120e0e: "Overload", 0xffbdc4c8: "Absorption"}
+									
+				Static DivinePotionColor := {"DivineSuperAttack": 0xff, "DivineSuperDefence": 0xff, "DivineSuperStrength": 0xff, "DivineBastion": 0xff
+										  , "DivineBattleMage": 0xff, "DivineSuperCombat": 0xff}
+									
+				Static DivinePotionName := {0xff: "DivineSuperAttack", 0xff: "DivineSuperDefence", 0xff: "DivineSuperStrength", 0xff: "DivineBastion"
+										   , 0xff: "DivineBattleMage", 0xff: "DivineSuperCombat"}
+				
 				
 				IsEmpty()
 				{
@@ -1277,7 +1363,6 @@ Class AutoOS
 					else
 						return false
 				}
-				
 				
 				ClickSlot(n, check_item_exists := false)
 				{
@@ -1302,10 +1387,37 @@ Class AutoOS
 						Input.Human.Mouse.HumanCoordinates(slot[1], slot[2], slot[3], slot[4], "Left")
 					Sleep, Math.Random(10, 50)
 				}
+			
+				SlotHasPotion(slot, potion)	
+				{
+					slot := AutoOS.Coordinates.GameTab.Inventory.GetSlot(slot)
+					potion := Color.Image.InBox(slot, "items\potion", 20)
+					if !potion
+						return false
+				
+					if Color.Pixel.InBox(AutoOS.Core.GameTab.Inventory.PotionColor[potion], slot, 5)
+						return true
+					else
+						return false
+				}
+			
 			}
 			
 			Class Equipment	; TODO
 			{
+				Static SlotName := {1: "Head", 2: "Cape", 3: "Amulet", 4: "Quiver", 5: "Weapon", 6: "Chest", 7: "Shield", 8: "Legs", 9: "Gloves", 10: "Boots", 11: "Ring"}
+					   
+				Static SlotNumber := {"Head": 1, "Cape": 2, "Amulet": 3, "Quiver": 4, "Weapon": 5, "Chest": 6, "Shield": 7, "Legs": 8, "Gloves": 9, "Boots": 10, "Ring": 11}
+				
+				IsEmpty()	; TODO Checks if we have items.
+				{
+					
+				}
+				
+				IsSlotEmpty(n)
+				{
+					
+				}
 				
 			}
 			
@@ -1551,8 +1663,37 @@ Class AutoOS
 				
 			}
 			
+		}
+		
+		Class Interface
+		{
+			
+			IsOpen()	; TODO add image search for other close button
+			{
+				If Color.Image.InBox(AutoOS.Coordinates.ClientPositionBox(375, 3, 514, 77), "interface\close1", 50)
+					return true
+				else
+					return false
+			}
+			
+			Class Bank
+			{
+				
+				IsOpen()	; TODO need testing in higher dpi. should work though.
+				{
+					If Color.Multi.Pixel.InBox(AutoOS.Coordinates.Interface.Bank.RearrangeMode, 0xff981f, 0x000000, 2, 3, 0x494034)
+						return true
+					Else if Color.Multi.Pixel.InBox(AutoOS.Coordinates.Interface.Bank.WithdrawAs, 0xff981f, 0x000000, 2, 3, 0x494034)
+						Return true
+					Else
+						Return false
+				}
+				
+			}
+			
 			
 		}
+		
 		
 	}
 	
@@ -2137,12 +2278,12 @@ Class UserInterface
 					toggle_client_position := false
 					w := mouse_x, h := mouse_y
 				}
-				ControlSetText,
-				, % "AutoOS.Coordinates.ClientPosition(" . (x - AutoOS.Client.Coordinates[1])
+				saved_coordinates := "AutoOS.Coordinates.ClientPositionBox(" . (x - AutoOS.Client.Coordinates[1])
 											      . ", " . (y - AutoOS.Client.Coordinates[2])
 												  . ", " . (w - AutoOS.Client.Coordinates[1])
 												  . ", " . (h - AutoOS.Client.Coordinates[2]) . ")"
-							   , % "ahk_id " . UserInterface.MainGUI.ClientPosition
+				Clipboard := saved_coordinates
+				ControlSetText,, % saved_coordinates, % "ahk_id " . UserInterface.MainGUI.ClientPosition
 			return
 		}
 		
@@ -2975,14 +3116,52 @@ Class Color
 		}
 	
 	}
-
+	
+	Class Image
+	{
+		InBox(box, img, tolerance := 0)
+		{
+			If (A_ScreenDPI == 120)
+				img .= "_125"
+			Else if (A_ScreenDPI == 144)
+				img .= "_150"
+			Else if (A_ScreenDPI == 168)
+				img .= "_175"
+			Else if (A_ScreenDPI == 192)
+				img .= "_200"
+			; ImageSearch, output_x, output_y, box[1], box[2], box[3], box[4], % "*" . tolerance . " *w46 *h-1 " . A_WorkingDir . "\assets\" . img . ".ico"
+			ImageSearch, output_x, output_y, box[1], box[2], box[3], box[4]
+					   , % "*" . tolerance . " *Trans0xff0000 " . A_WorkingDir . "\assets\" . img . ".bmp"
+			If (ErrorLevel == 2)
+			{
+				Debug.AddLine("No asset for your DPI")
+				return false
+			}
+			Else if (ErrorLevel == 1)
+				return false
+			Else
+				return Array(output_x, output_y)
+		}
+	}
+	
 	ARGBtoRGB(ARGB) ; Don't know who made this function as it's in several places but it's not mine. Credits go to the original creator.
 	{
 		VarSetCapacity( RGB,6,0 )
 		DllCall( "msvcrt.dll\sprintf", Str,RGB, Str,"%06X", UInt,ARGB<<8 )
 		Return "0x" RGB
 	}
-		
+	
+	; Function by nnnik @ https://www.autohotkey.com/boards/viewtopic.php?t=33197
+	IsEqualColor( color1, color2, variation := 0 )
+	{
+		Loop 4
+			if ( abs( ( color1 & 0xFF ) - ( color2 & 0xFF ) ) > variation )
+				return false
+			else
+				color1 := color1 >> 8, color2 := color2 >> 8
+		return true
+	}
+
 }
 
 Class Encryption

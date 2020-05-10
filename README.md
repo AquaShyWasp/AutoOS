@@ -200,7 +200,6 @@ Project Link: [https://github.com/AquaShyWasp/AutoOS](https://github.com/AquaShy
 
 
 
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/AquaShyWasp/AutoOS.svg?style=flat-square

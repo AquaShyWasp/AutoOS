@@ -208,5 +208,5 @@ Project Link: [https://github.com/AquaShyWasp/AutoOS](https://github.com/AquaShy
 [stars-url]: https://github.com/AquaShyWasp/AutoOS/stargazers
 [issues-shield]: https://img.shields.io/github/issues/AquaShyWasp/AutoOS.svg?style=flat-square
 [issues-url]: https://github.com/AquaShyWasp/AutoOS/issues
-[license-shield]: https://img.shields.io/badge/License-GPL--3.0-orange?style=flat-square
+[license-shield]: https://img.shields.io/badge/license-GPL--3.0-orange?style=flat-square
 [license-url]: https://github.com/AquaShyWasp/AutoOS/blob/master/LICENSE

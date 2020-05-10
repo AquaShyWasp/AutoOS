@@ -4,7 +4,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![GNU GPLv3 License][license-shield]][license-url]
+[![GPL-3.0 License][license-shield]][license-url]
 
 
 <!-- PROJECT LOGO -->
@@ -208,6 +208,5 @@ Project Link: [https://github.com/AquaShyWasp/AutoOS](https://github.com/AquaShy
 [stars-url]: https://github.com/AquaShyWasp/AutoOS/stargazers
 [issues-shield]: https://img.shields.io/github/issues/AquaShyWasp/AutoOS.svg?style=flat-square
 [issues-url]: https://github.com/AquaShyWasp/AutoOS/issues
-[license-shield]: https://img.shields.io/github/license/AquaShyWasp/AutoOS.svg?style=flat-square
+[license-shield]: https://img.shields.io/badge/License-GPL--3.0-orange?style=flat-square
 [license-url]: https://github.com/AquaShyWasp/AutoOS/blob/master/LICENSE
-[product-screenshot]: images/screenshot.png

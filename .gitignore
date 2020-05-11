@@ -2,4 +2,4 @@
 *.ini
 *.psd
 *.txt
-\tools\*.bmp
+tools/*.bmp

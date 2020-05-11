@@ -496,6 +496,13 @@ Class AutoOS
 															    , (552 + (42 * ((n-(Floor(n/4)*4)) != 0 ? (n-(Floor(n/4)*4)) : 4))), (208 + (36 * Ceil(n/4))))
 				}
 
+				GetRow(n)
+				{
+					If ((n >= 1) and (n <= 7))
+						return AutoOS.Coordinates.ClientPositionBox(563, (177 + (36 * n)) , 594, (208 + (36 * n)))
+				}
+				
+				
 			}
 			
 			Class Equipment	; TODO
@@ -1319,30 +1326,6 @@ Class AutoOS
 			
 			Class Inventory	; TODO
 			{
-				Static PotionColor := {"Attack": 0xff, "Antipoison": 0xffd4d259, "Strength": 0xff, "Compost": 0xff, "Restore": 0xff, "GuthixBalance": 0xff 
-									, "Energy": 0xff, "Defence": 0xff, "Agility": 0xff, "Combat": 0xff, "Prayer": 0xff59d4a8, "SuperAttack": 0xff5658d4, "SuperAntipoison": 0xff 
-									, "Fishing": 0xff, "SuperEnergy": 0xff, "Hunter": 0xff, "SuperStrength": 0xffd7d6d6, "MagicEssence": 0xff, "WeaponPoison": 0xff 
-									, "SuperRestore": 0xffb74272, "SanfewSerum": 0xff, "SuperDefence": 0xff, "AntidotePlus": 0xff, "Antifire": 0xff, "Ranging": 0xff56b1d4
-									, "WeaponPoisonPlus": 0xff, "Magic": 0xff, "Stamina": 0xff9f7b4a, "ZamorakBrew": 0xff, "AntidotePlusPlus": 0xff81853d, "Bastion": 0xffbd6316
-									, "BattleMage": 0xff, "SaradominBrew": 0xffcbca60, "WeaponPoisonPlusPlus": 0xff, "ExtendedAntifire": 0xff7442d2, "AntiVenom": 0xff
-									, "SuperCombat": 0xff1c700b, "SuperAntifire": 0xff, "AntiVenomPlus": 0xff5e4b51, "ExtendedSuperAntifire": 0xffb393cb
-									, "SuperMagic": 0xff, "SuperRanging": 0xff, "Overload": 0xff120e0e, "Absorption": 0xbdc4c8}
-				
-				Static PotionName := {0xff: "Attack", 0xff: "Antipoison", 0xffd4d259: "Strength", 0xff: "Compost", 0xff: "Restore", 0xff: "GuthixBalance"
-									 , 0xff: "Energy", 0xff: "Defence", 0xff: "Agility", 0xff: "Combat", 0xff59d4a8: "Prayer", 0xff5658d4: "SuperAttack", 0xff: "SuperAntipoison"
-									 , 0xff: "Fishing", 0xff: "SuperEnergy", 0xff: "Hunter", 0xffd7d6d6: "SuperStrength", 0xff: "MagicEssence", 0xff: "WeaponPoison"
-									 , 0xffb74272: "SuperRestore", 0xff: "SanfewSerum", 0xff: "SuperDefence", 0xff: "AntidotePlus", 0xff: "Antifire", 0xff56b1d4: "Ranging"
-									 , 0xff: "WeaponPoisonPlus", 0xff: "Magic", 0xff9f7b4a: "Stamina", 0xff: "ZamorakBrew", 0xff81853d: "AntidotePlusPlus", 0xffbd6316: "Bastion"
-									 , 0xff: "BattleMage", 0xffcbca60: "SaradominBrew", 0xff: "WeaponPoisonPlusPlus", 0xff7442d2: "ExtendedAntifire", 0xff: "AntiVenom"
-									 , 0xff1c700b: "SuperCombat", 0xff: "SuperAntifire", 0xff5e4b51: "AntiVenomPlus", 0xffb393cb: "ExtendedSuperAntifire"
-									 , 0xff: "SuperMagic", 0xff: "SuperRanging", 0xff120e0e: "Overload", 0xffbdc4c8: "Absorption"}
-									
-				Static DivinePotionColor := {"DivineSuperAttack": 0xff, "DivineSuperDefence": 0xff, "DivineSuperStrength": 0xff, "DivineBastion": 0xff
-										  , "DivineBattleMage": 0xff, "DivineSuperCombat": 0xff}
-									
-				Static DivinePotionName := {0xff: "DivineSuperAttack", 0xff: "DivineSuperDefence", 0xff: "DivineSuperStrength", 0xff: "DivineBastion"
-										   , 0xff: "DivineBattleMage", 0xff: "DivineSuperCombat"}
-				
 				
 				IsEmpty()
 				{
@@ -1388,17 +1371,19 @@ Class AutoOS
 					Sleep, Math.Random(10, 50)
 				}
 			
-				SlotHasPotion(slot, potion)	
+				SlotHasPotion(slot, potion := "Any")
 				{
-					slot := AutoOS.Coordinates.GameTab.Inventory.GetSlot(slot)
-					potion := Color.Image.InBox(slot, "items\potion", 20)
-					if !potion
-						return false
-				
-					if Color.Pixel.InBox(AutoOS.Core.GameTab.Inventory.PotionColor[potion], slot, 5)
+					Debug.AddLine("Checking if inventory slot " . slot . " has " . potion . " potion")
+					if AutoOS.Core.Item.HasPotion(AutoOS.Coordinates.GameTab.Inventory.GetSlot(slot), potion)
 						return true
 					else
 						return false
+				}
+				
+				HasPotion(potion := "Any")	; Checks the whole inventory
+				{
+					Debug.AddLine("Checking if inventory has " . potion . " potion")
+					return AutoOS.Core.Item.CountPotion(AutoOS.Coordinates.GameTab.Inventory.Inventory, potion)
 				}
 			
 			}
@@ -1694,7 +1679,118 @@ Class AutoOS
 			
 		}
 		
-		
+		Class Item
+		{
+			Static PotionColor := {"Attack": 0xff, "Antipoison": 0xffd4d259, "Strength": 0xff, "Compost": 0xff, "Restore": 0xff, "GuthixBalance": 0xff 
+									, "Energy": 0xff, "Defence": 0xff, "Agility": 0xff, "Combat": 0xff, "Prayer": 0xff59d4a8, "SuperAttack": 0xff5658d4, "SuperAntipoison": 0xff 
+									, "Fishing": 0xff, "SuperEnergy": 0xff, "Hunter": 0xff, "SuperStrength": 0xffd7d6d6, "MagicEssence": 0xff, "WeaponPoison": 0xff 
+									, "SuperRestore": 0xffb74272, "SanfewSerum": 0xff, "SuperDefence": 0xff, "AntidotePlus": 0xff, "Antifire": 0xff, "Ranging": 0xff56b1d4
+									, "WeaponPoisonPlus": 0xff, "Magic": 0xff, "Stamina": 0xff9f7b4a, "ZamorakBrew": 0xff, "AntidotePlusPlus": 0xff81853d, "Bastion": 0xffbd6316
+									, "BattleMage": 0xff, "SaradominBrew": 0xffcbca60, "WeaponPoisonPlusPlus": 0xff, "ExtendedAntifire": 0xff7442d2, "AntiVenom": 0xff
+									, "SuperCombat": 0xff1c700b, "SuperAntifire": 0xff, "AntiVenomPlus": 0xff5e4b51, "ExtendedSuperAntifire": 0xffb393cb
+									, "SuperMagic": 0xff, "SuperRanging": 0xff, "Overload": 0xff120e0e, "Absorption": 0xbdc4c8}
+				
+			Static PotionName := {0xff: "Attack", 0xff: "Antipoison", 0xffd4d259: "Strength", 0xff: "Compost", 0xff: "Restore", 0xff: "GuthixBalance"
+								 , 0xff: "Energy", 0xff: "Defence", 0xff: "Agility", 0xff: "Combat", 0xff59d4a8: "Prayer", 0xff5658d4: "SuperAttack", 0xff: "SuperAntipoison"
+								 , 0xff: "Fishing", 0xff: "SuperEnergy", 0xff: "Hunter", 0xffd7d6d6: "SuperStrength", 0xff: "MagicEssence", 0xff: "WeaponPoison"
+								 , 0xffb74272: "SuperRestore", 0xff: "SanfewSerum", 0xff: "SuperDefence", 0xff: "AntidotePlus", 0xff: "Antifire", 0xff56b1d4: "Ranging"
+								 , 0xff: "WeaponPoisonPlus", 0xff: "Magic", 0xff9f7b4a: "Stamina", 0xff: "ZamorakBrew", 0xff81853d: "AntidotePlusPlus", 0xffbd6316: "Bastion"
+								 , 0xff: "BattleMage", 0xffcbca60: "SaradominBrew", 0xff: "WeaponPoisonPlusPlus", 0xff7442d2: "ExtendedAntifire", 0xff: "AntiVenom"
+								 , 0xff1c700b: "SuperCombat", 0xff: "SuperAntifire", 0xff5e4b51: "AntiVenomPlus", 0xffb393cb: "ExtendedSuperAntifire"
+								 , 0xff: "SuperMagic", 0xff: "SuperRanging", 0xff120e0e: "Overload", 0xffbdc4c8: "Absorption"}
+								
+			Static DivinePotionColor := {"DivineSuperAttack": 0xff, "DivineSuperDefence": 0xff, "DivineSuperStrength": 0xff, "DivineBastion": 0xff
+									  , "DivineBattleMage": 0xff, "DivineSuperCombat": 0xff}
+								
+			Static DivinePotionName := {0xff: "DivineSuperAttack", 0xff: "DivineSuperDefence", 0xff: "DivineSuperStrength", 0xff: "DivineBastion"
+									   , 0xff: "DivineBattleMage", 0xff: "DivineSuperCombat"}
+			
+			HasItem(box, shape)
+			{
+				path := "items\" . shape
+				If Color.Image.InBox(box, path, 50)
+					return Array(potion_shape[1], potion_shape[2])
+				else
+					return false
+			}
+			
+			CountInventoryRow(row, shape)
+			{
+				item_count := 0
+				box := AutoOS.Coordinates.GameTab.Inventory.GetRow(row)
+				
+				Loop, 4	; Loops a maximum of 8 times. Bank has 8 columns, inventory has 4.
+				{		; In case of the bank you shouldn't need to count items as every item stacks ¯\_(ツ)_/¯
+					slot_box := [AutoOS.Coordinates.GameTab.Inventory.GetSlot(A_Index)[1], box[2], AutoOS.Coordinates.GameTab.Inventory.GetSlot(A_Index)[3], box[4]]
+					pot := AutoOS.Core.Item.HasItem(slot_box, shape)
+					if pot
+						++item_count
+				}
+				return item_count
+			}
+			
+			CountItem(shape)	; TODO need to make this smarter. Right now it's checking every single slot and shouldn't need to.
+			{
+				item_count := 0
+				Loop, 7
+				{
+					item_count += AutoOS.Core.Item.CountInventoryRow(A_Index, shape)
+				}
+				return item_count
+			}
+			
+			HasPotion(box, potion := "Any")	; TODO Should work fine but need to test all pots. NEED FIX FOR OVL.... EVERY POT VALIDATES OVL.
+			{
+				
+				potion_shape := AutoOS.Core.Item.HasItem(box, "potion")
+				if !potion_shape
+					return false
+				if (potion == "Any")
+					return Array(potion_shape[1], potion_shape[2])
+				else
+				{
+					box_width := box[3]-box[1]
+					box_height := box[4]-box[2]
+					
+					box := [box[1] + Ceil(box_width/3)
+						  , box[2] + Ceil(box_height/3)
+						  , box[3] - Ceil(box_width/2.5)
+						  , box[4] - Ceil(box_height/10)]
+					if Color.Pixel.InBox(AutoOS.Core.Item.PotionColor[potion], box, 8)
+						return Array(potion_shape[1], potion_shape[2])
+					else
+						return false
+				}
+			}
+			
+			CountInventoryRowPotion(row, potion := "Any")
+			{
+				item_count := 0
+				box := AutoOS.Coordinates.GameTab.Inventory.GetRow(row)
+				
+				Loop, 4	; Loops a maximum of 8 times. Bank has 8 columns, inventory has 4.
+				{		; In case of the bank you shouldn't need to count items as every item stacks ¯\_(ツ)_/¯
+					slot_box := [AutoOS.Coordinates.GameTab.Inventory.GetSlot(A_Index)[1], box[2], AutoOS.Coordinates.GameTab.Inventory.GetSlot(A_Index)[3], box[4]]
+					pot := AutoOS.Core.Item.HasPotion(slot_box, potion)
+					if pot
+						++item_count
+				}
+				return item_count
+			}
+			
+			CountPotion(potion := "Any")	; TODO need to make this smarter. Right now it's checking every single slot and shouldn't need to.
+			{
+				item_count := 0
+
+				Loop, 7
+				{
+					item_count += AutoOS.Core.Item.CountInventoryRowPotion(A_Index, potion)
+				}
+				return item_count
+			}
+			
+			
+		}
 	}
 	
 	Setup()

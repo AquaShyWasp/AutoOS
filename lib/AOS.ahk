@@ -1408,6 +1408,67 @@ Class AutoOS
 			
 			Class Prayer	; TODO
 			{
+				Static PrayerName := {1: "ThickSkin", 2: "BurstOfStrength", 3: "ClarityOfThought", 4: "SharpEye", 5: "MysticWill", 6: "RockSkin", 7: "SuperhumanStrength"
+								    , 8: "ImprovedReflexes", 9: "RapidRestore", 10: "RapidHeal", 11: "ProtectItem", 12: "HawkEye", 13: "MysticLore", 14: "SteelSkin"
+								    , 15: "UltimateStrength", 16: "IncredibleReflexes", 17: "ProtectFromMagic", 18: "ProtectFromMissiles", 19: "ProtectFromMelee"
+								    , 20: "EagleEye", 21: "MysticMight", 22: "Retribution", 23: "Redemption", 24: "Smite", 25: "Preserve", 26: "Chivalry", 27: "Piety"
+								    , 28: "Rigour", 29: "Augury"}
+				
+				Static PrayerNumber := {"ThickSkin": 1, "BurstOfStrength": 2, "ClarityOfThought": 3, "SharpEye": 4, "MysticWill": 5, "RockSkin": 6, "SuperhumanStrength": 7
+									  , "ImprovedReflexes": 8, "RapidRestore": 9, "RapidHeal": 10, "ProtectItem": 11, "HawkEye": 12, "MysticLore": 13, "SteelSkin": 14
+								      , "UltimateStrength": 15, "IncredibleReflexes": 16, "ProtectFromMagic": 17, "ProtectFromMissiles": 18, "ProtectFromMelee": 19
+									  , "EagleEye": 20, "MysticMight": 21, "Retribution": 22, "Redemption": 23, "Smite": 24, "Preserve": 25, "Chivalry": 26, "Piety": 27
+									  , "Rigour": 28, "Augury": 29}
+				
+				
+				ClickPray(n, flick := false, level_check := false)
+				{
+					If n is not Integer
+							n := AutoOS.Core.GameTab.Prayer.PrayerNumber[n]
+					If !Math.Between(n, 1, 29) ; no need to check if it's an integer, if it's not it will not validate and will return
+						return false
+					
+					AutoOS.Core.GameTab.Switch("Prayer")
+					
+					Debug.AddLine("Going to click " . n . " prayer")
+					
+					pray := AutoOS.Coordinates.GameTab.Prayer.GetPray(n)
+					
+					If Input.AsyncMouse
+					{
+						pray := pray[1] . ", " . pray[2] . ", " . pray[3] . ", " . pray[4]
+						If !flick
+							Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . pray . ", ""Left"")", "AsyncMouse.ahk ahk_class AutoHotkey")
+						Else if flick
+							Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . pray . ", ""doubleclick"")", "AsyncMouse.ahk ahk_class AutoHotkey")
+					}
+					else
+					{
+						If !flick
+							Input.Human.Mouse.HumanCoordinates(pray[1], pray[2], pray[3], pray[4], "Left")
+						Else if flick
+							Input.Human.Mouse.HumanCoordinates(pray[1], pray[2], pray[3], pray[4], "doubleclick")
+					}
+					Sleep, Math.Random(10, 50)
+				}
+				
+				PrayMelee()
+				{
+					AutoOS.Core.GameTab.Prayer.ClickPray("ProtectFromMelee")
+					return
+				}
+				
+				PrayRanged()
+				{
+					AutoOS.Core.GameTab.Prayer.ClickPray("ProtectFromMissiles")
+					return
+				}
+				
+				PrayMage()
+				{
+					AutoOS.Core.GameTab.Prayer.ClickPray("ProtectFromMagic")
+					return
+				}
 				
 			}
 			
@@ -1681,29 +1742,29 @@ Class AutoOS
 		
 		Class Item
 		{
-			Static PotionColor := {"Attack": 0xff, "Antipoison": 0xffd4d259, "Strength": 0xff, "Compost": 0xff, "Restore": 0xff, "GuthixBalance": 0xff 
-									, "Energy": 0xff, "Defence": 0xff, "Agility": 0xff, "Combat": 0xff, "Prayer": 0xff59d4a8, "SuperAttack": 0xff5658d4, "SuperAntipoison": 0xff 
-									, "Fishing": 0xff, "SuperEnergy": 0xff, "Hunter": 0xff, "SuperStrength": 0xffd7d6d6, "MagicEssence": 0xff, "WeaponPoison": 0xff 
-									, "SuperRestore": 0xffb74272, "SanfewSerum": 0xff, "SuperDefence": 0xff, "AntidotePlus": 0xff, "Antifire": 0xff, "Ranging": 0xff56b1d4
-									, "WeaponPoisonPlus": 0xff, "Magic": 0xff, "Stamina": 0xff9f7b4a, "ZamorakBrew": 0xff, "AntidotePlusPlus": 0xff81853d, "Bastion": 0xffbd6316
-									, "BattleMage": 0xff, "SaradominBrew": 0xffcbca60, "WeaponPoisonPlusPlus": 0xff, "ExtendedAntifire": 0xff7442d2, "AntiVenom": 0xff
-									, "SuperCombat": 0xff1c700b, "SuperAntifire": 0xff, "AntiVenomPlus": 0xff5e4b51, "ExtendedSuperAntifire": 0xffb393cb
-									, "SuperMagic": 0xff, "SuperRanging": 0xff, "Overload": 0xff120e0e, "Absorption": 0xbdc4c8}
+			Static PotionColor := {"Attack": 0x, "Antipoison": 0xd4d259, "Strength": 0x, "Compost": 0x, "Restore": 0x, "GuthixBalance": 0x 
+									, "Energy": 0x, "Defence": 0x, "Agility": 0x, "Combat": 0x, "Prayer": 0x4bd2a3, "SuperAttack": 0x5658d4, "SuperAntipoison": 0x 
+									, "Fishing": 0x, "SuperEnergy": 0x, "Hunter": 0x, "SuperStrength": 0xd6d4d4, "MagicEssence": 0x, "WeaponPoison": 0x 
+									, "SuperRestore": 0xb74272, "SanfewSerum": 0x, "SuperDefence": 0x, "AntidotePlus": 0x, "Antifire": 0x7c12a0, "Ranging": 0x46aed2
+									, "WeaponPoisonPlus": 0x, "Magic": 0xcaaea5, "Stamina": 0x9f7b4a, "ZamorakBrew": 0x, "AntidotePlusPlus": 0x81853d, "Bastion": 0xbd6316
+									, "BattleMage": 0x, "SaradominBrew": 0xcbca61, "WeaponPoisonPlusPlus": 0x, "ExtendedAntifire": 0x7442d2, "AntiVenom": 0x
+									, "SuperCombat": 0x1c700b, "SuperAntifire": 0x, "AntiVenomPlus": 0x5e4b51, "ExtendedSuperAntifire": 0xb393cb
+									, "SuperMagic": 0x599ac0, "SuperRanging": 0x59b2d4, "Overload": 0x120e0e, "Absorption": 0xbdc4c8}
 				
-			Static PotionName := {0xff: "Attack", 0xff: "Antipoison", 0xffd4d259: "Strength", 0xff: "Compost", 0xff: "Restore", 0xff: "GuthixBalance"
-								 , 0xff: "Energy", 0xff: "Defence", 0xff: "Agility", 0xff: "Combat", 0xff59d4a8: "Prayer", 0xff5658d4: "SuperAttack", 0xff: "SuperAntipoison"
-								 , 0xff: "Fishing", 0xff: "SuperEnergy", 0xff: "Hunter", 0xffd7d6d6: "SuperStrength", 0xff: "MagicEssence", 0xff: "WeaponPoison"
-								 , 0xffb74272: "SuperRestore", 0xff: "SanfewSerum", 0xff: "SuperDefence", 0xff: "AntidotePlus", 0xff: "Antifire", 0xff56b1d4: "Ranging"
-								 , 0xff: "WeaponPoisonPlus", 0xff: "Magic", 0xff9f7b4a: "Stamina", 0xff: "ZamorakBrew", 0xff81853d: "AntidotePlusPlus", 0xffbd6316: "Bastion"
-								 , 0xff: "BattleMage", 0xffcbca60: "SaradominBrew", 0xff: "WeaponPoisonPlusPlus", 0xff7442d2: "ExtendedAntifire", 0xff: "AntiVenom"
-								 , 0xff1c700b: "SuperCombat", 0xff: "SuperAntifire", 0xff5e4b51: "AntiVenomPlus", 0xffb393cb: "ExtendedSuperAntifire"
-								 , 0xff: "SuperMagic", 0xff: "SuperRanging", 0xff120e0e: "Overload", 0xffbdc4c8: "Absorption"}
+			Static PotionName := {0x: "Attack", 0x: "Antipoison", 0xd4d259: "Strength", 0x: "Compost", 0x: "Restore", 0x: "GuthixBalance"
+								 , 0x: "Energy", 0x: "Defence", 0x: "Agility", 0x: "Combat", 0x59d4a8: "Prayer", 0x4bd2a3: "SuperAttack", 0x: "SuperAntipoison"
+								 , 0x: "Fishing", 0x: "SuperEnergy", 0x: "Hunter", 0xd6d4d4: "SuperStrength", 0x: "MagicEssence", 0x: "WeaponPoison"
+								 , 0xb74272: "SuperRestore", 0x: "SanfewSerum", 0x: "SuperDefence", 0x: "AntidotePlus", 0x7c12a0: "Antifire", 0x46aed2: "Ranging"
+								 , 0x: "WeaponPoisonPlus", 0xcaaea5: "Magic", 0x9f7b4a: "Stamina", 0x: "ZamorakBrew", 0x81853d: "AntidotePlusPlus", 0xbd6316: "Bastion"
+								 , 0x: "BattleMage", 0xcbca61: "SaradominBrew", 0x: "WeaponPoisonPlusPlus", 0x7442d2: "ExtendedAntifire", 0x: "AntiVenom"
+								 , 0x1c700b: "SuperCombat", 0x: "SuperAntifire", 0x5e4b51: "AntiVenomPlus", 0xb393cb: "ExtendedSuperAntifire"
+								 , 0x599ac0: "SuperMagic", 0x59b2d4: "SuperRanging", 0x120e0e: "Overload", 0xbdc4c8: "Absorption"}
 								
-			Static DivinePotionColor := {"DivineSuperAttack": 0xff, "DivineSuperDefence": 0xff, "DivineSuperStrength": 0xff, "DivineBastion": 0xff
-									  , "DivineBattleMage": 0xff, "DivineSuperCombat": 0xff}
+			Static DivinePotionColor := {"DivineSuperAttack": 0x, "DivineSuperDefence": 0x, "DivineSuperStrength": 0x, "DivineBastion": 0x
+									  , "DivineBattleMage": 0x, "DivineSuperCombat": 0x }
 								
-			Static DivinePotionName := {0xff: "DivineSuperAttack", 0xff: "DivineSuperDefence", 0xff: "DivineSuperStrength", 0xff: "DivineBastion"
-									   , 0xff: "DivineBattleMage", 0xff: "DivineSuperCombat"}
+			Static DivinePotionName := {0x: "DivineSuperAttack", 0x: "DivineSuperDefence", 0x: "DivineSuperStrength", 0x: "DivineBastion"
+									   , 0x: "DivineBattleMage", 0x: "DivineSuperCombat"}
 			
 			HasItem(box, shape)
 			{
@@ -1739,9 +1800,8 @@ Class AutoOS
 				return item_count
 			}
 			
-			HasPotion(box, potion := "Any")	; TODO Should work fine but need to test all pots. NEED FIX FOR OVL.... EVERY POT VALIDATES OVL.
+			HasPotion(box, potion := "Any")
 			{
-				
 				potion_shape := AutoOS.Core.Item.HasItem(box, "potion")
 				if !potion_shape
 					return false
@@ -1752,11 +1812,11 @@ Class AutoOS
 					box_width := box[3]-box[1]
 					box_height := box[4]-box[2]
 					
-					box := [box[1] + Ceil(box_width/3)
-						  , box[2] + Ceil(box_height/3)
-						  , box[3] - Ceil(box_width/2.5)
-						  , box[4] - Ceil(box_height/10)]
-					if Color.Pixel.InBox(AutoOS.Core.Item.PotionColor[potion], box, 8)
+					box := [box[1] + Round(box_width/2.5)
+						  , box[2] + Round(box_height/1.5)
+						  , box[3] - Round(box_width/2.5)
+						  , Round(box[4] - (box_height/8))]
+					if Color.Pixel.InBox(AutoOS.Core.Item.PotionColor[potion], box, 15)
 						return Array(potion_shape[1], potion_shape[2])
 					else
 						return false
@@ -3240,18 +3300,11 @@ Class Color
 		}
 	}
 	
-	ARGBtoRGB(ARGB) ; Don't know who made this function as it's in several places but it's not mine. Credits go to the original creator.
-	{
-		VarSetCapacity( RGB,6,0 )
-		DllCall( "msvcrt.dll\sprintf", Str,RGB, Str,"%06X", UInt,ARGB<<8 )
-		Return "0x" RGB
-	}
-	
 	; Function by nnnik @ https://www.autohotkey.com/boards/viewtopic.php?t=33197
-	IsEqualColor( color1, color2, variation := 0 )
+	IsEqualColor(color1, color2, variation := 0)
 	{
 		Loop 4
-			if ( abs( ( color1 & 0xFF ) - ( color2 & 0xFF ) ) > variation )
+			if (abs((color1 & 0xff) - (color2 & 0xff)) > variation)
 				return false
 			else
 				color1 := color1 >> 8, color2 := color2 >> 8

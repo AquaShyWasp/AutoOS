@@ -1,5 +1,4 @@
-﻿
-AutoOSStart(player, async_input := true)
+﻿AutoOSStart(player, async_input := true)
 {
 	Thread, Priority, High
 	AutoOS.Player := player

@@ -431,9 +431,9 @@
 			}
 			Gui, MainGUI: Add, DropDownList, x10 y50 r0.7 w70, % player_list
 			Gui, MainGUI: Add, Button, x85 y49 r0.7 gPlayerManager, Player Manager
-			Gui, MainGUI: Add, Button, x10 y75 w50 r0.7, Load
-			Gui, MainGUI: Add, Button, x65 y75 w50 r0.7, Pause
-			Gui, MainGUI: Add, Button, x127 y75 w50 r0.7, Stop
+			Gui, MainGUI: Add, Button, x10 y75 w50 r0.7 gLoadScript, Load
+			Gui, MainGUI: Add, Button, x65 y75 w50 r0.7 gPauseScript, Pause
+			Gui, MainGUI: Add, Button, x127 y75 w50 r0.7 gStopScript, Stop
 			return
 			
 			PlayerManager:
@@ -442,6 +442,46 @@
 				UserInterface.PlayerManager.Viewer.Load()
 				UserInterface.PlayerManager.Viewer.State(true)
 			return
+			
+			LoadScript:
+			global ScriptLoaded
+				If ScriptLoaded
+				{
+					Debug.AddLine("Script already running, stop it first before loading another one", true)
+					return
+				}
+				FileSelectFile, LoadedScript, Options, % A_WorkingDir . "\scripts" , Script Loader, *.ahk
+				if !ErrorLevel and LoadedScript
+				{
+					script_loader := A_ScriptDir . "\scripts\ScriptLoader.ahk"
+					FileCopy, % script_loader, % script_loader . ".bak", true
+					FileCopy, % LoadedScript, % script_loader, true
+					Reload
+				}
+			return
+			
+			PauseScript:
+			global ScriptLoaded
+				If !ScriptLoaded
+				{
+					Debug.AddLine("No script running", true)
+					return
+				}
+				Suspend, Toggle
+			return
+			
+			StopScript:
+			global ScriptLoaded
+				If !ScriptLoaded
+				{
+					Debug.AddLine("No script running", true)
+					return
+				}
+				script_loader := A_ScriptDir . "\scripts\ScriptLoader.ahk"
+				FileCopy, % script_loader . ".bak", % script_loader, true
+				Reload
+			return
+			
 		}
 		
 		RightSide(main_gui_x, main_gui_y, main_gui_w, main_gui_h)

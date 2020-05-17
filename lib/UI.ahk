@@ -450,7 +450,7 @@
 					Debug.AddLine("Script already running, stop it first before loading another one", true)
 					return
 				}
-				FileSelectFile, LoadedScript, Options, % A_WorkingDir . "\scripts" , Script Loader, *.ahk
+				FileSelectFile, LoadedScript, Options, % A_WorkingDir . "\scripts" , Script Loader, [*]*.ahk
 				if !ErrorLevel and LoadedScript
 				{
 					script_loader := A_ScriptDir . "\scripts\ScriptLoader.ahk"

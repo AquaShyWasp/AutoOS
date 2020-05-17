@@ -111,18 +111,26 @@ If you are a developer, AutoOS is basically a large framework with all the borin
 
 To make your own script for AutoOS:
 Create your script in the scripts folder.
+You must name it this way:
+`[Category]ScriptName.ahk`
+Category you can type whatever you want but would be nice if everyone uses
+a set of standard categories.
+
+
 Add this lines at the top:
 
 ```
-If StrInclude(A_ScriptDir, "AutoOS/Scripts")
-  #Include ./lib/AOS.ahk
+ScriptLoaded := true
+
+RunScript()
+{
+	; Your script goes here.
+	return
+}
 ```
 
-This can be removed when you finish the script but it's useful to have while
-you develop the script.
-
 Personally I'm a Scite4ahk user, but until you are familiar with AutoOS classes, methods and functions,
- I would recommend you use AHKStudio.
+I would recommend you use AHKStudio.
 This is because AHKStudio makes an excellent at autocompleting stuff that is included or is in a library while Scite4ahk doesn't do it so well.
 This is the reason we add the code above at the top of our script, so your IDE/Text editor can fetch AutoOS classes and functions.
 
@@ -153,10 +161,10 @@ See the [open issues](https://github.com/AquaShyWasp/AutoOS/issues) for a list o
 Contributions are welcome though they should follow
 this guidelines:
 - Keep the current programming style.
-  - `Local my_variable`
-  - `Static MyVariable`
-  - `Global MY_VARIABLE`
-  - `Class MyClass`
+  - `local my_variable`
+  - `static MyVariable`
+  - `global MY_VARIABLE`
+  - `class MyClass`
   - `MyFunction(my_parameter, other_parameter)`
 - Readability over speed.
   - Fast code is important but if it's hard to

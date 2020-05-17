@@ -1,4 +1,5 @@
-﻿AOS_Start(player, async_input := true)
+﻿
+AutoOSStart(player, async_input := true)
 {
 	Thread, Priority, High
 	AutoOS.Player := player
@@ -6,10 +7,16 @@
 	AutoOS.Client.BootstrapCoordinates()
 	AutoOS.Setup()
 	Input.AsyncMouse := async_input, Input.AsyncKeyboard := async_input
-	if async_input
+	If async_input
 	{
-		Run, "AutoHotkey.exe" "plugins/AsyncMouse.ahk" %player%
-		Run, "AutoHotkey.exe" "plugins/AsyncKeyboard.ahk" %player%
+		DetectHiddenWindows On
+		SetTitleMatchMode 2
+		IfWinNotExist, % "AsyncMouse.ahk ahk_class AutoHotkey"
+			Run, "AutoHotkey.exe" "plugins/AsyncMouse.ahk" %player%
+		IfWinNotExist, % "AsyncKeyboard.ahk ahk_class AutoHotkey"
+			Run, "AutoHotkey.exe" "plugins/AsyncKeyboard.ahk" %player%
+		DetectHiddenWindows Off
+
 	}
 	UserInterface.MainGUI.Load()
 	return
@@ -954,24 +961,27 @@ Class AutoOS
 		{
 			Class Bank
 			{
-				Static BankPinSlot0 := AutoOS.Coordinates.ClientPositionBox(37, 107, 100, 170)
-					 , BankPinSlot1 := AutoOS.Coordinates.ClientPositionBox(131, 107, 194, 170)
-					 , BankPinSlot2 := AutoOS.Coordinates.ClientPositionBox(225, 107, 288, 170)
-					 , BankPinSlot3 := AutoOS.Coordinates.ClientPositionBox(309, 107, 372, 170)
-				
-				Static BankPinSlot4 := AutoOS.Coordinates.ClientPositionBox(37, 179, 100, 242)
-					 , BankPinSlot5 := AutoOS.Coordinates.ClientPositionBox(131, 179, 194, 242)
-					 , BankPinSlot6 := AutoOS.Coordinates.ClientPositionBox(225, 179, 288, 242)
-				
-				Static BankPinSlot7 := AutoOS.Coordinates.ClientPositionBox(37, 251, 100, 314)
-					 , BankPinSlot8 := AutoOS.Coordinates.ClientPositionBox(131, 251, 194, 314)
-					 , BankPinSlot9 := AutoOS.Coordinates.ClientPositionBox(225, 251, 288, 314)
-				
-				Static BankPinExit := AutoOS.Coordinates.ClientPositionBox(326, 251, 483, 275)
-					 , BankPinForgot := AutoOS.Coordinates.ClientPositionBox(326, 276, 483, 300)
-					 
-					 
-					 
+				Class Pin
+				{
+					Static Slot0 := AutoOS.Coordinates.ClientPositionBox(37, 107, 100, 170)
+						 , Slot1 := AutoOS.Coordinates.ClientPositionBox(131, 107, 194, 170)
+						 , Slot2 := AutoOS.Coordinates.ClientPositionBox(225, 107, 288, 170)
+						 , Slot3 := AutoOS.Coordinates.ClientPositionBox(309, 107, 372, 170)
+					
+					Static Slot4 := AutoOS.Coordinates.ClientPositionBox(37, 179, 100, 242)
+						 , Slot5 := AutoOS.Coordinates.ClientPositionBox(131, 179, 194, 242)
+						 , Slot6 := AutoOS.Coordinates.ClientPositionBox(225, 179, 288, 242)
+					
+					Static Slot7 := AutoOS.Coordinates.ClientPositionBox(37, 251, 100, 314)
+						 , Slot8 := AutoOS.Coordinates.ClientPositionBox(131, 251, 194, 314)
+						 , Slot9 := AutoOS.Coordinates.ClientPositionBox(225, 251, 288, 314)
+					
+					Static ExitButton := AutoOS.Coordinates.ClientPositionBox(326, 251, 483, 275)
+						 , ForgotPin := AutoOS.Coordinates.ClientPositionBox(326, 276, 483, 300)
+						 
+					Static Steps := AutoOS.Coordinates.ClientPositionBox(427, 29, 493, 50)
+				}
+					 	 
 				GetTab(n)
 				{	
 					if ((n < 0) or (n > 9))
@@ -1385,6 +1395,38 @@ Class AutoOS
 					Debug.AddLine("Checking if inventory has " . potion . " potion")
 					return AutoOS.Core.Item.CountPotion(AutoOS.Coordinates.GameTab.Inventory.Inventory, potion)
 				}
+				
+				
+				SlotHasNMZPotion(slot, potion := "Any")
+				{
+					Debug.AddLine("Checking if inventory slot " . slot . " has " . potion . " NMZ potion")
+					if AutoOS.Core.Item.HasNMZPotion(AutoOS.Coordinates.GameTab.Inventory.GetSlot(slot), potion)
+						return true
+					else
+						return false
+				}
+				
+				HasNMZPotion(potion := "Any")	; Checks the whole inventory
+				{
+					Debug.AddLine("Checking if inventory has " . potion . " NMZ potion")
+					return AutoOS.Core.Item.CountNMZPotion(AutoOS.Coordinates.GameTab.Inventory.Inventory, potion)
+				}
+				
+				
+				SlotHasDivinePotion(slot, potion := "Any")
+				{
+					Debug.AddLine("Checking if inventory slot " . slot . " has " . potion . " divine potion")
+					if AutoOS.Core.Item.HasDivinePotion(AutoOS.Coordinates.GameTab.Inventory.GetSlot(slot), potion)
+						return true
+					else
+						return false
+				}
+				
+				HasDivinePotion(potion := "Any")	; Checks the whole inventory
+				{
+					Debug.AddLine("Checking if inventory has " . potion . " divine potion")
+					return AutoOS.Core.Item.CountDivinePotion(AutoOS.Coordinates.GameTab.Inventory.Inventory, potion)
+				}
 			
 			}
 			
@@ -1718,22 +1760,207 @@ Class AutoOS
 			{
 				If Color.Image.InBox(AutoOS.Coordinates.ClientPositionBox(375, 3, 514, 77), "interface\close1", 50)
 					return true
+				else if AutoOS.Core.Interface.Bank.Pin.IsOpen()
+					return true
 				else
 					return false
 			}
 			
 			Class Bank
 			{
+				Class Pin
+				{
+					IsOpen()
+					{
+						Debug.AddLine("Checking if bank pin screen is open")
+						slot0 := AutoOS.Coordinates.Interface.Bank.Pin.Slot0
+						slot1 := AutoOS.Coordinates.Interface.Bank.Pin.Slot1
+						slot2 := AutoOS.Coordinates.Interface.Bank.Pin.Slot2
+						slot3 := AutoOS.Coordinates.Interface.Bank.Pin.Slot3
+						slot4 := AutoOS.Coordinates.Interface.Bank.Pin.Slot4
+						slot5 := AutoOS.Coordinates.Interface.Bank.Pin.Slot5
+						slot6 := AutoOS.Coordinates.Interface.Bank.Pin.Slot6
+						slot7 := AutoOS.Coordinates.Interface.Bank.Pin.Slot7
+						slot8 := AutoOS.Coordinates.Interface.Bank.Pin.Slot8
+						slot9 := AutoOS.Coordinates.Interface.Bank.Pin.Slot9
+						
+						If Color.Pixel.InBoxes(0xff7f00, slot0, slot1, 5, 3, slot2, slot3, slot4)
+						{
+							Debug.AddLine("Bank pin screen is open")
+							return true
+						}
+						Else if Color.Pixel.InBoxes(0xff7f00, slot5, slot6, 2, 3, slot7, slot8, slot9)
+						{
+							Debug.AddLine("Bank pin screen is open")
+							return true
+						}
+						Else
+						{
+							Debug.AddLine("Bank pin screen is not open")
+							return false
+						}
+					}
+					
+					ClickPinNumber(n)
+					{
+						
+						if ((n is not integer) or !AutoOS.Core.Interface.Bank.Pin.IsOpen() or (0 > n) or (0 > 9))
+							return false
+						
+						pin_box := [AutoOS.Coordinates.Interface.Bank.Pin.Slot0[1]
+								  , AutoOS.Coordinates.Interface.Bank.Pin.Slot0[2]
+								  , AutoOS.Coordinates.Interface.Bank.Pin.slot3[3]
+								  , AutoOS.Coordinates.Interface.Bank.Pin.Slot8[4]]
+						img := "interface\bank\pin\" . n
+						pin_number := Color.Image.InBox(pin_box, img, 10)
+						If pin_number
+						{
+							number_box := Math.WhichBox(pin_number[1], pin_number[2]
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot0
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot1
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot2
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot3
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot4
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot5
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot6
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot7
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot8
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot9
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot10)
+						}
+						else
+						{
+							AutoOS.Client.ActivateClient()
+							MouseGetPos, out_x, out_y
+							number_box := Math.WhichBox(out_x, out_y
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot0
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot1
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot2
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot3
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot4
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot5
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot6
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot7
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot8
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot9
+													  , AutoOS.Coordinates.Interface.Bank.Pin.Slot10)
+						}
+						
+						If Input.AsyncMouse
+						{
+							number_box := number_box[1] . ", " . number_box[2] . ", " . number_box[3] . ", " . number_box[4]
+							Input.SendAsyncInput("Input.Human.Mouse.HumanCoordinates(" . number_box . ", ""Left"")", "AsyncMouse.ahk ahk_class AutoHotkey")
+						}
+						else
+							Input.Human.Mouse.HumanCoordinates(number_box[1], number_box[2], number_box[3], number_box[4], "Left")
+						Sleep, Math.Random(10, 50)
+						
+					}
+				
+					FindStep()
+					{
+						if Color.Image.InBox(AutoOS.Coordinates.Interface.Bank.Pin.Steps, "interface\bank\pin\step0")
+							return "step0"
+						else if Color.Image.InBox(AutoOS.Coordinates.Interface.Bank.Pin.Steps, "interface\bank\pin\step1")
+							return "step1"
+						else if Color.Image.InBox(AutoOS.Coordinates.Interface.Bank.Pin.Steps, "interface\bank\pin\step2")
+							return "step2"
+						else if Color.Image.InBox(AutoOS.Coordinates.Interface.Bank.Pin.Steps, "interface\bank\pin\step3")
+							return "step3"
+						else
+							return false
+					}
+				
+					WaitStep(step, t)
+					{
+						Debug.AddLine("Going for " . step)
+						start_tick := A_TickCount, current_tick := A_TickCount
+						While ((current_tick - start_tick) < t)
+						{
+							If (AutoOS.Core.Interface.Bank.Pin.FindStep() == step)
+								return true
+							Else
+							{
+								Sleep, 50
+								current_tick := A_TickCount
+							}
+						}
+						return false
+					}
+					
+					UnlockBank(n1, n2, n3, n4)
+					{
+						
+						If AutoOS.Core.Interface.Bank.Pin.FindStep() == "step0"
+						{
+							Debug.AddLine("Going to click the first pin number")
+							AutoOS.Core.Interface.Bank.Pin.ClickPinNumber(n1)
+							AutoOS.Core.Interface.Bank.Pin.WaitStep("step1", 500)
+						}
+						
+						If AutoOS.Core.Interface.Bank.Pin.FindStep() == "step1"
+						{
+							Debug.AddLine("Going to click the second pin number")
+							AutoOS.Core.Interface.Bank.Pin.ClickPinNumber(n2)
+							AutoOS.Core.Interface.Bank.Pin.WaitStep("step2", 500)
+						}
+						
+						If AutoOS.Core.Interface.Bank.Pin.FindStep() == "step2"
+						{
+							Debug.AddLine("Going to click the third pin number")
+							AutoOS.Core.Interface.Bank.Pin.ClickPinNumber(n3)
+							AutoOS.Core.Interface.Bank.Pin.WaitStep("step3", 500)
+						}
+						
+						If AutoOS.Core.Interface.Bank.Pin.FindStep() == "step3"
+						{
+							Debug.AddLine("Going to click the fourth pin number")
+							AutoOS.Core.Interface.Bank.Pin.ClickPinNumber(n4)
+							AutoOS.Core.Interface.Bank.WaitBank(1000)
+						}
+						
+						
+					}
+					
+				}
 				
 				IsOpen()	; TODO need testing in higher dpi. should work though.
 				{
+					Debug.AddLine("Checking if bank is open")
 					If Color.Multi.Pixel.InBox(AutoOS.Coordinates.Interface.Bank.RearrangeMode, 0xff981f, 0x000000, 2, 3, 0x494034)
+					{
+						Debug.AddLine("Bank is open")
 						return true
+					}
 					Else if Color.Multi.Pixel.InBox(AutoOS.Coordinates.Interface.Bank.WithdrawAs, 0xff981f, 0x000000, 2, 3, 0x494034)
-						Return true
+					{
+						Debug.AddLine("Bank is open")
+						return true
+					}
 					Else
+					{
+						Debug.AddLine("Bank is not open")
 						Return false
+					}
 				}
+				
+				WaitBank(t)
+				{
+					Debug.AddLine("Waiting for bank screen")
+					start_tick := A_TickCount, current_tick := A_TickCount
+					While ((current_tick - start_tick) < t)
+					{
+						If AutoOS.Core.Interface.Bank.IsOpen()
+							return true
+						Else
+						{
+							Sleep, 50
+							current_tick := A_TickCount
+						}
+					}
+					return false
+				}
+				
 				
 			}
 			
@@ -1742,29 +1969,32 @@ Class AutoOS
 		
 		Class Item
 		{
-			Static PotionColor := {"Attack": 0x, "Antipoison": 0xd4d259, "Strength": 0x, "Compost": 0x, "Restore": 0x, "GuthixBalance": 0x 
-									, "Energy": 0x, "Defence": 0x, "Agility": 0x, "Combat": 0x, "Prayer": 0x4bd2a3, "SuperAttack": 0x5658d4, "SuperAntipoison": 0x 
-									, "Fishing": 0x, "SuperEnergy": 0x, "Hunter": 0x, "SuperStrength": 0xd6d4d4, "MagicEssence": 0x, "WeaponPoison": 0x 
-									, "SuperRestore": 0xb74272, "SanfewSerum": 0x, "SuperDefence": 0x, "AntidotePlus": 0x, "Antifire": 0x7c12a0, "Ranging": 0x46aed2
-									, "WeaponPoisonPlus": 0x, "Magic": 0xcaaea5, "Stamina": 0x9f7b4a, "ZamorakBrew": 0x, "AntidotePlusPlus": 0x81853d, "Bastion": 0xbd6316
-									, "BattleMage": 0x, "SaradominBrew": 0xcbca61, "WeaponPoisonPlusPlus": 0x, "ExtendedAntifire": 0x7442d2, "AntiVenom": 0x
-									, "SuperCombat": 0x1c700b, "SuperAntifire": 0x, "AntiVenomPlus": 0x5e4b51, "ExtendedSuperAntifire": 0xb393cb
-									, "SuperMagic": 0x599ac0, "SuperRanging": 0x59b2d4, "Overload": 0x120e0e, "Absorption": 0xbdc4c8}
+			Static PotionColor := {"Attack": 0x4bced2, "Antipoison": 0x7cdb21, "Strength": 0xd2d24b, "Compost": 0x87625c, "Restore": 0xd2544b, "GuthixBalance": 0x58be7d
+									, "Energy": 0xa75e6a, "Defence": 0x4bd24e, "Agility": 0x7b9312, "Combat": 0x88ba74, "Prayer": 0x4bd2a3, "SuperAttack": 0x4b4ed2, "SuperAntipoison": 0xdb2176
+									, "Fishing": 0x4f4a4a, "SuperEnergy": 0xbe589b, "Hunter": 0x0b5c5f, "SuperStrength": 0xd2d0d0, "WeaponPoison": 0x2182db
+									, "SuperRestore": 0xb3406f, "SanfewSerum": 0xb76f69, "SuperDefence": 0xd2b24b, "AntidotePlus": 0x7d7c62, "Antifire": 0x751298, "Ranging": 0x4bafd2
+									, "WeaponPoisonPlus": 0xa75c3c, "Magic": 0xc6a69b, "Stamina": 0x9b7747, "ZamorakBrew": 0x87650e, "AntidotePlusPlus": 0x7d813a, "Bastion": 0xb86216
+									, "Battlemage": 0xdba82e, "SaradominBrew": 0xcbca59, "WeaponPoisonPlusPlus": 0xb9b9c5, "ExtendedAntifire": 0x6d34d0, "AntiVenom": 0x3c4b43
+									, "SuperCombat": 0x1c6c0b, "SuperAntifire": 0x8c61aa, "AntiVenomPlus": 0x5a474d, "ExtendedSuperAntifire": 0xad87c9}
+									
+
+			Static PotionName := {0x4bced2: "Attack", 0x7cdb21: "Antipoison", 0xd2d24b: "Strength", 0x87625c: "Compost", 0xd2544b: "Restore", 0x58be7d: "GuthixBalance"
+								 , 0xa75e6a: "Energy", 0x4bd24e: "Defence", 0x7b9312: "Agility", 0x88ba74: "Combat", 0x4bd2a3: "Prayer", 0x4b4ed2: "SuperAttack", 0xdb2176: "SuperAntipoison"
+								 , 0x4f4a4a: "Fishing", 0x: "SuperEnergy", 0xd2b24b: "Hunter", 0xd2d0d0: "SuperStrength", 0x2182db: "WeaponPoison"
+								 , 0xb3406f: "SuperRestore", 0xb76f69: "SanfewSerum", 0xd2b24b: "SuperDefence", 0x7d7c62: "AntidotePlus", 0x751298: "Antifire", 0x4bafd2: "Ranging"
+								 , 0xa75c3c: "WeaponPoisonPlus", 0xc6a69b: "Magic", 0x9b7747: "Stamina", 0x87650e: "ZamorakBrew", 0x7d813a: "AntidotePlusPlus", 0xb86216: "Bastion"
+								 , 0xdba82e: "Battlemage", 0xcbca59: "SaradominBrew", 0xb9b9c5: "WeaponPoisonPlusPlus", 0x6d34d0: "ExtendedAntifire", 0x3c4b43: "AntiVenom"
+								 , 0x1c6c0b: "SuperCombat", 0x8c61aa: "SuperAntifire", 0x5a474d: "AntiVenomPlus", 0xad87c9: "ExtendedSuperAntifire"}
 				
-			Static PotionName := {0x: "Attack", 0x: "Antipoison", 0xd4d259: "Strength", 0x: "Compost", 0x: "Restore", 0x: "GuthixBalance"
-								 , 0x: "Energy", 0x: "Defence", 0x: "Agility", 0x: "Combat", 0x59d4a8: "Prayer", 0x4bd2a3: "SuperAttack", 0x: "SuperAntipoison"
-								 , 0x: "Fishing", 0x: "SuperEnergy", 0x: "Hunter", 0xd6d4d4: "SuperStrength", 0x: "MagicEssence", 0x: "WeaponPoison"
-								 , 0xb74272: "SuperRestore", 0x: "SanfewSerum", 0x: "SuperDefence", 0x: "AntidotePlus", 0x7c12a0: "Antifire", 0x46aed2: "Ranging"
-								 , 0x: "WeaponPoisonPlus", 0xcaaea5: "Magic", 0x9f7b4a: "Stamina", 0x: "ZamorakBrew", 0x81853d: "AntidotePlusPlus", 0xbd6316: "Bastion"
-								 , 0x: "BattleMage", 0xcbca61: "SaradominBrew", 0x: "WeaponPoisonPlusPlus", 0x7442d2: "ExtendedAntifire", 0x: "AntiVenom"
-								 , 0x1c700b: "SuperCombat", 0x: "SuperAntifire", 0x5e4b51: "AntiVenomPlus", 0xb393cb: "ExtendedSuperAntifire"
-								 , 0x599ac0: "SuperMagic", 0x59b2d4: "SuperRanging", 0x120e0e: "Overload", 0xbdc4c8: "Absorption"}
+			Static NMZPotionColor := {"SuperMagic": 0x5797bd, "SuperRanging": 0x4bafd2, "Overload": 0x120e0e, "Absorption": 0xb6c0c4}
+
+			Static NMZPotionName := {0x5797bd: "SuperMagic", 0x4bafd2: "SuperRanging", 0x120e0e: "Overload", 0xb6c0c4: "Absorption"}
+
+			Static DivinePotionColor := {"SuperAttack": 0x3f42d2, "SuperStrength": 0xcdcaca, "Ranging": 0x3facd2, "Bastion": 0xac5b15
+									  , "Battlemage": 0xd09c19, "SuperCombat": 0x19650b}
 								
-			Static DivinePotionColor := {"DivineSuperAttack": 0x, "DivineSuperDefence": 0x, "DivineSuperStrength": 0x, "DivineBastion": 0x
-									  , "DivineBattleMage": 0x, "DivineSuperCombat": 0x }
-								
-			Static DivinePotionName := {0x: "DivineSuperAttack", 0x: "DivineSuperDefence", 0x: "DivineSuperStrength", 0x: "DivineBastion"
-									   , 0x: "DivineBattleMage", 0x: "DivineSuperCombat"}
+			Static DivinePotionName := {0x3f42d2: "SuperAttack", 0xcdcaca: "SuperStrength", 0x3facd2: "SuperRanging", 0xac5b15: "Bastion"
+									   , 0xd09c19: "Battlemage", 0x19650b: "SuperCombat"}
 			
 			HasItem(box, shape)
 			{
@@ -1800,6 +2030,8 @@ Class AutoOS
 				return item_count
 			}
 			
+			
+			
 			HasPotion(box, potion := "Any")
 			{
 				potion_shape := AutoOS.Core.Item.HasItem(box, "potion")
@@ -1816,7 +2048,7 @@ Class AutoOS
 						  , box[2] + Round(box_height/1.5)
 						  , box[3] - Round(box_width/2.5)
 						  , Round(box[4] - (box_height/8))]
-					if Color.Pixel.InBox(AutoOS.Core.Item.PotionColor[potion], box, 15)
+					if Color.Pixel.InBox(AutoOS.Core.Item.PotionColor[potion], box)
 						return Array(potion_shape[1], potion_shape[2])
 					else
 						return false
@@ -1845,6 +2077,108 @@ Class AutoOS
 				Loop, 7
 				{
 					item_count += AutoOS.Core.Item.CountInventoryRowPotion(A_Index, potion)
+				}
+				return item_count
+			}
+			
+			
+			
+			HasNMZPotion(box, potion := "Any")
+			{
+				potion_shape := AutoOS.Core.Item.HasItem(box, "potion")
+				if !potion_shape
+					return false
+				if (potion == "Any")
+					return Array(potion_shape[1], potion_shape[2])
+				else
+				{
+					box_width := box[3]-box[1]
+					box_height := box[4]-box[2]
+					
+					box := [box[1] + Round(box_width/2.5)
+						  , box[2] + Round(box_height/1.5)
+						  , box[3] - Round(box_width/2.5)
+						  , Round(box[4] - (box_height/8))]
+					if Color.Pixel.InBox(AutoOS.Core.Item.NMZPotionColor[potion], box)
+						return Array(potion_shape[1], potion_shape[2])
+					else
+						return false
+				}
+			}
+			
+			CountInventoryRowNMZPotion(row, potion := "Any")
+			{
+				item_count := 0
+				box := AutoOS.Coordinates.GameTab.Inventory.GetRow(row)
+				
+				Loop, 4	; Loops a maximum of 8 times. Bank has 8 columns, inventory has 4.
+				{		; In case of the bank you shouldn't need to count items as every item stacks ¯\_(ツ)_/¯
+					slot_box := [AutoOS.Coordinates.GameTab.Inventory.GetSlot(A_Index)[1], box[2], AutoOS.Coordinates.GameTab.Inventory.GetSlot(A_Index)[3], box[4]]
+					pot := AutoOS.Core.Item.HasNMZPotion(slot_box, potion)
+					if pot
+						++item_count
+				}
+				return item_count
+			}
+			
+			CountNMZPotion(potion := "Any")	; TODO need to make this smarter. Right now it's checking every single slot and shouldn't need to.
+			{
+				item_count := 0
+
+				Loop, 7
+				{
+					item_count += AutoOS.Core.Item.CountInventoryRowNMZPotion(A_Index, potion)
+				}
+				return item_count
+			}
+			
+			
+			
+			HasDivinePotion(box, potion := "Any")
+			{
+				potion_shape := AutoOS.Core.Item.HasItem(box, "divine_potion")
+				if !potion_shape
+					return false
+				if (potion == "Any")
+					return Array(potion_shape[1], potion_shape[2])
+				else
+				{
+					box_width := box[3]-box[1]
+					box_height := box[4]-box[2]
+					
+					box := [box[1] + Round(box_width/2.5)
+						  , box[2] + Round(box_height/1.5)
+						  , box[3] - Round(box_width/2.5)
+						  , Round(box[4] - (box_height/8))]
+					if Color.Pixel.InBox(AutoOS.Core.Item.DivinePotionColor[potion], box)
+						return Array(potion_shape[1], potion_shape[2])
+					else
+						return false
+				}
+			}
+			
+			CountInventoryRowDivinePotion(row, potion := "Any")
+			{
+				item_count := 0
+				box := AutoOS.Coordinates.GameTab.Inventory.GetRow(row)
+				
+				Loop, 4	; Loops a maximum of 8 times. Bank has 8 columns, inventory has 4.
+				{		; In case of the bank you shouldn't need to count items as every item stacks ¯\_(ツ)_/¯
+					slot_box := [AutoOS.Coordinates.GameTab.Inventory.GetSlot(A_Index)[1], box[2], AutoOS.Coordinates.GameTab.Inventory.GetSlot(A_Index)[3], box[4]]
+					pot := AutoOS.Core.Item.HasDivinePotion(slot_box, potion)
+					if pot
+						++item_count
+				}
+				return item_count
+			}
+			
+			CountDivinePotion(potion := "Any")	; TODO need to make this smarter. Right now it's checking every single slot and shouldn't need to.
+			{
+				item_count := 0
+
+				Loop, 7
+				{
+					item_count += AutoOS.Core.Item.CountInventoryRowDivinePotion(A_Index, potion)
 				}
 				return item_count
 			}
@@ -1895,7 +2229,7 @@ Class UserInterface
 			Load()
 			{
 				Gui, PlayerManager: Hide
-				Gui, NewPlayer: New, New Player
+				Gui, NewPlayer: New,, New Player
 				Gui, NewPlayer: Add, Text, x10 y10, % "Client:"
 				Gui, NewPlayer: Add, Text, x82 y10, % "Email/Login:"
 				Gui, NewPlayer: Add, Text, x164 y10, % "Password:"
@@ -2022,7 +2356,7 @@ Class UserInterface
 			{
 				UserInterface.PlayerManager.Editor.Player := player
 				Gui, PlayerManager: Hide
-				Gui, PlayerEditor: New, Player Editor
+				Gui, PlayerEditor: New,, Player Editor
 				Gui, PlayerEditor: Add, Text, x10 y10, % "Client:"
 				Gui, PlayerEditor: Add, Text, x82 y10, % "Email/Login:"
 				Gui, PlayerEditor: Add, Text, x164 y10, % "Password:"
@@ -2189,7 +2523,7 @@ Class UserInterface
 								  . "Combat|Skills|Quests|Inventory|Equipment|Prayer|Magic|"
 								  . "Clan chat|Friend list|Acc. Management|Logout|Options|Emotes|Music"
 
-				Gui, PlayerManager: New, Player Manager
+				Gui, PlayerManager: New,, Player Manager
 				Gui, PlayerManager: Add, ListView, % list_view_options, % list_view_header
 				LV_ModIfyCol(AutoHdr)
 				LV_ModIfyCol(1, 75)
@@ -2221,6 +2555,9 @@ Class UserInterface
 					Gui, PlayerManager: Default
 					AutoOS.PlayerManager.DeletePlayer(LV_GetNext())
 					UserInterface.PlayerManager.Viewer.UpdatePlayersData()
+				return
+				PlayerManagerGuiClose:
+					UserInterface.PlayerManager.Viewer.State(false)
 				return
 				
 			}
@@ -2265,7 +2602,7 @@ Class UserInterface
 			main_gui_x := AutoOS.Client.Coordinates[1]
 			main_gui_y := AutoOS.Client.Coordinates[4]
 			main_gui_w := Math.DPIScale((AutoOS.Client.Coordinates[3] - AutoOS.Client.Coordinates[1]), "descale")
-			main_gui_h := 140
+			main_gui_h := 150
 			
 			Gui, MainGUI: New,, AutoOS
 			;Gui, MainGUI: Color, Gray
@@ -2284,18 +2621,26 @@ Class UserInterface
 		LeftSide()
 		{
 			player_count := Text.CountIniSections("account.ini")
-
-			Gui, MainGUI: Add, Text,, Select Player:
+			Gui, Add, Picture, x50 w80 h-1 y0, % A_WorkingDir . "\assets\logo.png"
+			Gui, MainGUI: Add, Text, x10 y33, Select Player:
 			Loop % player_count
 			{	
 				player_list .= "Player" . A_Index . "|"
 				if (A_Index == 1)
 					player_list .= "|"
 			}
-			Gui, MainGUI: Add, DropDownList,, % player_list
-			Gui, MainGUI: Add, Button,, Load script
-			Gui, MainGUI: Add, Button,, Pause script
-			Gui, MainGUI: Add, Button,, Stop script
+			Gui, MainGUI: Add, DropDownList, x10 y50 r0.7 w70, % player_list
+			Gui, MainGUI: Add, Button, x85 y49 r0.7 gPlayerManager, Player Manager
+			Gui, MainGUI: Add, Button, x10 y75 w50 r0.7, Load
+			Gui, MainGUI: Add, Button, x65 y75 w50 r0.7, Pause
+			Gui, MainGUI: Add, Button, x127 y75 w50 r0.7, Stop
+			return
+			
+			PlayerManager:
+				If (AutoOS.PlayerManager.MasterPassword == "")
+					UserInterface.PlayerManager.MasterPassword()
+				UserInterface.PlayerManager.Viewer.Load()
+				UserInterface.PlayerManager.Viewer.State(true)
 			return
 		}
 		
@@ -2318,7 +2663,7 @@ Class UserInterface
 			
 			Gui, MainGUI: Add, CheckBox, % "x" . debug_col1 . " y25 gMouseKeysToggle", Arrows mouse keys
 			
-			Gui, MainGUI: Add, GroupBox, % "x" . (debug_col1 - 5) . " y45 w150 h" . (debug_tools_h - 40),
+			Gui, MainGUI: Add, GroupBox, % "x" . (debug_col1 - 5) . " y45 w150 h" . (debug_tools_h - 50),
 			Gui, MainGUI: Add, Checkbox, % "x" . (debug_col1) . " y45 gMouseScreeenPositionToggle", Mouse position
 			Gui, MainGUI: Font, s8
 			Gui, MainGUI: Add, Text, % "x" . (debug_col1) . " y62", On Screen:
@@ -2445,985 +2790,6 @@ Class UserInterface
 		
 	}
 
-}
-
-Class Debug
-{
-	Static LogFile := ""
-	
-	Benchmark(loops)	; Speed benchmark. 
-	{
-		starting_tick := A_TickCount
-		
-		Loop % loops
-		{
-			;Tooltip % AutoOS.Coordinates.GameTab.Magic.Standard.Spell1[1] ; Add funcion or label here.
-			Tooltip % AutoOS.Coordinates.GameTab.Magic.Standard.GetSpell(1)[1]
-		}
-		Clipboard := (A_TickCount - starting_tick)
-		Tooltip % "Ran the command/function " . loops . " times in: " .  (Clipboard) . "miliseconds. Last result is: "
-	}
-	
-	CreateLog()
-	{
-		file_counter := 0
-		Loop, Files, logs\log*.txt
-		{
-			++file_counter
-		}
-		Debug.LogFile := "logs\log" . ++file_counter . ".txt"
-		
-		FormatTime, TIME_STAMP,, [dd-MM-yyyy HH:mm:ss]:
-		FileAppend, % TIME_STAMP . " AutoOS Starting.`r`n`r`n", % Debug.LogFile
-	}
-	
-	AddLine(line)
-	{
-		If !Debug.LogFile
-			Debug.CreateLog()
-		FormatTime, TIME_STAMP,, [dd-MM-yyyy HH:mm:ss]:
-		FileAppend, % "`r`n" . TIME_STAMP . " " . line, % Debug.LogFile
-		FileRead, debug_file, % Debug.LogFile
-		ControlSetText,, % debug_file , % "ahk_id " . UserInterface.MainGUI.ScriptDebugger	; Rewrites the script debugger to add the new lines. There's probably a better
-																							; way to do this but for now this is good enough.
-																							
-		PostMessage, 0x115, 7,,, % "ahk_id " . UserInterface.MainGUI.ScriptDebugger			; This scrolls the edit control down to the bottom.
-	}
-	
-	
-}
-
-Class Input	; Core Class of our input
-{	; TODO: Need to add a client check before every input I think, so we don't send input to the wrong place and mess the bot.
-	
-	Static AsyncMouse, AsyncKeyboard
-	
-	SendAsyncInput(ByRef StringToSend, ByRef TargetScriptTitle)
-	{	
-		Critical
-		VarSetCapacity(CopyDataStruct, 3*A_PtrSize, 0)  ; Set up the structure's memory area.
-		; First set the structure's cbData member to the size of the string, including its zero terminator:
-		SizeInBytes := (StrLen(StringToSend) + 1) * (A_IsUnicode ? 2 : 1)
-		NumPut(SizeInBytes, CopyDataStruct, A_PtrSize)  ; OS requires that this be done.
-		NumPut(&StringToSend, CopyDataStruct, 2*A_PtrSize)  ; Set lpData to point to the string itself.
-		Prev_DetectHiddenWindows := A_DetectHiddenWindows
-		Prev_TitleMatchMode := A_TitleMatchMode
-		DetectHiddenWindows On
-		SetTitleMatchMode 2
-		time_out := 25  ; I set this to 1 so it doesn't hang waiting for a response... I don't like having a confirmation though
-		SendMessage, 0x4a, 0, &CopyDataStruct,, %TargetScriptTitle%,,,, % time_out ; 0x4a is WM_COPYDATA.
-		If (ErrorLevel != 1)
-			SendMessage, 0x4a, 0, &CopyDataStruct,, %TargetScriptTitle%,,,, % time_out ; 0x4a is WM_COPYDATA.
-		DetectHiddenWindows %Prev_DetectHiddenWindows%  ; Restore original setting for the caller.
-		SetTitleMatchMode %Prev_TitleMatchMode%         ; Same.
-		
-		return
-	}
-	
-	DynamicMouseMethod(string)	; Runs an input method dynamically (a method inside a variable).
-	{
-		; When you call a input method through this, you need to declare all parameters. Haven't tested it but it's very likely it won't work well If you don't declare all params.
-		params := Text.ExtractParams(StrSplit(StrSplit(string, "(")[2], ")")[1])
-		If InStr(string, "Human.")	; need to include the period at the or it will be messed up by "HumanCoordinates" method.
-		{
-			If InStr(string, "Box")
-				Input.Human.Mouse.Box(params[1], params[2], params[3], params[4], params[5])
-			Else if InStr(string, "Mid")
-				Input.Human.Mouse.Mid(params[1], params[2], params[3], params[4], params[5])
-			Else if InStr(string, "Circle")
-				Input.Human.Mouse.Circle(params[1], params[2], params[3], params[4])
-			Else if InStr(string, "CwBox")
-				Input.Human.Mouse.CwBox(params[1], params[2], params[3], params[4], params[5])
-			Else if InStr(string, "HumanCoordinates")
-				Input.Human.Mouse.HumanCoordinates(params[1], params[2], params[3], params[4], params[5])
-		}
-		Else
-		{
-			If InStr(string, "Box")
-				Input.Mouse.Box(params[1], params[2], params[3], params[4], params[5])
-			Else if InStr(string, "Mid")
-				Input.Mouse.Mid(params[1], params[2], params[3], params[4], params[5])
-			Else if InStr(string, "Circle")
-				Input.Mouse.Circle(params[1], params[2], params[3], params[4])
-			Else if InStr(string, "CwBox")
-				Input.Mouse.CwBox(params[1], params[2], params[3], params[4], params[5])
-			Else if InStr(string, "HumanCoordinates")
-				Input.Mouse.HumanCoordinates(params[1], params[2], params[3], params[4], params[5])
-			Else if InStr(string, "RandomBezier")
-				Input.Mouse.RandomBezier(params[1], params[2], params[3], params[4], params[5], params[6], params[7])
-		}
-
-
-
-	}
-	
-	DynamicKeyboardMethod(string)	; Runs an input method dynamically (a method inside a variable).
-	{
-		; When you call a input method through this, you need to declare all parameters. Haven't tested it but it's very likely it won't work well If you don't declare all params.
-		
-		
-		params := Text.ExtractParams(StrSplit(StrSplit(string, "(")[2], ")")[1])
-		
-		If InStr(string, "Human.")	; need to include the period at the or it will be messed up by "HumanCoordinates" method.
-		{
-			If InStr(string, "PressKey")
-				Input.Human.Keyboard.PressKey(params[1], params[2])
-			Else if InStr(string, "MultiKeyPress")
-				Input.Human.Keyboard.MultiKeyPress(params[1], params[2], params[3], params[4], params[5], params[6])
-			Else if InStr(string, "SendSentence")
-				Input.Human.Keyboard.SendSentence()
-		}
-		Else
-		{
-			If InStr(string, "PressKey")
-				Input.Keyboard.PressKey(params[1], params[2])
-			Else if InStr(string, "MultiKeyPress")
-				Input.Keyboard.MultiKeyPress(params[1], params[2], params[3], params[4], params[5], params[6])
-			Else if InStr(string, "SendSentence")
-				Input.Keyboard.SendSentence()
-		}
-
-	}
-	
-	Class Mouse	; Basic Mouse functionality
-	{
-		
-		Box(x, y, w, h, action := "move")
-		{
-			box := Math.GetPoint.Box(x, y, w, h)
-			AutoOS.Client.ActivateClient()
-			MouseMove, box[1], box[2], Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
-			If (action != "move")
-				MouseClick, % action
-		}
-				
-		Mid(x, y, w, h, action := "move")
-		{
-			mid := Math.GetPoint.Mid(x, y, w, h)
-			AutoOS.Client.ActivateClient()
-			MouseMove, mid[1], mid[2], Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
-			If (action != "move")
-				MouseClick, % action
-		}
-		
-		Circle(x, y, radius, action := "move")
-		{
-			circle := Math.GetPoint.Circle(x, y, radius)
-			AutoOS.Client.ActivateClient()
-			MouseMove, circle[1], circle[2], Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
-			If (action != "move")
-				MouseClick, % action
-		}
-		
-		CwBox(x, y, w, h, action := "move") ; CwBox := Circle within box
-		{
-			cwb := Math.GetPoint.CwBox(x, y, w, h)
-			AutoOS.Client.ActivateClient()
-			MouseMove, cwb[1], cwb[2], Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
-			If (action != "move")
-				MouseClick, % action
-		}
-		
-		HumanCoordinates(x, y, w, h, action := "move")
-		{
-			coord := Math.GetPoint.HumanCoordinates(x, y, w, h)
-			AutoOS.Client.ActivateClient()
-			MouseMove, coord[1], coord[2], Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
-			If (action != "move")
-				MouseClick, % action
-		}
-
-		; MasterFocus's RandomBezier function.
-		; Source at: https://github.com/MasterFocus/AutoHotkey/tree/master/Functions/RandomBezier
-		; Slightly modIfied and simplIfied for my use... Would like to completely redo this later on as it's not very clear IMO.
-		RandomBezier(X0, Y0, Xf, Yf, action := "move", p1 := 2, p2 := 4, speed1 := 3, speed2 := 8)
-		{	
-			x_distance := X0 - Xf
-			y_distance := Y0 - Yf
-
-			; speed1 and speed2 are mousespeeds. Like the ones we have with MouseMove, X, Y, *Speed*
-			; Did some benchmarks with A_TickCount to figure more or less how do the mouse speed numbers translate to miliseconds.
-			; This formula depending on the distance is what I came up with.
-			speed_modIfier := Round(Math.GetLowest(Math.MakePositive(x_distance), Math.MakePositive(y_distance)) / 3.5)
-			time := Math.Random((speed2 * speed_modIfier), (speed1 * speed_modIfier))
-			N := Math.Random(p1, p2)
-			
-			If (N > 20)
-				N := 19
-			Else if (N < 2)
-				N := 2
-			
-			If (Math.Between(x_distance, -50, 50) or Math.Between(y_distance, -50, 50))	; If the distance is short, doesn't make sense having the
-				N := 2																						; mouse doing crazy curves.
-	
-			
-			OfT := 100, OfB := 100
-			OfL := 100, OfR := 100
-			
-			AutoOS.Client.ActivateClient()
-			MouseGetPos, XM, YM
-			
-			If (X0 < Xf)
-				sX := X0-OfL, bX := Xf+OfR
-			Else
-				sX := Xf-OfL, bX := X0+OfR
-				
-			If (Y0 < Yf)
-				sY := Y0-OfT, bY := Yf+OfB
-			Else
-				sY := Yf-OfT, bY := Y0+OfB
-				
-			Loop, % (--N)-1
-			{
-				Random, X%A_Index%, sX, bX
-				Random, Y%A_Index%, sY, bY
-			}
-			
-			X%N% := Xf
-			Y%N% := Yf
-			E := (I := A_TickCount) + time
-			While (A_TickCount < E)
-			{
-				U := 1 - (T := (A_TickCount - I) / time)
-				Loop, % N + 1 + (X := Y := 0)
-				{
-					Loop, % Idx := A_Index - (F1 := F2 := F3 := 1)
-						F2 *= A_Index, F1 *= A_Index
-					Loop, % D := N-Idx
-						F3 *= A_Index, F1 *= A_Index+Idx
-					M := (F1/(F2*F3))*((T+0.000001)**Idx)*((U-0.000001)**D), X+=M*X%Idx%, Y+=M*Y%Idx%
-				}
-				MouseMove, X, Y, 0
-			}
-			MouseMove, Xf, Yf, Math.Random(AutoOS.PlayerManager.MouseSlowSpeed, AutoOS.PlayerManager.MouseFastSpeed)
-			
-			If ((action != "move") and (action != "doubleclick"))
-				MouseClick, % action
-			Else if (action == "doubleclick")
-			{
-				MouseClick, Left
-				Sleep, Math.Random(300, 400)	; This should be passed to the function later on but for now i'll leave it like this since this is barely ever used.
-				MouseClick, Left
-			}
-			return N+1
-		}
-	
-	}
-	
-	Class Keyboard ; Basic Keyboard functionality
-	{
-		PressKey(key, time := 30)
-		{
-			AutoOS.Client.ActivateClient()
-			Send, {%key% Down}
-			Sleep, time
-			Send, {%key% Up}
-		}
-		
-		MultiKeyPress(key1, key2, key3 := "", key4 := "", key5 := "", time := 30)
-		{
-			AutoOS.Client.ActivateClient()
-			Send, {%key1% Down}
-			Send, {%key2% Down}
-			If key3
-				Send, {%key3% Down}
-			If key4
-				Send, {%key4% Down}
-			If key5
-				Send, {%key5% Down}
-			Sleep, time
-			Send, {%key1% Up}
-			Send, {%key2% Up}
-			If key3
-				Send, {%key3% Up}
-			If key4
-				Send, {%key4% Up}
-			If key5
-				Send, {%key5% Up}
-		}
-		
-		SendSentence()	; TODO. When done, need to finish async keyboard too.
-		{
-			
-		}
-		
-	}
-	
-	Class Human	; Uses input that looks more like a human.
-	{
-		Class Mouse	; This Class is an identical copy of Input.Mouse Class but uses RandomBezier for all mouse movements. Making it look more like a human.
-		{
-			Box(x, y, w, h, action := "move")
-			{
-				box := Math.GetPoint.Box(x, y, w, h)
-				AutoOS.Client.ActivateClient()
-				MouseGetPos, current_x, current_y
-				Input.Mouse.RandomBezier(current_x, current_y, box[1], box[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
-			}
-		
-			Mid(x, y, w, h, action := "move")
-			{
-				mid := Math.GetPoint.Mid(x, y, w, h)
-				AutoOS.Client.ActivateClient()
-				MouseGetPos, current_x, current_y
-				Input.Mouse.RandomBezier(current_x, current_y, mid[1], mid[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
-			}
-			
-			Circle(x, y, radius, action := "move")
-			{
-				circle := Math.GetPoint.Circle(x, y, radius)
-				AutoOS.Client.ActivateClient()
-				MouseGetPos, current_x, current_y
-				Input.Mouse.RandomBezier(current_x, current_y, circle[1], circle[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
-			}
-			
-			CwBox(x, y, w, h, action := "move") ; CwBox := Circle within box
-			{
-				cwb := Math.GetPoint.CwBox(x, y, w, h)
-				AutoOS.Client.ActivateClient()
-				MouseGetPos, current_x, current_y
-				Input.Mouse.RandomBezier(current_x, current_y, cwb[1], cwb[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
-			}
-			
-			HumanCoordinates(x, y, w, h, action := "move")
-			{
-				coord := Math.GetPoint.HumanCoordinates(x, y, w, h)
-				AutoOS.Client.ActivateClient()
-				MouseGetPos, current_x, current_y
-				Input.Mouse.RandomBezier(current_x, current_y, coord[1], coord[2], action, 2, 4, AutoOS.PlayerManager.MouseFastSpeed, AutoOS.PlayerManager.MouseSlowSpeed)
-			}
-
-		}
-	
-		Class Keyboard ; Uses the keyboard in a more human convincing way.
-		{
-			PressKey(key, time := 30)	; This function mimics the auto-repeat feature most keyboards have.
-			{
-				AutoOS.Client.ActivateClient()
-				Send, {%key% Down}
-				If (time > 500)			; This might be dIfferent with other keyboards but mine holds the key down
-				{						; for 500 miliseconds before starting the auto-repeat ¯\_(ツ)_/¯
-					Sleep, 500
-					time := time-500
-					loop_counter := Round((time/30))
-					Loop % loop_counter
-					{
-						Send, {%key% Down}
-						Sleep, 30
-					}
-					
-					If ((loop_counter * 30) < time)				; Fixes the rounding we've done before... there's probably
-						Sleep, ((loop_counter * 30) - time)		; no need to be this precise, but I'm a perfectionist.
-				}
-				Else
-					Sleep, time
-				Send, {%key% Up}
-			}
-			
-			MultiKeyPress(key1, key2, key3 := "", key4 := "", key := "", time := 30) ; Haven't tested this yet. Should work though.
-			{
-				AutoOS.Client.ActivateClient()
-				Send, {%key1% Down}
-				Send, {%key2% Down}
-				If key3
-					Send, {%key3% Down}
-				If key4
-					Send, {%key4% Down}
-				If key5
-					Send, {%key5% Down}
-				If (time > 500)
-				{
-					Sleep, 500
-					time := time-500
-					loop_counter := Round((time/30))
-					Loop % loop_counter
-					{
-						Send, {%key1% Down}
-						Send, {%key2% Down}
-						If key3
-							Send, {%key3% Down}
-						If key4
-							Send, {%key4% Down}
-						If key5
-							Send, {%key5% Down}
-						Sleep, 30
-					}
-					
-					If ((loop_counter * 30) < time)
-						Sleep, ((loop_counter * 30) - time)
-				}
-				Else
-					Sleep, time
-				Send, {%key1% Up}
-				Send, {%key2% Up}
-				If key3
-					Send, {%key3% Up}
-				If key4
-					Send, {%key4% Up}
-				If key5
-					Send, {%key5% Up}
-			}
-		
-			SendSentence()	; TODO. When done, need to finish async keyboard too.
-			{
-				
-			}
-		
-		}
-	}
-
-}
-
-Class Math
-{
-	Random(n1, n2)
-	{
-		Random, r, %n1%, %n2%
-		return %r%
-	}
-	
-	Between(n, min, max)	; Between function that can be used in expressions. Checks If n is between min and max
-	{
-		If ((min <=  n) and (n <= max))
-			return true
-		Else
-			return false	
-	}
-	
-	InBox(x, y, box)
-	{
-		If (Math.Between(x, box[1], box[3]) and Math.Between(y, box[2], box[4]))
-			return true
-		Else
-			return false
-		
-	}
-	
-	GetLowest(n1, n2)
-	{
-		If (n1 > n2)
-			return n2
-		Else if (n1 < n2)
-			return n1
-	}
-	
-	GetHighest(n1, n2)
-	{
-		If (n1 > n2)
-			return n1
-		Else if (n1 < n2)
-			return n2
-	}
-	
-	MakePositive(n)
-	{
-		If (n < 0)
-			return (n * -1)
-		Else
-			return n
-	}
-	
-	MakeNegative(n)
-	{
-		If (n > 0)
-			return (n * -1)
-		Else
-			return n
-	}
-	
-	DPIScale(n, operation := "scale")
-	{
-		If (operation == "scale")
-		{
-			If (A_ScreenDPI == 96)
-				return % n
-			Else if (A_ScreenDPI == 120)
-				return % Round(n * 1.25)
-			Else if (A_ScreenDPI == 144)
-				return % Round(n * 1.5)
-			Else if (A_ScreenDPI == 168)
-				return % Round(n * 1.75)
-			Else if (A_ScreenDPI == 192)
-				return % n * 2
-		}
-		Else if (operation == "descale")
-		{
-			If (A_ScreenDPI == 96)
-				return % n
-			Else if (A_ScreenDPI == 120)
-				return % Round(n / 1.25)
-			Else if (A_ScreenDPI == 144)
-				return % Round(n / 1.5)
-			Else if (A_ScreenDPI == 168)
-				return % Round(n / 1.75)
-			Else if (A_ScreenDPI == 192)
-				return % Round(n / 2)
-		}
-	}
-	
-	Class GetPoint
-	{
-		Box(x, y, w, h)
-		{
-			return Array(Math.Random(x, w), Math.Random(y, h))
-		}
-		
-		; Get Middle point of 2 coordinates (same axis) or 4 points (2 axis).
-		; If only 2 points are used, n1 and n2 MUST be of the same axis.
-		; When all 4 points are used n1, n2, n3 and n4 should be x, y, w, h respectively.
-		Mid(n1, n2, n3 := "", n4 := "")
-		{
-			If (!n3 and !n4)
-				return Round((n1 + n2) / 2)
-			Else if (n3 and n4)			
-				return Array(Round((n1 + n3) / 2), Round((n2 + n4) / 2))
-			Else if ((n3 and !n4) or (!n3 and n4))
-				return "Error"
-		}
-		
-		; Calculates a random point within a radius of x and y.
-		Circle(x, y, radius)
-		{
-			final_x := Round((Math.Random(-1.0, 1.0) * radius) + x)
-			final_y := Round((sqrt(1 - Math.Random(-1.0, 1.0) ** 2) * radius * Math.Random(-1.0, 1.0)) + y)
-			return Array(final_x, final_y)
-		}
-		
-		; Calculates a random point in a circle within a box.
-		CwBox(x, y, w, h)
-		{
-			; Checks which diameter is smaller and uses it to calculate the radius.
-			; If both axis have the same diameter it uses the first one since they would be the same.
-			If ((x - w) <= (y - h))
-				radius := Round((w - x) / 2)
-			Else if ((x -w) > (y - h))
-				radius := Round((h - y) / 2)
-			mid_point := Math.GetPoint.Mid(x, y, w, h)
-			return Math.GetPoint.Circle(mid_point[1], mid_point[2], radius)
-		}
-		
-		; One thing that annoys me on some bots and scripts is that they take your mouse to a random coordinate inside a border.
-		; I deslike it because you end up click a lot of times close to the borders of whatever your are clicking,
-		; where usually there's only "empty" space and doesn't look human at all.
-		; This function attempts to solve that.
-		; It gives you coordinates that are more likely to be in the center where the icon of whatever you want to click likely is.
-		HumanCoordinates(x, y, w, h) ; TODO NEED TO MAKE THIS BETTER
-		{
-			Random, probability, 0, 99
-			
-			if ((((w-x) - (h-y)) >= 10) OR (((w-x) - (h-y)) <= -10)) ; checks if the box is a square or a rectangle. 
-			{
-				x := x+2, y := y+2, w := w-2, h := h-2
-				return Array(Math.Random(x, w), Math.Random(y, h))
-			}
-			Else
-			{
-				If (probability <= 49)
-				{
-					case := 1
-					x_circle := Round(x + ((w - x) * 0.2))	; 50% probability the coordinates will be in the "eye" of the box.
-					w_circle := Round(w + ((x - w) * 0.2))
-					y_circle := Round(y + ((h - y) * 0.2))
-					h_circle := Round(h + ((y - h) * 0.2))
-				}
-				Else if (probability <= 84)
-				{
-					case := 2
-					x_circle := Round(x + ((w - x) * 0.35))	; 35% probability the coordinates will be in the inner circle inside of the box.
-					w_circle := Round(w + ((x - w) * 0.35))	; This includes the "eye" above, so in reality the probability of having the coordinates closer to the center
-					y_circle := Round(y + ((h - y) * 0.35))	; is higher than 50%.
-					h_circle := Round(h + ((y - h) * 0.35))
-				}
-				Else if (probability >= 85)
-				{
-					case := 3
-					x_circle := Round(x + ((w - x) * 0.45))	; 15% probability the coordinates will be in the outter parts of the circle inside of the box.
-					w_circle := Round(w + ((x - w) * 0.45))	; This includes the "eye" and the inner circle above, so in reality the probability of having
-					y_circle := Round(y + ((h - y) * 0.45))	; the coordinates closer to the center is higher than 50% for the "eye" and 35% for the inner circle.
-					h_circle := Round(h + ((y - h) * 0.45))
-				}
-				return Math.GetPoint.CwBox(x_circle, y_circle, w_circle, h_circle)
-			}
-		}
-
-	}
-	
-	
-}
-
-Class Color
-{
-	
-	Class Pixel
-	{
-		InBox(color_id, box, tolerance := 0)
-		{
-			PixelSearch, output_x, output_y, box[1], box[2], box[3], box[4], color_id, tolerance, Fast RGB
-			If ErrorLevel
-				return false
-			Else
-				return true
-		}
-		
-		CountInBox(color_id, box, tolerance := 0)	; returns the number of pixels found with specIfied color within a box
-		{
-			pixel_count := 0
-			Loop
-			{
-				PixelSearch, output_x, output_y, box[1], box[2], box[3], box[4], color_id, tolerance, Fast RGB
-				If !ErrorLevel
-				{
-					++pixel_count
-					box[1] := output_x + 1
-					box[2] := output_y
-				}
-				Else if ErrorLevel
-					return pixel_count
-			}
-		}
-		
-		ShIft(x, y, t := 100, tolerance := 0)	; Checks If the pixel at coordinates x and y shIfted color in t time. NEED TESTING!
-		{
-			PixelGetColor, output1, x, y, RGB
-			Sleep % t
-			PixelGetColor, output2, x, y, RGB
-			If (output1 != output2)
-				return true
-			Else if (output1 == output2)
-				return false
-		}
-		
-		InBoxes(color_id, box1, box2, tolerance := 0, min := 2, box3 := "", box4 := "")	; Checks If color_id is present in the specIfied boxes. If the number of present pixels
-		{																				; is above the minimum threshold (min)
-			If (!IsObject(box1) or !IsObject(Box2) or !IsObject(Box3) or !IsObject(Box4))
-				return "Boxes must be objects with 4 x, y, w and h."
-			
-			pixel_counter := 0
-			
-			PixelSearch, output_x, output_y, box1[1], box1[2], box1[3], box1[4], color_id, tolerance, Fast RGB
-			If !ErrorLevel
-				++pixel_counter
-			
-			PixelSearch, output_x, output_y, box2[1], box2[2], box2[3], box2[4], color_id, tolerance, Fast RGB
-			If !ErrorLevel
-				++pixel_counter
-			
-			If Box3	; Checks If Box3 exists.
-			{
-				PixelSearch, output_x, output_y, box3[1], box3[2], box3[3], box3[4], color_id, tolerance, Fast RGB
-				If !ErrorLevel
-					++pixel_counter
-			}
-			
-			If Box4	; Box4 can be inside Box3 check because Box4 won't exist If 3 doesn't.
-			{
-				PixelSearch, output_x, output_y, box4[1], box4[2], box4[3], box4[4], color_id, tolerance, Fast RGB
-				If !ErrorLevel
-					++pixel_counter
-			}
-		
-			If (pixel_counter < min)
-				return false
-			Else
-				return true
-		}
-		
-		Gdip_PixelSearch(pBitmap, ARGB, x1, y1, x2, y2) ; This is slow as heck... but I'll leave it here anyway in case it's useful.
-		{
-			While !(y1 >= y2)
-			{
-				While !(x1 >= x2)
-				{
-					pixel_color := Gdip_GetPixel(pBitmap, x1, y1)
-					If (pixel_color == ARGB)
-						return Array(x1, y1)
-					Else
-					{
-						If (x1 < x2)
-							++x1
-					}
-				}
-				
-				x1 := 0
-				If (y1 < y2)
-					++y1
-			}
-			MsgBox % "we are here"
-			return "Error"
-		}
-		
-	}
-	
-	Class Multi
-	{
-		Class Pixel ; Pretty much the same thing as Color.Pixel Class but with several pixels in mind.
-		{
-			InBox(box, color_id1, color_id2, min := 2, tolerance := 0, color_id3 := "", color_id4 := "", color_id5 := "")
-			{
-				pixel_counter := 0, final_x := 0, final_y := 0
-				PixelSearch, output_x1, output_y1, box[1], box[2], box[3], box[4], color_id1, tolerance, Fast RGB
-				If !ErrorLevel
-				{
-					++pixel_counter
-					final_x += output_x1
-					final_y += output_y1
-				}
-				
-				PixelSearch, output_x2, output_y2, box[1], box[2], box[3], box[4], color_id2, tolerance, Fast RGB
-				If !ErrorLevel
-				{
-					++pixel_counter
-					final_x += output_x2
-					final_y += output_y2
-				}
-				
-				If color_id3
-				{
-					PixelSearch, output_x3, output_y3, x, y, w, h, color_id3, tolerance, Fast RGB
-					If !ErrorLevel
-					{
-						++pixel_counter
-						final_x += output_x3
-						final_y += output_y3
-					}
-					
-				}
-				
-				If color_id4
-				{
-					PixelSearch, output_x4, output_y4, x, y, w, h, color_id4, tolerance, Fast RGB
-					If !ErrorLevel
-					{
-						++pixel_counter
-						final_x += output_x4
-						final_y += output_y4
-					}
-				}
-				
-				If color_id5
-				{
-					PixelSearch, output_x5, output_y5, x, y, w, h, color_id5, tolerance, Fast RGB
-					If !ErrorLevel
-					{
-						++pixel_counter
-						final_x += output_x5
-						final_y += output_y5
-					}
-				}
-				
-				final_x := Round(final_x/pixel_counter)
-				final_y := Round(final_y/pixel_counter)
-				If (pixel_counter >= min)
-					return Array(final_x, final_y)
-				Else
-					return false
-			}
-			
-			CountInBox(x, y, w, h, color_id1, color_id2, min := 2, tolerance := 0, color_id3 := "", color_id4 := "", color_id5 := "")
-			{
-				pixel_count := Color.Pixel.CountInBox(color_id1, x, y, w, h, tolerance)
-				pixel_count += Color.Pixel.CountInBox(color_id2, x, y, w, h, tolerance)
-				If color_id3
-					pixel_count += Color.Pixel.CountInBox(color_id3, x, y, w, h, tolerance)
-				If color_id4
-					pixel_count += Color.Pixel.CountInBox(color_id4, x, y, w, h, tolerance)
-				If color_id5
-					pixel_count += Color.Pixel.CountInBox(color_id5, x, y, w, h, tolerance)
-				return pixel_count
-			}
-			
-			ShIft(Obj1, Obj2, Obj3 := "", Obj4 := "", t := 100, tolerance := 0, min := 2) ; Checks If the pixels at coordinates x and y shIfted color in t time. NEED TESTING!
-			{
-				shIft_counter := 0
-				
-				PixelGetColor, pixel1_start, Obj1[1], Obj1[2], RGB
-				PixelGetColor, pixel2_start, Obj2[1], Obj2[2], RGB
-				
-				If Obj3
-					PixelGetColor, pixel3_start, Obj3[1], Obj3[2], RGB
-				If Obj4
-					PixelGetColor, pixel4_start, Obj4[1], Obj4[2], RGB
-				
-				Sleep % t
-				
-				PixelGetColor, pixel1_final, Obj1[1], Obj1[2], RGB
-				PixelGetColor, pixel2_final, Obj2[1], Obj2[2], RGB
-				
-				If Obj3
-					PixelGetColor, pixel3_final, Obj3[1], Obj3[2], RGB
-				If Obj4
-					PixelGetColor, pixel4_final, Obj4[1], Obj4[2], RGB
-				
-				If (pixel1_start != pixel1_final)
-					++shIft_counter
-				If (pixel2_start != pixel2_final)
-					++shIft_counter
-				If (pixel3_start != pixel3_final)	; I think doesn't need a check If the object exist because If it doesn't both will be the same. NEED TESTING!
-					++shIft_counter
-				If (pixel4_start != pixel4_final)	; I think doesn't need a check If the object exist because If it doesn't both will be the same. NEED TESTING!
-					++shIft_counter
-				
-				If (shIft_counter >= 2)
-					return true
-				Else
-					return false
-			}
-			
-		}
-	
-	}
-	
-	Class Image
-	{
-		InBox(box, img, tolerance := 0)
-		{
-			If (A_ScreenDPI == 120)
-				img .= "_125"
-			Else if (A_ScreenDPI == 144)
-				img .= "_150"
-			Else if (A_ScreenDPI == 168)
-				img .= "_175"
-			Else if (A_ScreenDPI == 192)
-				img .= "_200"
-			; ImageSearch, output_x, output_y, box[1], box[2], box[3], box[4], % "*" . tolerance . " *w46 *h-1 " . A_WorkingDir . "\assets\" . img . ".ico"
-			ImageSearch, output_x, output_y, box[1], box[2], box[3], box[4]
-					   , % "*" . tolerance . " *Trans0xff0000 " . A_WorkingDir . "\assets\" . img . ".bmp"
-			If (ErrorLevel == 2)
-			{
-				Debug.AddLine("No asset for your DPI")
-				return false
-			}
-			Else if (ErrorLevel == 1)
-				return false
-			Else
-				return Array(output_x, output_y)
-		}
-	}
-	
-	; Function by nnnik @ https://www.autohotkey.com/boards/viewtopic.php?t=33197
-	IsEqualColor(color1, color2, variation := 0)
-	{
-		Loop 4
-			if (abs((color1 & 0xff) - (color2 & 0xff)) > variation)
-				return false
-			else
-				color1 := color1 >> 8, color2 := color2 >> 8
-		return true
-	}
-
-}
-
-Class Encryption
-{
-	; Code by jNizM on GitHub modIfied to UTF-8 as it was causing some errors. Link: https://gist.github.com/jNizM/79aa6a4b8ec428bf780f
-	Class AES
-	{
-		Encrypt(string, password, alg)
-		{
-			len := this.StrPutVar(string, str_buf, 0, "UTF-8")
-			this.Crypt(str_buf, len, password, alg, 1)
-			return this.b64Encode(str_buf, len)
-		}
-		Decrypt(string, password, alg)
-		{
-			len := this.b64Decode(string, encr_Buf)
-			sLen := this.Crypt(encr_Buf, len, password, alg, 0)
-			sLen /= 2
-			return StrGet(&encr_Buf, sLen, "UTF-8")
-		}
-
-		Crypt(ByRef encr_Buf, ByRef Buf_Len, password, ALG_ID, CryptMode := 1)
-		{
-			; WinCrypt.h
-			Static MS_ENH_RSA_AES_PROV := "Microsoft Enhanced RSA and AES Cryptographic Provider"
-			Static PROV_RSA_AES        := 24
-			Static CRYPT_VERIFYCONTEXT := 0xF0000000
-			Static CALG_SHA1           := 0x00008004
-			Static CALG_SHA_256        := 0x0000800c
-			Static CALG_SHA_384        := 0x0000800d
-			Static CALG_SHA_512        := 0x0000800e
-			Static CALG_AES_128        := 0x0000660e ; KEY_LENGHT := 0x80  ; (128)
-			Static CALG_AES_192        := 0x0000660f ; KEY_LENGHT := 0xC0  ; (192)
-			Static CALG_AES_256        := 0x00006610 ; KEY_LENGHT := 0x100 ; (256)
-			Static KP_BLOCKLEN         := 8
-
-			If !(DllCall("advapi32.dll\CryptAcquireContext", "Ptr*", hProv, "Ptr", 0, "Ptr", 0, "Uint", PROV_RSA_AES, "UInt", CRYPT_VERIFYCONTEXT))
-				MsgBox % "*CryptAcquireContext (" DllCall("kernel32.dll\GetLastError") ")"
-
-			If !(DllCall("advapi32.dll\CryptCreateHash", "Ptr", hProv, "Uint", CALG_SHA1, "Ptr", 0, "Uint", 0, "Ptr*", hHash))
-				MsgBox % "*CryptCreateHash (" DllCall("kernel32.dll\GetLastError") ")"
-
-			passLen := this.StrPutVar(password, passBuf, 0, "UTF-8")
-			If !(DllCall("advapi32.dll\CryptHashData", "Ptr", hHash, "Ptr", &passBuf, "Uint", passLen, "Uint", 0))
-				MsgBox % "*CryptHashData (" DllCall("kernel32.dll\GetLastError") ")"
-			
-			If !(DllCall("advapi32.dll\CryptDeriveKey", "Ptr", hProv, "Uint", CALG_AES_%ALG_ID%, "Ptr", hHash, "Uint", (ALG_ID << 0x10), "Ptr*", hKey)) ; KEY_LENGHT << 0x10
-				MsgBox % "*CryptDeriveKey (" DllCall("kernel32.dll\GetLastError") ")"
-
-			If !(DllCall("advapi32.dll\CryptGetKeyParam", "Ptr", hKey, "Uint", KP_BLOCKLEN, "Uint*", BlockLen, "Uint*", 4, "Uint", 0))
-				MsgBox % "*CryptGetKeyParam (" DllCall("kernel32.dll\GetLastError") ")"
-			BlockLen /= 8
-
-			If (CryptMode)
-				DllCall("advapi32.dll\CryptEncrypt", "Ptr", hKey, "Ptr", 0, "Uint", 1, "Uint", 0, "Ptr", &encr_Buf, "Uint*", Buf_Len, "Uint", Buf_Len + BlockLen)
-			Else
-				DllCall("advapi32.dll\CryptDecrypt", "Ptr", hKey, "Ptr", 0, "Uint", 1, "Uint", 0, "Ptr", &encr_Buf, "Uint*", Buf_Len)
-
-			DllCall("advapi32.dll\CryptDestroyKey", "Ptr", hKey)
-			DllCall("advapi32.dll\CryptDestroyHash", "Ptr", hHash)
-			DllCall("advapi32.dll\CryptReleaseContext", "Ptr", hProv, "UInt", 0)
-			return Buf_Len
-		}
-
-		StrPutVar(string, ByRef var, addBufLen := 0, encoding := "UTF-8")
-		{
-			tlen := ((encoding = "UTF-8" || encoding = "CP1200") ? 2 : 1)
-			str_len := StrPut(string, encoding) * tlen
-			VarSetCapacity(var, str_len + addBufLen, 0)
-			StrPut(string, &var, encoding)
-			return str_len - tlen
-		}
-
-		b64Encode(ByRef VarIn, SizeIn)
-		{
-			Static CRYPT_STRING_BASE64 := 0x00000001
-			Static CRYPT_STRING_NOCRLF := 0x40000000
-			DllCall("crypt32.dll\CryptBinaryToStringA", "Ptr", &VarIn, "UInt", SizeIn, "Uint", (CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF), "Ptr", 0, "UInt*", SizeOut)
-			VarSetCapacity(VarOut, SizeOut, 0)
-			DllCall("crypt32.dll\CryptBinaryToStringA", "Ptr", &VarIn, "UInt", SizeIn, "Uint", (CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF), "Ptr", &VarOut, "UInt*", SizeOut)
-			return StrGet(&VarOut, SizeOut, "CP0")
-		}
-		b64Decode(ByRef VarIn, ByRef VarOut)
-		{
-			Static CRYPT_STRING_BASE64 := 0x00000001
-			Static CryptStringToBinary := "CryptStringToBinary" (A_IsUnicode ? "W" : "A")
-			DllCall("crypt32.dll\" CryptStringToBinary, "Ptr", &VarIn, "UInt", 0, "Uint", CRYPT_STRING_BASE64, "Ptr", 0, "UInt*", SizeOut, "Ptr", 0, "Ptr", 0)
-			VarSetCapacity(VarOut, SizeOut, 0)
-			DllCall("crypt32.dll\" CryptStringToBinary, "Ptr", &VarIn, "UInt", 0, "Uint", CRYPT_STRING_BASE64, "Ptr", &VarOut, "UInt*", SizeOut, "Ptr", 0, "Ptr", 0)
-			return SizeOut
-		}
-	}
-}
-
-Class Text
-{
-	CountIniSections(file)
-	{
-		Loop, Read, % file
-		{
-				If InStr(A_LoopReadLine, "[")
-					section_count++	; If the ini file exists, counts saved player to know know which player number to add.
-		}
-		return section_count
-	}
-	
-	ExtractParams(string)	; Extract parameters of a function in a string.
-	{
-		string := StrSplit(string, ", ", " `t")
-		Loop % string.Length()
-			string[A_Index] := StrReplace(string[A_Index], """", "") ; removes quotes from quoted strings. Keyboard methods need this.
-		return string
-	}
 }
 
 OnExit()

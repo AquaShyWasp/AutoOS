@@ -1,8 +1,12 @@
 ﻿#NoEnv
 #SingleInstance Force
-#NoTrayIcon
+;#NoTrayIcon
 #Include ./lib/AOS.ahk
 #Include ./lib/Gdip.ahk
+#Include ./lib/Math.ahk
+#Include ./lib/Text.ahk
+#Include ./lib/InputHandler.ahk
+
 DATA_ARRAY := []
 OnMessage(0x4a, "ReceiveAsyncInput")  ; 0x4a is WM_COPYDATA
 return

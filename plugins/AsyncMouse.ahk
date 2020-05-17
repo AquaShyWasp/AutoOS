@@ -1,8 +1,12 @@
 ﻿#NoEnv
 #SingleInstance Force
-#NoTrayIcon
+;#NoTrayIcon
 #Include ./lib/AOS.ahk
 #Include ./lib/Gdip.ahk
+#Include ./lib/Math.ahk
+#Include ./lib/Text.ahk
+#Include ./lib/InputHandler.ahk
+
 
 AutoOS.PlayerManager.GetPlayerMouseSpeed(%1%) ; Get current player.
 AutoOS.Setup()

@@ -60,9 +60,9 @@ injection, in theory, it's undetectable.
   - Mouse and keyboard can move and press keys
     independent from each other and at the same
     time.
-- DPI scaling.
+- <del>DPI scaling.
   - Everything should work and adapt to your
-    screen DPI outside of the box.
+    screen DPI outside of the box.</del>
 - Great Antiban.
   - Lot's of random variables and several random
     profiles for everyone.
@@ -109,15 +109,17 @@ To use AutoOS is easy to use and setup.
 
 If you are a developer, AutoOS is basically a large framework with all the boring and hard work already done for you.
 
-To make your own script for AutoOS:
-Create your script in the scripts folder.
+To make your own script for AutoOS, first create your script in the scripts folder.
+
 You must name it this way:
+
 `[Category]ScriptName.ahk`
-Category you can type whatever you want but would be nice if everyone uses
+
+In Category you can type whatever you want but would be nice if everyone uses
 a set of standard categories.
 
 
-Add this lines at the top:
+Add this lines at the top of your script:
 
 ```
 ScriptLoaded := true
@@ -125,6 +127,7 @@ ScriptLoaded := true
 RunScript()
 {
 	; Your script goes here.
+	; From here you can either insert your script directly or call functions/methods/etc.
 	return
 }
 ```
@@ -149,10 +152,8 @@ And gives you an easy way to copy paste useful data.
 
 <!-- ROADMAP -->
 ## Roadmap
-
-WIP
 See the [open issues](https://github.com/AquaShyWasp/AutoOS/issues) for a list of proposed features (and known issues).
-
+Click here to check the current [Roadmap](https://github.com/AquaShyWasp/AutoOS/ROADMAP.md).
 
 
 <!-- CONTRIBUTING -->
